@@ -40,7 +40,6 @@ public class GetReplacementsData implements Runnable {
 
             String teacherTemp = "";
             ArrayList<String> res = new ArrayList<String>();
-            if(singleDay) res.add(""+st0);
 
             for(int i=0; i<tds.size(); i++) {
                 String td = tds.get(i).text();
@@ -69,6 +68,7 @@ public class GetReplacementsData implements Runnable {
 
             data = String.join("\n", removeDuplicates(res));
             if(!singleDay) data = data.substring(1);
+            else if(res.size() > 0) data = st0+data;
         } catch (Exception e) {
             System.out.println(e);
         }

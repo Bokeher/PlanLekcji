@@ -50,7 +50,6 @@ public class GetTimetableData implements Runnable {
         }
     }
 
-
     public Lessons getLessons() {
         return lessons;
     }

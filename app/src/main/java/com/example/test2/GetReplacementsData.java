@@ -17,7 +17,6 @@ public class GetReplacementsData implements Runnable {
     @Override
     public void run() {
         try {
-            final int[] numbers = {1, 2, 3, 4, 5, 6, 7, 8 ,9 , 10, 11, 12};
             final String classToken = "4 PTN";
 
             Document doc = Jsoup.connect("http://zastepstwa.ckziu-elektryk.pl/").get();
@@ -26,17 +25,17 @@ public class GetReplacementsData implements Runnable {
             Elements teachers = doc.select(".st1");
 
             ArrayList<String> teacherList = new ArrayList<String>();
-            for (Element teacher : teachers) {
-                teacherList.add(teacher.text());
-            }
+            for(Element teacher : teachers) teacherList.add(teacher.text());
 
             boolean singleDay = true;
-
+            String titleOfReplacements = doc.select(".st0").text();
             int year = Calendar.getInstance().get(Calendar.YEAR);
-            String st0 = doc.select(".st0").text();
-            if(st0.split(String.valueOf(year)).length == 3){
-                singleDay = false;
-            }
+            /**
+             * Sprawdza czy zastepstwa sa w formacie jednego dnia lub paru
+             * W przypadku jednego dnia jest inna forma w wierszach zawierajacych informacje o nauczycielach (st1) oraz naglowku (st0),
+             * Gdy jest pare dni to st0 zawiera dwa razy aktualny rok tzn. zawiera np. tekst: "Zastępstwa w dniu 2023-02-27 - 2023-03-03"
+             */
+            if(titleOfReplacements.split(String.valueOf(year)).length == 3) singleDay = false;
 
             String teacherTemp = "";
             ArrayList<String> res = new ArrayList<String>();
@@ -44,16 +43,9 @@ public class GetReplacementsData implements Runnable {
             for(int i=0; i<tds.size(); i++) {
                 String td = tds.get(i).text();
                 Element tdElem = tds.get(i);
-                //get teacher temp
-                singleDay = true;
-                if(singleDay){
-                    if(teacherList.contains(td)) {
-                        teacherTemp = td;
-                    }
-                }else{
-                    if(td.contains("/")){
-                        teacherTemp = td;
-                    }
+
+                if(teacherList.contains(td)) {
+                    teacherTemp = td;
                 }
 
                 String classNumber = classToken.substring(0, 1);
@@ -62,13 +54,11 @@ public class GetReplacementsData implements Runnable {
                     res.add("\n"+teacherTemp);
                     res.add(trOfData.substring(0, 1)+" | "+trOfData.substring(2));
                 }
-
             }
-//            System.out.println(res);
 
             data = String.join("\n", removeDuplicates(res));
             if(!singleDay) data = data.substring(1);
-            else if(res.size() > 0) data = st0+data;
+            else if(res.size() > 0) data = titleOfReplacements+data;
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -81,8 +71,8 @@ public class GetReplacementsData implements Runnable {
     private static <T> ArrayList<T> removeDuplicates(ArrayList<T> list) {
         ArrayList<T> newList = new ArrayList<T>();
 
-        for (T element : list) {
-            if (!newList.contains(element)) {
+        for(T element : list) {
+            if(!newList.contains(element)) {
                 newList.add(element);
             }
         }

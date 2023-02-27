@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         setContentView(R.layout.activity_main);
 
+        Lessons lessonsData = getDataForTimetable();
         replacementsData = getDataForReplacements();
         getDataNeededFromReplacementsToTimetable();
 
@@ -42,14 +43,11 @@ public class MainActivity extends AppCompatActivity {
         ViewPager2 viewPager2 = findViewById(R.id.pager);
         viewPager2.setOffscreenPageLimit(6);
 
-        Lessons timetableData = getDataForTimetable();
-
-        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), timetableData, replacementDataForTimetable);
+        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonsData, replacementDataForTimetable);
         viewPager2.setAdapter(adapter);
 
-        Date date = new Date();
         Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTime(new Date());
         int dayNumb = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         if(dayNumb < 1 || dayNumb > 5) dayNumb = 1;
 
@@ -116,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
     private void changeVisibilityToReplacements(boolean change) {
         int timetableVisibility = View.VISIBLE;
         int replacementsVisibility = View.INVISIBLE;
+
         if(change) {
             timetableVisibility = View.INVISIBLE;
             replacementsVisibility = View.VISIBLE;
@@ -124,31 +123,24 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tabLayout).setVisibility(timetableVisibility);
         findViewById(R.id.pager).setVisibility(timetableVisibility);
 
-        findViewById(R.id.tabLayout).setVisibility(timetableVisibility);
         findViewById(R.id.textView_replacements).setVisibility(replacementsVisibility);
     }
 
     private void setReplacements() {
         TextView textFieldReplacements = findViewById(R.id.textView_replacements);
         if (replacementsData == null || replacementsData.isEmpty() || replacementsData.equals("")) textFieldReplacements.setText("Brak zastępstw");
-        else {
-            //set replacementsData to editText
-            textFieldReplacements.setText(replacementsData);
-
-//            get replacementsData needed for updating timetable
-
-        }
+        else textFieldReplacements.setText(replacementsData);
     }
     private void getDataNeededFromReplacementsToTimetable() {
         final String[] dayNames = {"poniedziałek", "wtorek", "środa", "czwartek", "piątek"};
         List<String> arrayData = new ArrayList<>();
-        if(replacementsData.startsWith("Zastępstwa w dniu")) {
-            arrayData.add(replacementsData);
-        } else arrayData = Arrays.asList(replacementsData.split("\n\n"));
+
+        if (replacementsData.startsWith("Zastępstwa w dniu")) arrayData.add(replacementsData);
+        else arrayData = Arrays.asList(replacementsData.split("\n\n"));
 
         for (String replacement : arrayData) {
             for (String dayName : dayNames) {
-                if(replacement.contains(dayName)) {
+                if (replacement.contains(dayName)) {
                     int dayNumb = dayNameToIntValue(dayName);
                     String lessonNumbers = getLessonNumberFromReplacement(replacement);
                     replacementDataForTimetable.add(lessonNumbers+";"+dayNumb);
@@ -160,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     private int dayNameToIntValue(String dayName) {
         final String[] dayNames = {"poniedziałek", "wtorek", "środa", "czwartek", "piątek"};
 
-        for(int i = 0; i < dayNames.length; i++) {
+        for (int i = 0; i < dayNames.length; i++) {
             if(dayName.equals(dayNames[i])) return i+1;
         }
         return 0;
@@ -177,9 +169,8 @@ public class MainActivity extends AppCompatActivity {
             String number = String.valueOf(ch);
             lessonNumbers.add(number);
         }
-        String res = String.join(",", lessonNumbers);
 
-        return res;
+        return String.join(",", lessonNumbers);
     }
 
     private String getDataForReplacements() {

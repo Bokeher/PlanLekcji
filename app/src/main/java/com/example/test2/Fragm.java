@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -81,7 +82,7 @@ public class Fragm extends Fragment {
         String data = "";
 
         ArrayList <Integer> indexList = new ArrayList<>();
-//        System.out.println(replacementsData);
+        Log.e("xd2", replacementsData.toString());
         for (String data2 : replacementsData) {
             String[] replacementData = data2.split(";");
 

@@ -1,23 +1,24 @@
 package com.example.test2;
 
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class GetReplacementsData implements Runnable {
     private String data;
-    private int dayNumb; // in case there are only singular day replacements
+    private ReplacementList replacementList = new ReplacementList();
 
     @Override
     public void run() {
         try {
-            final String classToken = "4 PTN";
+            final String classToken = "3 ALN";
 
             Document doc = Jsoup.connect("http://zastepstwa.ckziu-elektryk.pl/").get();
 
@@ -58,7 +59,32 @@ public class GetReplacementsData implements Runnable {
 
             data = String.join("\n", removeDuplicates(res));
             if(!singleDay) data = data.substring(1);
-            else if(res.size() > 0) data = titleOfReplacements+data;
+//            else if(res.size() > 0) data = titleOfReplacements+data;
+
+            String[] arr = data.split("\n\n");
+
+            String prevTeacher = "";
+            for (int i = 0; i < arr.length; i++) {
+                String[] arr2 = arr[i].split("\n");
+                int startingIndex = 1;
+
+                String teacher = arr2[0];
+
+                if(i == 0) {
+                    startingIndex = 2;
+                    teacher = arr2[1];
+                }
+
+                arr2 = Arrays.copyOfRange(arr2, startingIndex, arr2.length);
+
+                Replacement replacement = new Replacement(titleOfReplacements, teacher, Arrays.asList(arr2), singleDay);
+                replacementList.add(replacement);
+//                replacementList.add(replacement);
+                Log.e("xd", replacement.toString());
+            }
+
+            replacementList.getReplacementInfo();
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -66,6 +92,10 @@ public class GetReplacementsData implements Runnable {
 
     public String getData() {
         return data;
+    }
+
+    public ReplacementList getReplacementList() {
+        return replacementList;
     }
 
     private static <T> ArrayList<T> removeDuplicates(ArrayList<T> list) {

@@ -1,6 +1,5 @@
 package com.example.test2;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager2.widget.ViewPager2;
@@ -13,24 +12,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
-    private ArrayList<String> replacementDataForTimetable = new ArrayList<String>();
-    private String replacementsData;
+    private HashMap<Integer, List<Integer>> replacementsToTimetableData = new HashMap<>();
+//    private String replacementsData;
+    private ReplacementList replacementList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +41,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Lessons lessonsData = getDataForTimetable();
-        replacementsData = getDataForReplacements();
-
-
-        getDataNeededFromReplacementsToTimetable();
+        replacementList = getDataForReplacements();
+        replacementsToTimetableData = replacementList.getReplacementInfo();
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager2 viewPager2 = findViewById(R.id.pager);
         viewPager2.setOffscreenPageLimit(6);
 
-        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonsData, replacementDataForTimetable);
+        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonsData, replacementsToTimetableData);
         viewPager2.setAdapter(adapter);
 
         Calendar calendar = GregorianCalendar.getInstance();
@@ -88,9 +85,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        System.out.println("onStop");
-        Log.e("ryhc", "dwad2");
-        startService(new Intent(this, NotificationService.class));
+        // TODO: notifications
+//        System.out.println("onStop");
+//        Log.e("ryhc", "dwad2");
+//        startService(new Intent(this, NotificationService.class));
     }
 
     private void createNotificationChannel() {
@@ -160,26 +158,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void setReplacements() {
         TextView textFieldReplacements = findViewById(R.id.textView_replacements);
-        if (replacementsData == null || replacementsData.isEmpty() || replacementsData.equals("")) textFieldReplacements.setText("Brak zastępstw");
-        else textFieldReplacements.setText(replacementsData);
+        if (replacementList.getReplacementList().size() == 0) textFieldReplacements.setText("Brak zastępstw");
+        else textFieldReplacements.setText(replacementList.toString());
     }
-    private void getDataNeededFromReplacementsToTimetable() {
-        final String[] dayNames = {"poniedziałek", "wtorek", "środa", "czwartek", "piątek"};
-        List<String> arrayData = new ArrayList<>();
-
-        if (replacementsData.startsWith("Zastępstwa w dniu")) arrayData.add(replacementsData);
-        else arrayData = Arrays.asList(replacementsData.split("\n\n"));
-
-        for (String replacement : arrayData) {
-            for (String dayName : dayNames) {
-                if (replacement.contains(dayName)) {
-                    int dayNumb = dayNameToIntValue(dayName);
-                    String lessonNumbers = getLessonNumberFromReplacement(replacement);
-                    replacementDataForTimetable.add(lessonNumbers+";"+dayNumb);
-                }
-            }
-        }
-    }
+//    private void getDataNeededFromReplacementsToTimetable() {
+//        final String[] dayNames = {"poniedziałek", "wtorek", "środa", "czwartek", "piątek"};
+//        List<String> arrayData = new ArrayList<>();
+//
+//        if (replacementsData.startsWith("Zastępstwa w dniu")) arrayData.add(replacementsData);
+//        else arrayData = Arrays.asList(replacementsData.split("\n\n"));
+//
+//        for (String replacement : arrayData) {
+//            for (String dayName : dayNames) {
+//                if (replacement.contains(dayName)) {
+//                    int dayNumb = dayNameToIntValue(dayName);
+//                    String lessonNumbers = getLessonNumberFromReplacement(replacement);
+//                    replacementDataForTimetable.add(lessonNumbers+";"+dayNumb);
+//                }
+//            }
+//        }
+//    }
 
     private int dayNameToIntValue(String dayName) {
         final String[] dayNames = {"poniedziałek", "wtorek", "środa", "czwartek", "piątek"};
@@ -205,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         return String.join(",", lessonNumbers);
     }
 
-    private String getDataForReplacements() {
+    private ReplacementList getDataForReplacements() {
         GetReplacementsData getReplacementsData = new GetReplacementsData();
         Thread thread = new Thread(getReplacementsData);
         thread.start();
@@ -215,6 +213,6 @@ public class MainActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        return getReplacementsData.getData();
+        return getReplacementsData.getReplacementList();
     }
 }

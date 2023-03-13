@@ -28,16 +28,18 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
 
 public class Fragm extends Fragment {
 
     public static final String TITLE = "title";
     private Lessons timetableData;
-    private ArrayList<String> replacementsData;
+    private HashMap<Integer, List<Integer>> replacementsData;
     private ArrayList<Integer> idsCards;
     private View view;
 
-    public Fragm(Lessons timetableData, ArrayList<String> replacementsData) {
+    public Fragm(Lessons timetableData, HashMap<Integer, List<Integer>> replacementsData) {
         this.timetableData = timetableData;
         this.replacementsData = replacementsData;
     }
@@ -81,26 +83,9 @@ public class Fragm extends Fragment {
         int currentLesson = getCurrentLessonIndex(tabNumber);
         String data = "";
 
-        ArrayList <Integer> indexList = new ArrayList<>();
-        Log.e("xd2", replacementsData.toString());
-        for (String data2 : replacementsData) {
-            String[] replacementData = data2.split(";");
-
-            int dayInInt = Integer.parseInt(replacementData[1]);
-            String temp = replacementData[0];
-
-            if(dayInInt == tabNumber) {
-                if(temp.contains(",")) {
-                    String[] lessonNumbers = temp.split(",");
-                    for (String lessonNumber : lessonNumbers) {
-                        int number = Integer.parseInt(lessonNumber);
-                        indexList.add(number-1);
-                    }
-                } else {
-                    int number = Integer.parseInt(temp);
-                    indexList.add(number-1);
-                }
-            }
+        List<Integer> indexList = new ArrayList<>();
+        if(replacementsData.containsKey(tabNumber)) {
+            indexList = replacementsData.get(tabNumber);
         }
 
         for (int i = 0; i < dataList.size(); i++) {
@@ -113,17 +98,17 @@ public class Fragm extends Fragment {
             
             LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCards);
 
-            CardView cardView = new CardView(getActivity());
             ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
                     ConstraintLayout.LayoutParams.MATCH_PARENT,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT
             );
-            cardView.setId(idsCards.get(i));
             layoutParams.setMargins(0, 0, 0, 10);
 
-            cardView.setRadius(30);
             int color = ContextCompat.getColor(getActivity(), R.color.lessonBackgroundColor);
 
+            CardView cardView = new CardView(getActivity());
+            cardView.setId(idsCards.get(i));
+            cardView.setRadius(30);
             cardView.setCardBackgroundColor(color);
 
             ConstraintLayout.LayoutParams layoutParams_matchParent2 = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
@@ -150,8 +135,11 @@ public class Fragm extends Fragment {
             lessonData.setText(data);
             lessonData.setPadding(0, 0, 0, dpToPx(16));
 
-//            System.out.println(indexList);
-            if(indexList.contains(i)) strikeThroughText(lessonData);
+            if(indexList.contains(i+1)) {
+                strikeThroughText(lessonData);
+                cardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.lessonBackgroundColorStrikedThrough));
+            }
+            // TODO: repair possible out of bound error
 
             if(currentLesson-1 == i) {
                 int bgColor =  ContextCompat.getColor(getActivity(), R.color.primaryDark);
@@ -196,6 +184,7 @@ public class Fragm extends Fragment {
 
     private void strikeThroughText(TextView textView) {
         textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//        textView
     }
 
     private String formatData(String data) {

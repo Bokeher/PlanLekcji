@@ -9,11 +9,13 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Adapter extends FragmentStateAdapter {
     private Lessons timetableData;
-    private ArrayList<String> replacementsData;
-    public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, Lessons timetableData, ArrayList<String> replacementData) {
+    private HashMap<Integer, List<Integer>> replacementsData;
+    public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, Lessons timetableData, HashMap<Integer, List<Integer>> replacementData) {
         super(fragmentManager, lifecycle);
         this.timetableData = timetableData;
         this.replacementsData = replacementData;

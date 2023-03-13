@@ -25,13 +25,8 @@ public class ReplacementList {
         return replacementList;
     }
 
-    public String getReplacementInfo() {
-        getDataNeededFromReplacementsToTimetable();
-        return "d";
-    }
-    private List<String> getDataNeededFromReplacementsToTimetable() {
+    public HashMap<Integer, List<Integer>> getReplacementInfo() {
         List<String> list = new ArrayList<>();
-        final String[] dayNames = {"poniedziałek", "wtorek", "środa", "czwartek", "piątek"};
         List<String> arrayData = new ArrayList<>();
 
         HashMap<Integer, List<Integer>> map = new HashMap<>();
@@ -71,7 +66,7 @@ public class ReplacementList {
                 map.put(dayNumb, mainList);
             }
         }
-        Log.e("xd2", map.toString());
+        Log.e("zastepstwa", map.toString());
 
 //        if (replacementsData.startsWith("Zastępstwa w dniu")) arrayData.add(replacementsData);
 //        else arrayData = Arrays.asList(replacementsData.split("\n\n"));
@@ -85,26 +80,15 @@ public class ReplacementList {
 //                }
 //            }
 //        }
-        return null;
+        return map;
     }
-    private String getLessonNumberFromReplacement(String text) {
-        Pattern pattern = Pattern.compile("([0-9]|[0-9]) \\| ");
-        Matcher matcher = pattern.matcher(text);
 
-        ArrayList<String> lessonNumbers = new ArrayList<String>();
-        while (matcher.find()) {
-            int startingIndex = matcher.start();
-            char ch = text.charAt(startingIndex);
-            String number = String.valueOf(ch);
-            lessonNumbers.add(number);
+    @Override
+    public String toString() {
+        String res = "";
+        for (Replacement replacement : replacementList) {
+            res += replacement.toString()+"\n\n";
         }
-
-        return String.join(",", lessonNumbers);
+        return res;
     }
-//    private int dayNameToIntValue(String dayName) {
-//        for (int i = 0; i < dayNames.length; i++) {
-//            if(dayName.equals(dayNames[i])) return i+1;
-//        }
-//        return 0;
-//    }
 }

@@ -18,7 +18,7 @@ public class GetReplacementsData implements Runnable {
     @Override
     public void run() {
         try {
-            final String classToken = "3 ALN";
+            final String classToken = "4 PTN";
 
             Document doc = Jsoup.connect("http://zastepstwa.ckziu-elektryk.pl/").get();
 
@@ -41,7 +41,7 @@ public class GetReplacementsData implements Runnable {
             String teacherTemp = "";
             ArrayList<String> res = new ArrayList<String>();
 
-            for(int i=0; i<tds.size(); i++) {
+            for(int i = 0; i < tds.size(); i++) {
                 String td = tds.get(i).text();
                 Element tdElem = tds.get(i);
 
@@ -63,14 +63,13 @@ public class GetReplacementsData implements Runnable {
 
             String[] arr = data.split("\n\n");
 
-            String prevTeacher = "";
             for (int i = 0; i < arr.length; i++) {
                 String[] arr2 = arr[i].split("\n");
                 int startingIndex = 1;
 
                 String teacher = arr2[0];
 
-                if(i == 0) {
+                if(i == 0 && singleDay) {
                     startingIndex = 2;
                     teacher = arr2[1];
                 }
@@ -79,12 +78,8 @@ public class GetReplacementsData implements Runnable {
 
                 Replacement replacement = new Replacement(titleOfReplacements, teacher, Arrays.asList(arr2), singleDay);
                 replacementList.add(replacement);
-//                replacementList.add(replacement);
-                Log.e("xd", replacement.toString());
+                Log.e("Zastepstwo", replacement.toString());
             }
-
-            replacementList.getReplacementInfo();
-
         } catch (Exception e) {
             System.out.println(e);
         }

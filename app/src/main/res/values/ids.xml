@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="textViewLessonNumber" type="id" />
+    <item name="textViewLessonData" type="id" />
+    <item name="textViewLessonHours" type="id" />
+    <item name="constraintLayout" type="id" />
+
+    <item name="cardView1" type="id" />
+    <item name="cardView2" type="id" />
+    <item name="cardView3" type="id" />
+    <item name="cardView4" type="id" />
+    <item name="cardView5" type="id" />
+    <item name="cardView6" type="id" />
+    <item name="cardView7" type="id" />
+    <item name="cardView8" type="id" />
+    <item name="cardView9" type="id" />
+    <item name="cardView10" type="id" />
+    <item name="cardView11" type="id" />
+    <item name="cardView12" type="id" />
+</resources>

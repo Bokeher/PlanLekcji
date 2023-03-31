@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.PlanLekcji" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primaryDark</item>
+        <item name="colorPrimaryVariant">#003566</item>
+        <item name="colorOnPrimary">#000814</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#001D3D</item>
+        <item name="colorSecondaryVariant">#001D3D</item>
+        <item name="colorOnSecondary">#000814</item>
+        <!-- Status bar color. -->
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+
+        <!--        -->
+    </style>
+</resources>

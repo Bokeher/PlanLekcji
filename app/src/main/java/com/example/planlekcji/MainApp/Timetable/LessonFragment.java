@@ -1,8 +1,10 @@
 package com.example.planlekcji.MainApp.Timetable;
 
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.planlekcji.MainApp.MainActivity;
 import com.example.planlekcji.R;
 
 import org.jsoup.select.Elements;
@@ -30,6 +33,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LessonFragment extends Fragment {
 
@@ -38,6 +43,7 @@ public class LessonFragment extends Fragment {
     private HashMap<Integer, List<Integer>> replacementsData;
     private ArrayList<Integer> idsCards;
     private View view;
+    private SharedPreferences sharedPreferences;
 
     public LessonFragment(Lessons timetableData, HashMap<Integer, List<Integer>> replacementsData) {
         this.timetableData = timetableData;
@@ -57,6 +63,8 @@ public class LessonFragment extends Fragment {
         String argument = getArguments().getString(TITLE);
         this.view = view;
         int tabNumber = Character.getNumericValue(argument.charAt(3));
+
+        sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs",0);
 
         idsCards = new ArrayList<>(Arrays.asList(
                 R.id.cardView1, R.id.cardView2, R.id.cardView3, R.id.cardView4,
@@ -88,13 +96,21 @@ public class LessonFragment extends Fragment {
             indexList = replacementsData.get(tabNumber);
         }
 
+        Pattern pattern = Pattern.compile("[ABS]\\d+[\\w\\- /\\#.]+[ABS]\\d+");
         for (int i = 0; i < dataList.size(); i++) {
 
             String number = timetableData.getLessonNumbers().get(i).text();
             String hour = timetableData.getLessonHours().get(i).text();
             data = dataList.get(i).text();
 
-            if(data.contains("WP")) data = formatData(data);
+//            if(data.contains("WP")) data = formatData(data);
+
+            Matcher matcher = pattern.matcher(data);
+
+            if(matcher.find()) {
+                data = formatData(data);
+            }
+
             
             LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCards);
 
@@ -136,7 +152,8 @@ public class LessonFragment extends Fragment {
             lessonData.setPadding(0, 0, 0, dpToPx(16));
 
             if(indexList.contains(i+1)) {
-                strikeThroughText(lessonData);
+                boolean crossOut = sharedPreferences.getBoolean("crossOutReplacements", true);
+                if(crossOut) strikeThroughText(lessonData);
                 cardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.lessonBackgroundColorStrikedThrough));
             }
             // TODO: repair possible out of bound error
@@ -184,14 +201,18 @@ public class LessonFragment extends Fragment {
 
     private void strikeThroughText(TextView textView) {
         textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-//        textView
     }
 
     private String formatData(String data) {
-        String[] arr = data.split(" WP");
-        String res = String.join("\nWP", arr);
+        String[] arr = data.split("[ABS]\\d+");
 
-        return res;
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < arr.length; i++) {
+            String elem = arr[i];
+            list.add(elem.substring(0, elem.length()-1));
+        }
+
+        return String.join("\n", list);
     }
 
     private int getCurrentLessonIndex(int tabNumber) {

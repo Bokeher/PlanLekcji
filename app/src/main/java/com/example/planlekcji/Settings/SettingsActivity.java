@@ -1,6 +1,5 @@
 package com.example.planlekcji.Settings;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,16 +18,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
-    Context context;
     SharedPreferences sharedPref;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_layout);
 
-        context = this;
-        sharedPref = context.getSharedPreferences("classToken", 0);
+        sharedPref = this.getSharedPreferences("sharedPrefs", 0);
 
+        classInfoSpinnerInit();
+        crossOutReplacementsSwitchInit();
+    }
+
+    private void classInfoSpinnerInit() {
         List<ClassInfo> classInfoList = getData();
 
         Spinner spinnerClassTokens = findViewById(R.id.spinnerClassTokens);
@@ -63,6 +66,18 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    private void crossOutReplacementsSwitchInit() {
+        Switch crossSwitch = findViewById(R.id.switch_crossOutReplacements);
+
+        boolean bool = sharedPref.getBoolean("crossOutReplacements", true);
+        crossSwitch.setChecked(bool);
+
+        crossSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("crossOutReplacements", b);
+            editor.apply();
+        });
+    }
     private List<ClassInfo> getData() {
         Log.e("set", "test1");
         GetClassInfo getClassInfo = new GetClassInfo();

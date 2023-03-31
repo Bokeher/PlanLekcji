@@ -5,6 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView_selectTheme2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Przekreślenie zastępstw:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textView_selectTheme"
+        app:layout_constraintTop_toBottomOf="@+id/textView_selectTheme" />
+
     <Spinner
         android:id="@+id/spinnerClassTokens2"
         android:layout_width="wrap_content"
@@ -55,4 +65,15 @@
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/textView_selectClass"
         app:layout_constraintTop_toBottomOf="@+id/textView_selectClass" />
+
+    <Switch
+        android:id="@+id/switch_crossOutReplacements"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:checked="true"
+        android:theme="@style/SwitchStyle"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_selectTheme2"
+        app:layout_constraintStart_toEndOf="@+id/textView_selectTheme2"
+        app:layout_constraintTop_toTopOf="@+id/textView_selectTheme2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

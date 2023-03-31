@@ -12,4 +12,8 @@
     <color name="fontColor">#FFb4b4b4</color>
     <color name="lessonBackgroundColor">#FF1c1c1c</color>
     <color name="lessonBackgroundColorStrikedThrough">#FF2b2b2b</color>
+
+    <color name="switchOnColor">#FFFFC300</color>
+    <color name="switchOffColor">#f1f1f1</color>
+    <color name="switchOffTrackColor">#46FFC300</color>
 </resources>

@@ -21,7 +21,7 @@ public class GetTimetableData implements Runnable {
         try {
             //36
             Context context = MainActivity.getContext();
-            SharedPreferences sharedPreferences = context.getSharedPreferences("classToken", 0);
+            SharedPreferences sharedPreferences = context.getSharedPreferences("sharedPrefs", 0);
             String url = sharedPreferences.getString("classTimetableUrl", "http://plan.ckziu-elektryk.pl/plany/o36.html");
 
             Log.e("set", url);

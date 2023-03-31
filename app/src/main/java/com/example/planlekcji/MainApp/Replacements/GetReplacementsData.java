@@ -23,7 +23,7 @@ public class GetReplacementsData implements Runnable {
     public void run() {
         try {
             Context context = MainActivity.getContext();
-            SharedPreferences sharedPreferences = context.getSharedPreferences("classToken", 0);
+            SharedPreferences sharedPreferences = context.getSharedPreferences("sharedPrefs", 0);
             String classToken = sharedPreferences.getString("classToken", "4 PTN");
 
             Document doc = Jsoup.connect("http://zastepstwa.ckziu-elektryk.pl/").get();

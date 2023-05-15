@@ -72,7 +72,7 @@ public class LessonFragment extends Fragment {
                 R.id.cardView9, R.id.cardView10, R.id.cardView11, R.id.cardView12
         ));
 
-        ArrayList<Elements> dataList = timetableData.getMonday();
+        List<Elements> dataList = timetableData.getMonday();
         switch (tabNumber) {
             case 2:
                 dataList = timetableData.getTuesday();

@@ -12,6 +12,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GetTimetableData implements Runnable {
     private Lessons lessons;
@@ -26,10 +28,20 @@ public class GetTimetableData implements Runnable {
 
             Log.e("set", url);
 
-
             Document doc = Jsoup.connect(url).get();
 
+            //TODO: show changes on timetable
+//            String version = doc.select("body>div>table>tbody>tr:nth-child(2)").text().substring(15);
+//            Log.e("version", version);
+//
+//            String savedVersion = sharedPreferences.getString("version", "no_version");
+//            if (!savedVersion.equals(version)) {
+//
+//            }
+
+            // za duzo bledow to sypie, aby to przerobic na tablicy dwuwymiarowa
             Elements trs = doc.select(".tabela tr");
+            Elements[][] columns = new Elements[7][trs.size()];
 
             ArrayList<Elements> monday = new ArrayList<Elements>();
             ArrayList<Elements> tuesday = new ArrayList<Elements>();
@@ -39,7 +51,9 @@ public class GetTimetableData implements Runnable {
             ArrayList<Elements> lessonNumbers = new ArrayList<Elements>();
             ArrayList<Elements> lessonHours = new ArrayList<Elements>();
 
-            for (Element tr : trs) {
+            for (int i = 1; i < trs.size(); i++) {
+                Element tr = trs.get(i);
+
                 lessonNumbers.add(tr.select("td:nth-child(1)"));
                 lessonHours.add(tr.select("td:nth-child(2)"));
                 monday.add(tr.select("td:nth-child(3)"));
@@ -48,14 +62,6 @@ public class GetTimetableData implements Runnable {
                 thursday.add(tr.select("td:nth-child(6)"));
                 friday.add(tr.select("td:nth-child(7)"));
             }
-
-            lessonHours.remove(0);
-            lessonNumbers.remove(0);
-            monday.remove(0);
-            tuesday.remove(0);
-            wednesday.remove(0);
-            thursday.remove(0);
-            friday.remove(0);
 
             lessons = new Lessons(lessonNumbers, lessonHours, monday, tuesday, wednesday, thursday, friday);
         } catch (Exception e) {

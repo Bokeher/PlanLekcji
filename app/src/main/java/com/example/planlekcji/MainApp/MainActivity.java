@@ -46,9 +46,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.e("state", "onCreate");
 
-//        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-//        getActionBar().hide();
-
         mContext = this;
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         createNotificationChannel();

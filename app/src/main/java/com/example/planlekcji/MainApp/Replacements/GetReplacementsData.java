@@ -48,7 +48,7 @@ public class GetReplacementsData implements Runnable {
             }
 
             String currentTeacherName = "";
-            ArrayList<String> res = new ArrayList<String>();
+            ArrayList<String> res = new ArrayList<>();
 
             /**
              * Sposób działania:
@@ -68,7 +68,8 @@ public class GetReplacementsData implements Runnable {
 
                 // Sprawdza, czy w danym wierszu znajdują się informacje o zastępstwie dla sprawdzanej klasy.
                 String classNumber = classToken.substring(0, 1);
-                if (td.contains(classToken) || (td.contains("_roz_kl" + classNumber) && !classNumber.equals("4"))) {
+                if (td.contains(classToken) || (td.contains("_roz_kl" + classNumber) )) {
+                    //&& !classNumber.equals("4")
                     // Jeśli tak, zapisuje informacje o zastępstwie.
 
                     String rowData = tdElem.parent().text();
@@ -82,7 +83,7 @@ public class GetReplacementsData implements Runnable {
             data = String.join("\n", removeDuplicates(res));
 
             if(!singleDay) data = data.substring(1);
-//            else if(res.size() > 0) data = titleOfReplacements+data;
+            else if(res.size() > 0) data = titleOfReplacements+data;
 
             // Dzieli dane o zastępstwach na oddzielne dni i przetwarza każdy dzień z osobna.
             String[] arr = data.split("\n\n");

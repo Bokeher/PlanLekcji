@@ -36,7 +36,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private HashMap<Integer, List<Integer>> replacementsToTimetableData = new HashMap<>();
     private static Context mContext;
-    //    private String replacementsData;
     private ReplacementList replacementList;
     ViewPager2 viewPager;
     Lessons lessonsData;
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = this;
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        createNotificationChannel();
+//        createNotificationChannel();
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         setContentView(R.layout.activity_main);
@@ -100,22 +99,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.e("state", "onStop");
         // TODO: notifications
-//        System.out.println("onStop");
-//        Log.e("ryhc", "dwad2");
-//        startService(new Intent(this, NotificationService.class));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("state", "onResume");
+
         // update all data for timetable and replacements
         getAllData();
 
-        // set adapter to viewPager
+        // set adapter to viewPager (update timetable data)
         setAdapterToViewPager();
+
+        // update replecement data
+        setReplacements();
 
         // set current day (monday -> first tab, etc)
         setCurrentDay();
@@ -193,10 +191,10 @@ public class MainActivity extends AppCompatActivity {
     }
     private void changeVisibilityToReplacements(boolean change) {
         int timetableVisibility = View.VISIBLE;
-        int replacementsVisibility = View.INVISIBLE;
+        int replacementsVisibility = View.GONE;
 
         if(change) {
-            timetableVisibility = View.INVISIBLE;
+            timetableVisibility = View.GONE;
             replacementsVisibility = View.VISIBLE;
         }
 

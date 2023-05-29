@@ -41,7 +41,6 @@ public class GetTimetableData implements Runnable {
 
             // za duzo bledow to sypie, aby to przerobic na tablicy dwuwymiarowa
             Elements trs = doc.select(".tabela tr");
-            Elements[][] columns = new Elements[7][trs.size()];
 
             ArrayList<Elements> monday = new ArrayList<Elements>();
             ArrayList<Elements> tuesday = new ArrayList<Elements>();

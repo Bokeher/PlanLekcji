@@ -27,7 +27,6 @@ public class SettingsActivity extends AppCompatActivity {
         sharedPref = this.getSharedPreferences("sharedPrefs", 0);
 
         classInfoSpinnerInit();
-        crossOutReplacementsSwitchInit();
     }
 
     private void classInfoSpinnerInit() {
@@ -66,18 +65,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void crossOutReplacementsSwitchInit() {
-        Switch crossSwitch = findViewById(R.id.switch_crossOutReplacements);
 
-        boolean bool = sharedPref.getBoolean("crossOutReplacements", true);
-        crossSwitch.setChecked(bool);
-
-        crossSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("crossOutReplacements", b);
-            editor.apply();
-        });
-    }
     private List<ClassInfo> getData() {
         Log.e("set", "test1");
         GetClassInfo getClassInfo = new GetClassInfo();

@@ -3,8 +3,8 @@ package com.example.planlekcji.MainApp.Timetable;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,24 +24,22 @@ import androidx.fragment.app.Fragment;
 import com.example.planlekcji.MainApp.MainActivity;
 import com.example.planlekcji.R;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LessonFragment extends Fragment {
 
     public static final String TITLE = "title";
     private Lessons timetableData;
     private HashMap<Integer, List<Integer>> replacementsData;
-    private ArrayList<Integer> idsCards;
     private View view;
     private SharedPreferences sharedPreferences;
 
@@ -66,12 +64,6 @@ public class LessonFragment extends Fragment {
 
         sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs",0);
 
-        idsCards = new ArrayList<>(Arrays.asList(
-                R.id.cardView1, R.id.cardView2, R.id.cardView3, R.id.cardView4,
-                R.id.cardView5, R.id.cardView6, R.id.cardView7, R.id.cardView8,
-                R.id.cardView9, R.id.cardView10, R.id.cardView11, R.id.cardView12
-        ));
-
         List<Elements> dataList = timetableData.getMonday();
         switch (tabNumber) {
             case 2:
@@ -89,29 +81,29 @@ public class LessonFragment extends Fragment {
         }
 
         int currentLesson = getCurrentLessonIndex(tabNumber);
-        String data = "";
 
         List<Integer> indexList = new ArrayList<>();
         if(replacementsData.containsKey(tabNumber)) {
             indexList = replacementsData.get(tabNumber);
         }
 
-        Pattern pattern = Pattern.compile("[ABS]\\d+[\\w\\- /\\#.]+[ABS]\\d+");
         for (int i = 0; i < dataList.size(); i++) {
-
+            // get number of lesson and hour
             String number = timetableData.getLessonNumbers().get(i).text();
             String hour = timetableData.getLessonHours().get(i).text();
-            data = dataList.get(i).text();
 
-//            if(data.contains("WP")) data = formatData(data);
+            // get html to chane <br> tag into \n
+            String html = dataList.get(i).html();
 
-            Matcher matcher = pattern.matcher(data);
+            // create pointer for \n (\n cant be used here)
+            html = html.replace("<br>", "|nLine|");
 
-            if(matcher.find()) {
-                data = formatData(data);
-            }
+            // create html document to later change it into text
+            Document doc = Jsoup.parse(html);
 
-            
+            // replace pointer for \n
+            String data = doc.text().replace("|nLine|", "\n");
+
             LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCards);
 
             ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
@@ -123,7 +115,6 @@ public class LessonFragment extends Fragment {
             int color = ContextCompat.getColor(getActivity(), R.color.lessonBackgroundColor);
 
             CardView cardView = new CardView(getActivity());
-            cardView.setId(idsCards.get(i));
             cardView.setRadius(30);
             cardView.setCardBackgroundColor(color);
 
@@ -152,12 +143,12 @@ public class LessonFragment extends Fragment {
             lessonData.setPadding(0, 0, 0, dpToPx(16));
 
             if(indexList.contains(i+1)) {
-                boolean crossOut = sharedPreferences.getBoolean("crossOutReplacements", true);
-                if(crossOut) strikeThroughText(lessonData);
+                boolean crossOut = true;
+//                if(crossOut) strikeThroughText(lessonData);
                 cardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.lessonBackgroundColorStrikedThrough));
             }
-            // TODO: repair possible out of bound error
 
+            // might be some out of bound exception but works for now
             if(currentLesson-1 == i) {
                 int bgColor =  ContextCompat.getColor(getActivity(), R.color.primaryDark);
                 int textColor = ContextCompat.getColor(getActivity(), R.color.black);
@@ -166,9 +157,9 @@ public class LessonFragment extends Fragment {
                 lessonNumber.setTextColor(textColor);
                 lessonHours.setTextColor(textColor);
                 lessonData.setTextColor(textColor);
-//                lessonNumber.setTypeface(null, Typeface.BOLD);
-//                lessonHours.setTypeface(null, Typeface.BOLD);
-//                lessonData.setTypeface(null, Typeface.BOLD);
+                lessonNumber.setTypeface(null, Typeface.BOLD);
+                lessonHours.setTypeface(null, Typeface.BOLD);
+                lessonData.setTypeface(null, Typeface.BOLD);
             }
 
             ConstraintLayout constraintLayout = new ConstraintLayout(getActivity());
@@ -178,20 +169,20 @@ public class LessonFragment extends Fragment {
             constraintLayout.addView(lessonHours);
             constraintLayout.addView(lessonData);
 
-            ConstraintSet constrSet = new ConstraintSet();
-            constrSet.clone(constraintLayout);
-            constrSet.connect(R.id.textViewLessonHours, ConstraintSet.TOP, R.id.constraintLayout, ConstraintSet.TOP, dpToPx(8));
-            constrSet.connect(R.id.textViewLessonHours, ConstraintSet.LEFT, R.id.textViewLessonNumber, ConstraintSet.RIGHT, dpToPx(40));
-            constrSet.connect(R.id.textViewLessonHours, ConstraintSet.RIGHT, R.id.constraintLayout, ConstraintSet.RIGHT, dpToPx(16));
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.connect(R.id.textViewLessonHours, ConstraintSet.TOP, R.id.constraintLayout, ConstraintSet.TOP, dpToPx(8));
+            constraintSet.connect(R.id.textViewLessonHours, ConstraintSet.LEFT, R.id.textViewLessonNumber, ConstraintSet.RIGHT, dpToPx(40));
+            constraintSet.connect(R.id.textViewLessonHours, ConstraintSet.RIGHT, R.id.constraintLayout, ConstraintSet.RIGHT, dpToPx(16));
 
-            constrSet.connect(R.id.textViewLessonData, ConstraintSet.TOP, R.id.textViewLessonHours, ConstraintSet.BOTTOM, dpToPx(2));
-            constrSet.connect(R.id.textViewLessonData, ConstraintSet.BOTTOM, R.id.constraintLayout, ConstraintSet.BOTTOM, dpToPx(2));
-            constrSet.connect(R.id.textViewLessonData, ConstraintSet.RIGHT, R.id.constraintLayout, ConstraintSet.RIGHT, dpToPx(16));
-            constrSet.connect(R.id.textViewLessonData, ConstraintSet.LEFT, R.id.textViewLessonNumber, ConstraintSet.LEFT, dpToPx(40));
+            constraintSet.connect(R.id.textViewLessonData, ConstraintSet.TOP, R.id.textViewLessonHours, ConstraintSet.BOTTOM, dpToPx(2));
+            constraintSet.connect(R.id.textViewLessonData, ConstraintSet.BOTTOM, R.id.constraintLayout, ConstraintSet.BOTTOM, dpToPx(2));
+            constraintSet.connect(R.id.textViewLessonData, ConstraintSet.RIGHT, R.id.constraintLayout, ConstraintSet.RIGHT, dpToPx(16));
+            constraintSet.connect(R.id.textViewLessonData, ConstraintSet.LEFT, R.id.textViewLessonNumber, ConstraintSet.LEFT, dpToPx(40));
 
-            constrSet.connect(R.id.textViewLessonNumber, ConstraintSet.TOP, R.id.constraintLayout, ConstraintSet.TOP, 0);
-            constrSet.connect(R.id.textViewLessonNumber, ConstraintSet.BOTTOM, R.id.constraintLayout, ConstraintSet.BOTTOM, 0);
-            constrSet.applyTo(constraintLayout);
+            constraintSet.connect(R.id.textViewLessonNumber, ConstraintSet.TOP, R.id.constraintLayout, ConstraintSet.TOP, 0);
+            constraintSet.connect(R.id.textViewLessonNumber, ConstraintSet.BOTTOM, R.id.constraintLayout, ConstraintSet.BOTTOM, 0);
+            constraintSet.applyTo(constraintLayout);
 
             cardView.addView(constraintLayout);
             cardView.setLayoutParams(layoutParams);
@@ -203,18 +194,6 @@ public class LessonFragment extends Fragment {
         textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
-    private String formatData(String data) {
-        String[] arr = data.split("[ABS]\\d+");
-
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < arr.length; i++) {
-            String elem = arr[i];
-            list.add(elem.substring(0, elem.length()-1));
-        }
-
-        return String.join("\n", list);
-    }
-
     private int getCurrentLessonIndex(int tabNumber) {
         Date date = new Date();
         Calendar calendar = GregorianCalendar.getInstance();
@@ -222,9 +201,6 @@ public class LessonFragment extends Fragment {
         int dayNumb = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 1 - Monday etc
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
-
-//        hour = 12;
-//        minutes = 12;
 
         if (dayNumb == tabNumber) {
             if (hour >= 6 && hour < 8) return 1;

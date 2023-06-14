@@ -2,9 +2,8 @@ package com.example.planlekcji.MainApp.Timetable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.example.planlekcji.MainApp.MainActivity;
+import com.example.planlekcji.MainActivity;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,8 +11,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class GetTimetableData implements Runnable {
     private Lessons lessons;
@@ -24,22 +21,22 @@ public class GetTimetableData implements Runnable {
             //36
             Context context = MainActivity.getContext();
             SharedPreferences sharedPreferences = context.getSharedPreferences("sharedPrefs", 0);
-            String url = sharedPreferences.getString("classTimetableUrl", "http://plan.ckziu-elektryk.pl/plany/o36.html");
 
-            Log.e("set", url);
+            // 0 - klasy, 1 - nauczyciel, 2 - sale
+            int typeOfTimetable = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
+            String sharedPrefUrl = "";
+            if(typeOfTimetable == 0) {
+                sharedPrefUrl = sharedPreferences.getString("classTimetableUrl", "http://plan.ckziu-elektryk.pl/plany/o1.html");
+            } else if(typeOfTimetable == 1){
+                sharedPrefUrl = sharedPreferences.getString("teacherTimetableUrl", "http://plan.ckziu-elektryk.pl/plany/o1.html");
+            } else {
+                sharedPrefUrl = sharedPreferences.getString("classroomTimetableUrl", "http://plan.ckziu-elektryk.pl/plany/o1.html");
+            }
+            String url = sharedPrefUrl;
 
             Document doc = Jsoup.connect(url).get();
 
-            //TODO: show changes on timetable
-//            String version = doc.select("body>div>table>tbody>tr:nth-child(2)").text().substring(15);
-//            Log.e("version", version);
-//
-//            String savedVersion = sharedPreferences.getString("version", "no_version");
-//            if (!savedVersion.equals(version)) {
-//
-//            }
-
-            // za duzo bledow to sypie, aby to przerobic na tablicy dwuwymiarowa
+            // za duzo bledow to sypie, aby to przerobic na tablice dwuwymiarowa
             Elements trs = doc.select(".tabela tr");
 
             ArrayList<Elements> monday = new ArrayList<Elements>();

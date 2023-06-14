@@ -63,7 +63,6 @@ public class ReplacementList {
                 map.put(dayNumb, mainList);
             }
         }
-        Log.e("zastepstwa", map.toString());
 
         return map;
     }

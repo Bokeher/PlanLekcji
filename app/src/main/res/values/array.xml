@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="spinnerItems">
-        <item>Dla ucznia</item>
-        <item>Dla nauczyciela</item>
+        <item>Klasy</item>
+        <item>Nauczyciele</item>
+        <item>Sale</item>
     </string-array>
 </resources>

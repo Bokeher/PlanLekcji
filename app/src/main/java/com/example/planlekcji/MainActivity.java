@@ -1,19 +1,14 @@
-package com.example.planlekcji.MainApp;
+package com.example.planlekcji;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -39,15 +34,14 @@ public class MainActivity extends AppCompatActivity {
     private ReplacementList replacementList;
     ViewPager2 viewPager;
     Lessons lessonsData;
+    private String allReplacementData = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("state", "onCreate");
 
         mContext = this;
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//        createNotificationChannel();
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         setContentView(R.layout.activity_main);
@@ -119,22 +113,6 @@ public class MainActivity extends AppCompatActivity {
         setCurrentDay();
     }
 
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "ChannelName";
-            String description = "ChannelDesc";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("notificationChannel", name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
     private void setCurrentDay() {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(new Date());
@@ -201,13 +179,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tabLayout).setVisibility(timetableVisibility);
         findViewById(R.id.pager).setVisibility(timetableVisibility);
 
-        findViewById(R.id.textView_replacements).setVisibility(replacementsVisibility);
+        findViewById(R.id.scrollView_replacements).setVisibility(replacementsVisibility);
     }
 
     private void setReplacements() {
         TextView textFieldReplacements = findViewById(R.id.textView_replacements);
-        if (replacementList.getReplacementList().size() == 0) textFieldReplacements.setText("Brak zastępstw");
-        else textFieldReplacements.setText(replacementList.toString());
+        textFieldReplacements.setText(allReplacementData);
+//        if (replacementList.getReplacementList().size() == 0) textFieldReplacements.setText("Brak zastępstw");
+//        else textFieldReplacements.setText(replacementList.toString());
     }
 
     private ReplacementList getDataForReplacements() {
@@ -219,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        allReplacementData = getReplacementsData.getAllReplacements();
 
         return getReplacementsData.getReplacementList();
     }

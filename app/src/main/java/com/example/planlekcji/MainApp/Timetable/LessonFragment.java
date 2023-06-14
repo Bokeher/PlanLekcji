@@ -21,7 +21,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.planlekcji.MainApp.MainActivity;
+import com.example.planlekcji.MainActivity;
 import com.example.planlekcji.R;
 
 import org.jsoup.Jsoup;
@@ -63,6 +63,7 @@ public class LessonFragment extends Fragment {
         int tabNumber = Character.getNumericValue(argument.charAt(3));
 
         sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs",0);
+        int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
 
         List<Elements> dataList = timetableData.getMonday();
         switch (tabNumber) {
@@ -92,11 +93,19 @@ public class LessonFragment extends Fragment {
             String number = timetableData.getLessonNumbers().get(i).text();
             String hour = timetableData.getLessonHours().get(i).text();
 
-            // get html to chane <br> tag into \n
+
+            // get html to change <br> tag into \n
             String html = dataList.get(i).html();
 
+            // for some reason when timetable is for classrooms and teacher there is br at the end of cell
+            // this is to prevent that from making new lines
+            if(timetableType == 1 || timetableType == 2) {
+                html = html.replace("<br>", "");
+//                html = html.replace(",", "<br>");
+            }
             // create pointer for \n (\n cant be used here)
             html = html.replace("<br>", "|nLine|");
+
 
             // create html document to later change it into text
             Document doc = Jsoup.parse(html);

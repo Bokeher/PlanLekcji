@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainApp.MainActivity">
+    tools:context=".MainActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutChangeView"
@@ -52,21 +52,34 @@
 
     </androidx.viewpager2.widget.ViewPager2>
 
-    <TextView
-        android:id="@+id/textView_replacements"
-        android:layout_width="0dp"
+    <ScrollView
+        android:id="@+id/scrollView_replacements"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:scrollbars="vertical"
-        android:textSize="18sp"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayoutChangeView" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayoutChangeView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_replacements"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:scrollbars="vertical"
+                android:textSize="18sp"
+                android:visibility="visible" />
+        </LinearLayout>
+    </ScrollView>
 
     <ImageButton
         android:id="@+id/imageButton_goSettings"

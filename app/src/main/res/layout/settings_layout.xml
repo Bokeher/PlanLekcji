@@ -6,7 +6,29 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Ustawienia"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinnerUserType"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:entries="@array/spinnerItems"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_selectTimetableType"
+        app:layout_constraintStart_toEndOf="@+id/textView_selectTimetableType"
+        app:layout_constraintTop_toTopOf="@+id/textView_selectTimetableType" />
+
+    <TextView
+        android:id="@+id/textView_selectTimetableType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -22,42 +44,58 @@
         android:layout_marginTop="8dp"
         android:text="Wybierz klasę:"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toStartOf="@+id/textView_selectTimetableType"
+        app:layout_constraintTop_toBottomOf="@+id/textView_selectTimetableType" />
 
     <Spinner
         android:id="@+id/spinnerClassTokens"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/textView_selectClass"
         app:layout_constraintStart_toEndOf="@+id/textView_selectClass"
         app:layout_constraintTop_toTopOf="@+id/textView_selectClass" />
 
-    <Spinner
-        android:id="@+id/spinnerUserType"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:entries="@array/spinnerItems"
-        app:layout_constraintBottom_toBottomOf="@+id/textView4"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="@+id/textView4" />
-
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView_selectTeacher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Ustawienia"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Wybierz nauczyciela:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textView_selectClass"
+        app:layout_constraintTop_toBottomOf="@+id/textView_selectClass" />
+
+    <Spinner
+        android:id="@+id/spinnerTeacherTokens"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_selectTeacher"
+        app:layout_constraintStart_toEndOf="@+id/textView_selectTeacher"
+        app:layout_constraintTop_toTopOf="@+id/textView_selectTeacher" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView_selectClassroom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Wybierz sale:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textView_selectTeacher"
+        app:layout_constraintTop_toBottomOf="@+id/textView_selectTeacher" />
+
+    <Spinner
+        android:id="@+id/spinnerClassroomTokens"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_selectClassroom"
+        app:layout_constraintStart_toEndOf="@+id/textView_selectClassroom"
+        app:layout_constraintTop_toTopOf="@+id/textView_selectClassroom" />
+
+    <TextView
+        android:id="@+id/textView_authorInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -67,13 +105,13 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textView_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Autor: Szymon Rychter"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="@+id/textView"
-        app:layout_constraintStart_toStartOf="@+id/textView" />
+        app:layout_constraintBottom_toTopOf="@+id/textView_authorInfo"
+        app:layout_constraintEnd_toEndOf="@+id/textView_authorInfo"
+        app:layout_constraintStart_toStartOf="@+id/textView_authorInfo" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

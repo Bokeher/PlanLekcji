@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">PlanLekcji</string>
+    <string name="classTokenKey">classToken</string>
+    <string name="teacherTokenKey">teacherToken</string>
+    <string name="classroomTokenKey">classroomToken</string>
+
+    <string name="classTimetableUrlKey">classTimetableUrl</string>
+    <string name="teacherTimetableUrlKey">teacherTimetableUrl</string>
+    <string name="classroomTimetableUrlKey">classroomTimetableUrl</string>
+
+    <string name="selectedTypeOfTimetableKey">selectedTypeOfTimetable</string>
 </resources>

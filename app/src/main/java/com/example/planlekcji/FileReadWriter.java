@@ -1,7 +1,5 @@
 package com.example.planlekcji;
 
-import com.example.planlekcji.MainApp.MainActivity;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

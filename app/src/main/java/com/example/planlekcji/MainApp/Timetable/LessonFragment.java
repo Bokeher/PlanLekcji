@@ -39,13 +39,11 @@ public class LessonFragment extends Fragment {
 
     public static final String TITLE = "title";
     private Lessons timetableData;
-    private HashMap<Integer, List<Integer>> replacementsData;
     private View view;
     private SharedPreferences sharedPreferences;
 
-    public LessonFragment(Lessons timetableData, HashMap<Integer, List<Integer>> replacementsData) {
+    public LessonFragment(Lessons timetableData) {
         this.timetableData = timetableData;
-        this.replacementsData = replacementsData;
     }
 
     @Override
@@ -82,11 +80,6 @@ public class LessonFragment extends Fragment {
         }
 
         int currentLesson = getCurrentLessonIndex(tabNumber);
-
-        List<Integer> indexList = new ArrayList<>();
-        if(replacementsData.containsKey(tabNumber)) {
-            indexList = replacementsData.get(tabNumber);
-        }
 
         for (int i = 0; i < dataList.size(); i++) {
             // get number of lesson and hour
@@ -150,12 +143,6 @@ public class LessonFragment extends Fragment {
             lessonData.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
             lessonData.setText(data);
             lessonData.setPadding(0, 0, 0, dpToPx(16));
-
-            if(indexList.contains(i+1)) {
-                boolean crossOut = true;
-//                if(crossOut) strikeThroughText(lessonData);
-                cardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.lessonBackgroundColorStrikedThrough));
-            }
 
             // might be some out of bound exception but works for now
             if(currentLesson-1 == i) {

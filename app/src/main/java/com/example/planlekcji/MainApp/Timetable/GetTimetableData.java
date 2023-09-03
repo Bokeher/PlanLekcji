@@ -18,13 +18,12 @@ public class GetTimetableData implements Runnable {
     @Override
     public void run() {
         try {
-            //36
             Context context = MainActivity.getContext();
             SharedPreferences sharedPreferences = context.getSharedPreferences("sharedPrefs", 0);
 
-            // 0 - klasy, 1 - nauczyciel, 2 - sale
+            // 0 - classes, 1 - teachers, 2 - classrooms
             int typeOfTimetable = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
-            String sharedPrefUrl = "";
+            String sharedPrefUrl;
             if(typeOfTimetable == 0) {
                 sharedPrefUrl = sharedPreferences.getString("classTimetableUrl", "http://plan.ckziu-elektryk.pl/plany/o1.html");
             } else if(typeOfTimetable == 1){
@@ -32,11 +31,10 @@ public class GetTimetableData implements Runnable {
             } else {
                 sharedPrefUrl = sharedPreferences.getString("classroomTimetableUrl", "http://plan.ckziu-elektryk.pl/plany/o1.html");
             }
-            String url = sharedPrefUrl;
 
-            Document doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(sharedPrefUrl).get();
 
-            // za duzo bledow to sypie, aby to przerobic na tablice dwuwymiarowa
+            // too much errors to make this 2-dimensional array
             Elements trs = doc.select(".tabela tr");
 
             ArrayList<Elements> monday = new ArrayList<Elements>();

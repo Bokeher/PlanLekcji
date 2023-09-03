@@ -39,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
         Spinner spinnerTeacherTokens = findViewById(R.id.spinnerTeacherTokens);
         Spinner spinnerClassroomTokens = findViewById(R.id.spinnerClassroomTokens);
 
-        // moze byc tu blad w przyszlosci jak nie bedzie nauczyciela 'AB' lub klasy '1 ALN' lub sali 'A29'
+        // might be an error when default values don't exist
         setSpinner(spinnerClassTokens, classInfoList, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey), "1 ALN");
         setSpinner(spinnerTeacherTokens, teachersInfoList, getString(R.string.teacherTokenKey), getString(R.string.teacherTimetableUrlKey), "AB");
         setSpinner(spinnerClassroomTokens, classroomsInfoList, getString(R.string.teacherTokenKey), getString(R.string.classroomTimetableUrlKey), "A29");

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -16,8 +17,6 @@ import com.example.planlekcji.MainApp.Timetable.Adapter;
 import com.example.planlekcji.MainApp.Replacements.GetReplacementsData;
 import com.example.planlekcji.MainApp.Timetable.GetTimetableData;
 import com.example.planlekcji.MainApp.Timetable.Lessons;
-import com.example.planlekcji.R;
-import com.example.planlekcji.MainApp.Replacements.ReplacementList;
 import com.example.planlekcji.Settings.SettingsActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -25,25 +24,27 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private HashMap<Integer, List<Integer>> replacementsToTimetableData = new HashMap<>();
-    private static Context mContext;
-    private ReplacementList replacementList;
-    ViewPager2 viewPager;
+    private static Context appContext;
+    private String replacementData;
     Lessons lessonsData;
-    private String allReplacementData = "";
+    ViewPager2 viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mContext = this;
+        // initialize context for other function
+        appContext = this;
+
+        // lock orientation screen
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        // always use night mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
+        // set app content
         setContentView(R.layout.activity_main);
 
         // init ViewPager2
@@ -59,12 +60,14 @@ public class MainActivity extends AppCompatActivity {
         // set current day (monday -> first tab, etc)
         setCurrentDay();
 
+        // make settings button work
         ImageButton button = findViewById(R.id.imageButton_goSettings);
         button.setOnClickListener(view -> {
             Intent settingsIntent = new Intent(view.getContext(), SettingsActivity.class);
             startActivity(settingsIntent);
         });
 
+        // set headers to tabLayout
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             String data = "Pon";
@@ -86,14 +89,11 @@ public class MainActivity extends AppCompatActivity {
             tab.setText(data);
         }).attach();
 
+        // make tab 'replacement' work
         setEventListenersToReplacements();
-        setReplacements();
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // TODO: notifications
+        // set text of replacements
+        setReplacements();
     }
 
     @Override
@@ -106,31 +106,34 @@ public class MainActivity extends AppCompatActivity {
         // set adapter to viewPager (update timetable data)
         setAdapterToViewPager();
 
-        // update replecement data
+        // update replacement data
         setReplacements();
 
         // set current day (monday -> first tab, etc)
         setCurrentDay();
     }
 
+    /**
+     * get current day, convert into number and set current item of viewPager
+     * monday -> first tab, etc
+     */
     private void setCurrentDay() {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(new Date());
         int dayNumb = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         if(dayNumb < 1 || dayNumb > 5) dayNumb = 1;
 
-        viewPager.setCurrentItem(dayNumb-1);
+        viewPager.setCurrentItem(dayNumb - 1);
     }
 
     private void setAdapterToViewPager() {
-        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonsData, replacementsToTimetableData);
+        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonsData);
         viewPager.setAdapter(adapter);
     }
 
     private void getAllData() {
         lessonsData = getDataForTimetable();
-        replacementList = getDataForReplacements();
-        replacementsToTimetableData = replacementList.getReplacementInfo();
+        replacementData = getDataForReplacements();
     }
 
     private Lessons getDataForTimetable() {
@@ -154,10 +157,10 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch(tab.getPosition()) {
                     case 0:
-                        changeVisibilityToReplacements(false);
+                        changeVisibilityOfReplacements(false);
                         break;
                     case 1:
-                        changeVisibilityToReplacements(true);
+                        changeVisibilityOfReplacements(true);
                         break;
                 }
             }
@@ -167,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {}
         });
     }
-    private void changeVisibilityToReplacements(boolean change) {
+    private void changeVisibilityOfReplacements(boolean change) {
         int timetableVisibility = View.VISIBLE;
         int replacementsVisibility = View.GONE;
 
@@ -184,12 +187,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setReplacements() {
         TextView textFieldReplacements = findViewById(R.id.textView_replacements);
-        textFieldReplacements.setText(allReplacementData);
-//        if (replacementList.getReplacementList().size() == 0) textFieldReplacements.setText("Brak zastępstw");
-//        else textFieldReplacements.setText(replacementList.toString());
+        textFieldReplacements.setText(Html.fromHtml(replacementData, Html.FROM_HTML_MODE_LEGACY));
     }
 
-    private ReplacementList getDataForReplacements() {
+    private String getDataForReplacements() {
         GetReplacementsData getReplacementsData = new GetReplacementsData();
         Thread thread = new Thread(getReplacementsData);
         thread.start();
@@ -198,12 +199,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        allReplacementData = getReplacementsData.getAllReplacements();
 
-        return getReplacementsData.getReplacementList();
+        return getReplacementsData.getAllReplacements();
     }
 
     public static Context getContext() {
-        return mContext;
+        return appContext;
     }
 }

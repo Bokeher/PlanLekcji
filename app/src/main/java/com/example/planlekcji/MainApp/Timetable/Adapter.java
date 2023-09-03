@@ -13,17 +13,15 @@ import java.util.List;
 
 public class Adapter extends FragmentStateAdapter {
     private Lessons timetableData;
-    private HashMap<Integer, List<Integer>> replacementsData;
-    public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, Lessons timetableData, HashMap<Integer, List<Integer>> replacementData) {
+    public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, Lessons timetableData) {
         super(fragmentManager, lifecycle);
         this.timetableData = timetableData;
-        this.replacementsData = replacementData;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        Fragment fragment = new LessonFragment(timetableData, replacementsData);
+        Fragment fragment = new LessonFragment(timetableData);
         Bundle args = new Bundle();
         args.putString(LessonFragment.TITLE, "Tab"+(position+1));
         fragment.setArguments(args);

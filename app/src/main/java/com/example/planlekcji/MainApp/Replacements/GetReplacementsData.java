@@ -1,5 +1,7 @@
 package com.example.planlekcji.MainApp.Replacements;
 
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,23 +25,23 @@ public class GetReplacementsData implements Runnable {
             removeUnwantedData(tds);
 
             for (Element td : tds) {
-                if(teachers.contains(td)) {
-                    // if this is teacher then bold it and put <br> before
-                    allReplacements += "<br><b>"+td.text()+"</b>";
-                } else {
-                    // else just add data
-                    allReplacements += td.text();
+                if(tdIsLessonNumber(td)) {
+                    allReplacements += "<br>";
                 }
 
-                // TODO: fix possible error when there is additional info on replacement
-                if(isTdTextNumeric(td)) {
-                    allReplacements +=" | ";
+                if(teachers.contains(td)) {
+                    // if this is teacher then bold it and put <br> before
+                    allReplacements += "<br><br><b>"+td.text()+"</b>";
                 } else {
-                    allReplacements += "<br>";
+                    // else just add data
+                    allReplacements += td.text()+" ";
+                }
+
+                if(tdIsLessonNumber(td)) {
+                    allReplacements += "| ";
                 }
             }
             if(teachers.isEmpty()) allReplacements = "Brak zastępstw";
-
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -58,7 +60,8 @@ public class GetReplacementsData implements Runnable {
         }
     }
 
-    private boolean isTdTextNumeric(Element td) {
-        return td.text().matches("\\d+");
+    private boolean tdIsLessonNumber(Element td) {
+        if(td.text().length() > 1) return false;
+        return true;
     }
 }

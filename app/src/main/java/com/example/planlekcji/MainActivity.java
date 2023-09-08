@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.planlekcji.MainApp.Timetable.Adapter;
 import com.example.planlekcji.MainApp.Replacements.GetReplacementsData;
@@ -44,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
         // initialize context for other function
         appContext = this;
 
+        // exit app if not connected to internet
+        if(!isOnline()) {
+            Toast.makeText(this, "Wymagane połączenie z internetem.", Toast.LENGTH_LONG).show();
+            MainActivity.this.finish();
+            System.exit(0);
+        }
+        
         // lock orientation of screen
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -268,5 +278,14 @@ public class MainActivity extends AppCompatActivity {
 
         EditText searchBar = findViewById(R.id.editText_searchBar);
         searchBar.setText(searchKey);
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
     }
 }

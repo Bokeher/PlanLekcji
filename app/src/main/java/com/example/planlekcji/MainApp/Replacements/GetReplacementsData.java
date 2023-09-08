@@ -7,11 +7,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class GetReplacementsData implements Runnable {
     private String allReplacements = "";
+    private List<String> replacementsForSearch = new ArrayList<>();
 
     @Override
     public void run() {
@@ -42,6 +44,13 @@ public class GetReplacementsData implements Runnable {
                 }
             }
             if(teachers.isEmpty()) allReplacements = "Brak zastępstw";
+
+            String[] data = allReplacements.split("<br><br>");
+            for (String singleData : data) {
+                if(singleData == data[0]) continue;
+                replacementsForSearch.add(singleData);
+            }
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -63,5 +72,9 @@ public class GetReplacementsData implements Runnable {
     private boolean tdIsLessonNumber(Element td) {
         if(td.text().length() > 1) return false;
         return true;
+    }
+
+    public List<String> getReplacementsForSearch() {
+        return replacementsForSearch;
     }
 }

@@ -30,7 +30,6 @@ public class SettingsActivity extends AppCompatActivity {
         sharedPref = this.getSharedPreferences("sharedPrefs", 0);
 
         getData();
-
         initSpinners();
     }
 
@@ -40,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
         Spinner spinnerClassroomTokens = findViewById(R.id.spinnerClassroomTokens);
 
         // might be an error when default values don't exist
-        setSpinner(spinnerClassTokens, classInfoList, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey), "1 ALN");
+        setSpinner(spinnerClassTokens, classInfoList, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey), "5 PTN");
         setSpinner(spinnerTeacherTokens, teachersInfoList, getString(R.string.teacherTokenKey), getString(R.string.teacherTimetableUrlKey), "AB");
         setSpinner(spinnerClassroomTokens, classroomsInfoList, getString(R.string.teacherTokenKey), getString(R.string.classroomTimetableUrlKey), "A29");
         setTypeSpinner();

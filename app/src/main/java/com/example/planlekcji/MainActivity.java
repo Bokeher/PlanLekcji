@@ -6,10 +6,14 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -24,10 +28,12 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static Context appContext;
     private String replacementData;
+    private List<String> replacementsForSearch;
     Lessons lessonsData;
     ViewPager2 viewPager;
 
@@ -38,13 +44,12 @@ public class MainActivity extends AppCompatActivity {
         // initialize context for other function
         appContext = this;
 
-        // lock orientation screen
+        // lock orientation of screen
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // always use night mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
-        // set app content
         setContentView(R.layout.activity_main);
 
         // init ViewPager2
@@ -54,43 +59,16 @@ public class MainActivity extends AppCompatActivity {
         // get all data for timetable and replacements from website
         getAllData();
 
-        // set adapter to viewPager
         setAdapterToViewPager();
 
         // set current day (monday -> first tab, etc)
         setCurrentDay();
-
-        // make settings button work
-        ImageButton button = findViewById(R.id.imageButton_goSettings);
-        button.setOnClickListener(view -> {
-            Intent settingsIntent = new Intent(view.getContext(), SettingsActivity.class);
-            startActivity(settingsIntent);
-        });
-
-        // set headers to tabLayout
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            String data = "Pon";
-            position++;
-            switch (position) {
-                case 2:
-                    data = "Wto";
-                    break;
-                case 3:
-                    data = "Śrd";
-                    break;
-                case 4:
-                    data = "Czw";
-                    break;
-                case 5:
-                    data = "Ptk";
-                    break;
-            }
-            tab.setText(data);
-        }).attach();
+        setHeadersToTabLayout();
 
         // make tab 'replacement' work
+        setEventListenerToSettingsButton();
         setEventListenersToReplacements();
+        setEventListenerToSearchBar();
 
         // set text of replacements
         setReplacements();
@@ -111,6 +89,20 @@ public class MainActivity extends AppCompatActivity {
 
         // set current day (monday -> first tab, etc)
         setCurrentDay();
+
+        // update search bar
+        updateSearchBar();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EditText searchBar = findViewById(R.id.editText_searchBar);
+
+        SharedPreferences sharedPref = this.getSharedPreferences("sharedPrefs", 0);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.searchKey), String.valueOf(searchBar.getText()));
+        editor.apply();
     }
 
     /**
@@ -170,6 +162,53 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {}
         });
     }
+    private void setEventListenerToSettingsButton() {
+        ImageButton button = findViewById(R.id.imageButton_goSettings);
+        button.setOnClickListener(view -> {
+            Intent settingsIntent = new Intent(view.getContext(), SettingsActivity.class);
+            startActivity(settingsIntent);
+        });
+    }
+
+    private void setEventListenerToSearchBar() {
+        EditText searchBar = findViewById(R.id.editText_searchBar);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String foundData = searchReplacements(String.valueOf(charSequence));
+                if(foundData.isEmpty() || charSequence.equals("")) setReplacements();
+                else setReplacements(foundData);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+    }
+
+    private void setHeadersToTabLayout() {
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            String data = "Pon";
+            position++;
+            switch (position) {
+                case 2:
+                    data = "Wto";
+                    break;
+                case 3:
+                    data = "Śrd";
+                    break;
+                case 4:
+                    data = "Czw";
+                    break;
+                case 5:
+                    data = "Ptk";
+                    break;
+            }
+            tab.setText(data);
+        }).attach();
+    }
     private void changeVisibilityOfReplacements(boolean change) {
         int timetableVisibility = View.VISIBLE;
         int replacementsVisibility = View.GONE;
@@ -189,6 +228,10 @@ public class MainActivity extends AppCompatActivity {
         TextView textFieldReplacements = findViewById(R.id.textView_replacements);
         textFieldReplacements.setText(Html.fromHtml(replacementData, Html.FROM_HTML_MODE_LEGACY));
     }
+    private void setReplacements(String data) {
+        TextView textFieldReplacements = findViewById(R.id.textView_replacements);
+        textFieldReplacements.setText(Html.fromHtml(data, Html.FROM_HTML_MODE_LEGACY));
+    }
 
     private String getDataForReplacements() {
         GetReplacementsData getReplacementsData = new GetReplacementsData();
@@ -199,11 +242,31 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
+        replacementsForSearch = getReplacementsData.getReplacementsForSearch();
         return getReplacementsData.getAllReplacements();
     }
 
     public static Context getContext() {
         return appContext;
+    }
+
+    private String searchReplacements(String searchingKey) {
+        if(searchingKey.equals("")) return "";
+        String foundResults = "";
+        for (String singleReplacement : replacementsForSearch) {
+            if(singleReplacement.toLowerCase().contains(searchingKey.toLowerCase())) {
+                if(foundResults.isEmpty()) foundResults += singleReplacement;
+                else foundResults += "<br><br>"+singleReplacement;
+            }
+        }
+        return foundResults;
+    }
+
+    private void updateSearchBar() {
+        SharedPreferences sharedPref = this.getSharedPreferences("sharedPrefs", 0);
+        String searchKey = sharedPref.getString(getString(R.string.searchKey), "");
+
+        EditText searchBar = findViewById(R.id.editText_searchBar);
+        searchBar.setText(searchKey);
     }
 }

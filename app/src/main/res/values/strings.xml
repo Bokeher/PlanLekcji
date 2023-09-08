@@ -9,4 +9,5 @@
     <string name="classroomTimetableUrlKey">classroomTimetableUrl</string>
 
     <string name="selectedTypeOfTimetableKey">selectedTypeOfTimetable</string>
+    <string name="searchKey">searchingKey</string>
 </resources>

@@ -68,6 +68,22 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <EditText
+                android:id="@+id/editText_searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Wyszukaj"
+                android:inputType="textPersonName" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="?android:attr/listDivider" />
+
             <TextView
                 android:id="@+id/textView_replacements"
                 android:layout_width="match_parent"
@@ -77,8 +93,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:scrollbars="vertical"
-                android:textSize="18sp"
-                android:visibility="visible" />
+                android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>
 

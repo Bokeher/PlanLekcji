@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Typ planu:"
+        android:text="Rodzaj planu:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -95,23 +95,14 @@
         app:layout_constraintTop_toTopOf="@+id/textView_selectClassroom" />
 
     <TextView
-        android:id="@+id/textView_authorInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Stworzono na potrzeby edukacyjne CKZiU &quot;Elektryk&quot;"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
         android:id="@+id/textView_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="Autor: Szymon Rychter"
-        app:layout_constraintBottom_toTopOf="@+id/textView_authorInfo"
-        app:layout_constraintEnd_toEndOf="@+id/textView_authorInfo"
-        app:layout_constraintStart_toStartOf="@+id/textView_authorInfo" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -102,44 +102,26 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Changes the visibility of three components: class, teacher, and classroom.
+     */
     private void changeVisibility() {
-        TextView textView_selectClass = findViewById(R.id.textView_selectClass);
-        TextView textView_selectTeacher = findViewById(R.id.textView_selectTeacher);
-        TextView textView_selectClassroom = findViewById(R.id.textView_selectClassroom);
+        int whichIsVisible = sharedPref.getInt(getString(R.string.selectedTypeOfTimetableKey), 0) + 1;
 
-        Spinner spinnerClassTokens = findViewById(R.id.spinnerClassTokens);
-        Spinner spinnerTeacherTokens = findViewById(R.id.spinnerTeacherTokens);
-        Spinner spinnerClassroomTokens = findViewById(R.id.spinnerClassroomTokens);
+        int classVisibility = View.GONE;
+        int teacherVisibility = View.GONE;
+        int classroomVisibility = View.GONE;
 
-        int visible = View.VISIBLE;
-        int gone = View.GONE;
+        if(whichIsVisible == 1) classVisibility = View.VISIBLE;
+        else if(whichIsVisible == 2) teacherVisibility = View.VISIBLE;
+        else if(whichIsVisible == 3) classroomVisibility = View.VISIBLE;
 
-        int timetableType = sharedPref.getInt(getString(R.string.selectedTypeOfTimetableKey), 0);
-        if(timetableType == 0) {
-            spinnerClassTokens.setVisibility(visible);
-            spinnerTeacherTokens.setVisibility(gone);
-            spinnerClassroomTokens.setVisibility(gone);
-
-            textView_selectClass.setVisibility(visible);
-            textView_selectTeacher.setVisibility(gone);
-            textView_selectClassroom.setVisibility(gone);
-        } else if(timetableType == 1) {
-            spinnerClassTokens.setVisibility(gone);
-            spinnerTeacherTokens.setVisibility(visible);
-            spinnerClassroomTokens.setVisibility(gone);
-
-            textView_selectClass.setVisibility(gone);
-            textView_selectTeacher.setVisibility(visible);
-            textView_selectClassroom.setVisibility(gone);
-        } else {
-            spinnerClassTokens.setVisibility(gone);
-            spinnerTeacherTokens.setVisibility(gone);
-            spinnerClassroomTokens.setVisibility(visible);
-
-            textView_selectClass.setVisibility(gone);
-            textView_selectTeacher.setVisibility(gone);
-            textView_selectClassroom.setVisibility(visible);
-        }
+        findViewById(R.id.textView_selectClass).setVisibility(classVisibility);
+        findViewById(R.id.textView_selectTeacher).setVisibility(teacherVisibility);
+        findViewById(R.id.textView_selectClassroom).setVisibility(classroomVisibility);
+        findViewById(R.id.spinnerClassTokens).setVisibility(classVisibility);
+        findViewById(R.id.spinnerTeacherTokens).setVisibility(teacherVisibility);
+        findViewById(R.id.spinnerClassroomTokens).setVisibility(classroomVisibility);
     }
 
     private void getData() {

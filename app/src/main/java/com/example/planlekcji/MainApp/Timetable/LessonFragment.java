@@ -86,7 +86,6 @@ public class LessonFragment extends Fragment {
             String number = timetableData.getLessonNumbers().get(i).text();
             String hour = timetableData.getLessonHours().get(i).text();
 
-
             // get html to change <br> tag into \n
             String html = dataList.get(i).html();
 
@@ -186,19 +185,19 @@ public class LessonFragment extends Fragment {
         }
     }
 
-    private void strikeThroughText(TextView textView) {
-        textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-    }
-
+    /**
+     * Calculates the current lesson index for a given tab number (day of the week).
+     * @param tabNumber The tab number representing the day of the week (e.g., 1 for Monday).
+     * @return The index of the current lesson (1 to 11) or 0 if there is no ongoing lesson.
+     */
     private int getCurrentLessonIndex(int tabNumber) {
-        Date date = new Date();
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTime(date);
-        int dayNumb = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 1 - Monday etc
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 1 - Monday etc
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
 
-        if (dayNumb == tabNumber) {
+        // TODO: make this automatic, because there are classes with more than 11 lessons
+        if (dayOfWeek == tabNumber) {
             if (hour >= 6 && hour < 8) return 1;
             else if (hour == 8) {
                 if (minutes < 45) return 1;

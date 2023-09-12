@@ -7,7 +7,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,13 +25,20 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Set the content view to display the settings layout.
         setContentView(R.layout.settings_layout);
 
+        // Initialize SharedPreferences for storing application settings.
         sharedPref = this.getSharedPreferences("sharedPrefs", 0);
 
+        // Fetch data relevant to settings.
         getData();
+
+        // Initialize spinners and populate them with data.
         initSpinners();
-        setListenerToGoBackButton();
+
+        // Set a listener for the back button to handle navigation.
+        setListenerToBackButton();
     }
 
     private void initSpinners() {
@@ -40,11 +46,12 @@ public class SettingsActivity extends AppCompatActivity {
         Spinner spinnerTeacherTokens = findViewById(R.id.spinnerTeacherTokens);
         Spinner spinnerClassroomTokens = findViewById(R.id.spinnerClassroomTokens);
 
-        // might be an error when default values don't exist
+        // Might be an error when default values don't exist
         setSpinner(spinnerClassTokens, classInfoList, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey), "5 PTN");
         setSpinner(spinnerTeacherTokens, teachersInfoList, getString(R.string.teacherTokenKey), getString(R.string.teacherTimetableUrlKey), "AB");
         setSpinner(spinnerClassroomTokens, classroomsInfoList, getString(R.string.teacherTokenKey), getString(R.string.classroomTimetableUrlKey), "A29");
-        setTypeSpinner();
+
+        setTypeOfTimetableSpinner();
     }
 
     private void setSpinner(Spinner spinner, List<TimetableInfo> timetableInfoList, String sharedPreferencesToken, String sharedPreferencesUrl, String sharedPreferencesDefaultToken) {
@@ -79,7 +86,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void setTypeSpinner() {
+    private void setTypeOfTimetableSpinner() {
         Spinner spinnerUserType = findViewById(R.id.spinnerUserType);
 
         int typeIndex = sharedPref.getInt(getString(R.string.selectedTypeOfTimetableKey), 0);
@@ -96,9 +103,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
     }
 
@@ -119,6 +124,7 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.textView_selectClass).setVisibility(classVisibility);
         findViewById(R.id.textView_selectTeacher).setVisibility(teacherVisibility);
         findViewById(R.id.textView_selectClassroom).setVisibility(classroomVisibility);
+
         findViewById(R.id.spinnerClassTokens).setVisibility(classVisibility);
         findViewById(R.id.spinnerTeacherTokens).setVisibility(teacherVisibility);
         findViewById(R.id.spinnerClassroomTokens).setVisibility(classroomVisibility);
@@ -139,8 +145,8 @@ public class SettingsActivity extends AppCompatActivity {
         classroomsInfoList = getDataForSpinners.getClassroomsInfoList();
     }
 
-    private void setListenerToGoBackButton() {
-        ImageButton imageButton_goBack = findViewById(R.id.imageButton_goBack);
+    private void setListenerToBackButton() {
+        ImageButton imageButton_goBack = findViewById(R.id.imageButton_back);
         imageButton_goBack.setOnClickListener(view -> {
             finish();
         });

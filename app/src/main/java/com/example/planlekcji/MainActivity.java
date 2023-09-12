@@ -44,44 +44,47 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // initialize context for other function
+        // Initialize the application context for use in other functions.
         appContext = this;
 
-        // exit app if not connected to internet
+        // Check for internet connection; exit the app if not connected.
         if(!isOnline()) {
             Toast.makeText(this, "Wymagane połączenie z internetem.", Toast.LENGTH_LONG).show();
             MainActivity.this.finish();
             System.exit(0);
         }
-        
-        // lock orientation of screen
+
+        // Lock the orientation of the screen to portrait mode.
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        // always use night mode
+        // Enable night mode for the entire application.
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
-        // set view
+        // Set the content view for the main activity.
         setContentView(R.layout.activity_main);
 
-        // init ViewPager2
+        // Initialize ViewPager2.
         viewPager = findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(6);
 
-        // get all data for timetable and replacements from website
-        getAllData();
-
+        // Set the adapter for ViewPager2.
         setAdapterToViewPager();
 
-        // set current day (monday -> first tab, etc)
+        // Fetch all data for the timetable and replacement schedule from the website.
+        getAllData();
+
+        // Set the currently active day (Monday -> the first tab, etc.).
         setCurrentDay();
+
+        // Set headers for the TabLayout.
         setHeadersToTabLayout();
 
-        // set event listeners
+        // Set event listeners for various UI elements.
         setEventListenerToSettingsButton();
         setEventListenersToReplacements();
         setEventListenerToSearchBar();
 
-        // set text of replacements
+        // Populate the text for replacements.
         setReplacements();
     }
 
@@ -89,19 +92,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // update all data for timetable and replacements
+        // Refresh all data for the timetable and replacements.
         getAllData();
 
-        // set adapter to viewPager (update timetable data)
+        // Set the adapter for the ViewPager to update timetable data.
         setAdapterToViewPager();
 
-        // update replacement data
+        // Refresh replacement data.
         setReplacements();
 
-        // set current day (monday -> first tab, etc)
+        // Set the current day (Monday -> the first tab, etc.).
         setCurrentDay();
 
-        // update search bar
+        // Update the search bar.
         updateSearchBar();
     }
 
@@ -117,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * get current day, convert into number and set current item of viewPager
-     * monday -> first tab, etc
+     * Sets the current item of the ViewPager based on the current day of the week.
+     * Monday corresponds to the first tab, Tuesday to the second tab, and so on.
      */
     private void setCurrentDay() {
         Calendar calendar = GregorianCalendar.getInstance();

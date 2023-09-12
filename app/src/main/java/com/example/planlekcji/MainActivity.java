@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // always use night mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
+        // set view
         setContentView(R.layout.activity_main);
 
         // init ViewPager2
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         setCurrentDay();
         setHeadersToTabLayout();
 
-        // make tab 'replacement' work
+        // set event listeners
         setEventListenerToSettingsButton();
         setEventListenersToReplacements();
         setEventListenerToSearchBar();
@@ -182,12 +183,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void setEventListenerToSearchBar() {
         EditText searchBar = findViewById(R.id.editText_searchBar);
+        TextView textView_resultsNumber = findViewById(R.id.textView_noResults);
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String foundData = searchReplacements(String.valueOf(charSequence));
-                if(foundData.isEmpty() || charSequence.equals("")) setReplacements();
-                else setReplacements(foundData);
+                if(charSequence.length() == 0) {
+                    setReplacements();
+                } else {
+                    String foundData = searchReplacements(String.valueOf(charSequence));
+                    if(foundData.isEmpty() || charSequence.equals("")) {
+                        textView_resultsNumber.setVisibility(View.VISIBLE);
+                        setReplacements();
+                    } else {
+                        textView_resultsNumber.setVisibility(View.GONE);
+                        setReplacements(foundData);
+                    }
+                }
             }
 
             @Override
@@ -261,7 +272,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String searchReplacements(String searchingKey) {
-        if(searchingKey.equals("")) return "";
         String foundResults = "";
         for (String singleReplacement : replacementsForSearch) {
             if(singleReplacement.toLowerCase().contains(searchingKey.toLowerCase())) {

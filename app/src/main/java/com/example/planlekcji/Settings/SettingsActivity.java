@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         getData();
         initSpinners();
+        setListenerToGoBackButton();
     }
 
     private void initSpinners() {
@@ -153,5 +155,12 @@ public class SettingsActivity extends AppCompatActivity {
         classInfoList = getDataForSpinners.getClassInfoList();
         teachersInfoList = getDataForSpinners.getTeachersInfoList();
         classroomsInfoList = getDataForSpinners.getClassroomsInfoList();
+    }
+
+    private void setListenerToGoBackButton() {
+        ImageButton imageButton_goBack = findViewById(R.id.imageButton_goBack);
+        imageButton_goBack.setOnClickListener(view -> {
+            finish();
+        });
     }
 }

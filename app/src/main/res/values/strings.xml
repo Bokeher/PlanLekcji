@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PlanLekcji</string>
+    <string name="app_name">Plan lekcji</string>
     <string name="classTokenKey">classToken</string>
     <string name="teacherTokenKey">teacherToken</string>
     <string name="classroomTokenKey">classroomToken</string>

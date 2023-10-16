@@ -84,7 +84,7 @@ public class LessonFragment extends Fragment {
             // get html to change <br> tag into \n
             String html = dataList.get(i).html();
 
-            // for some reason when timetable is for classrooms and teacher there is br at the end of cell
+            // for some reason when timetable is for classrooms or teachers there is br at the end of cell
             // this is to prevent that from making new lines
             if(timetableType == 1 || timetableType == 2) {
                 html = html.replace("<br>", "");

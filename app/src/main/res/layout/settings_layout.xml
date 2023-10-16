@@ -85,6 +85,16 @@
         app:layout_constraintStart_toStartOf="@+id/textView_selectTeacher"
         app:layout_constraintTop_toBottomOf="@+id/textView_selectTeacher" />
 
+    <TextView
+        android:id="@+id/textView_showReplacementsOnTimetable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Pokaż zastępstwa na planie:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textView_selectClassroom"
+        app:layout_constraintTop_toBottomOf="@+id/textView_selectClassroom" />
+
     <Spinner
         android:id="@+id/spinnerClassroomTokens"
         android:layout_width="wrap_content"
@@ -117,6 +127,16 @@
         android:src="@android:drawable/ic_menu_revert"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Switch
+        android:id="@+id/switch_showReplacementsOnTimetable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:theme="@style/SwitchStyle"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_showReplacementsOnTimetable"
+        app:layout_constraintStart_toEndOf="@+id/textView_showReplacementsOnTimetable"
+        app:layout_constraintTop_toTopOf="@+id/textView_showReplacementsOnTimetable" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -127,6 +127,9 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.spinnerClassTokens).setVisibility(classVisibility);
         findViewById(R.id.spinnerTeacherTokens).setVisibility(teacherVisibility);
         findViewById(R.id.spinnerClassroomTokens).setVisibility(classroomVisibility);
+
+        findViewById(R.id.switch_showReplacementsOnTimetable).setVisibility(classVisibility);
+        findViewById(R.id.textView_showReplacementsOnTimetable).setVisibility(classVisibility);
     }
 
     private void getData() {

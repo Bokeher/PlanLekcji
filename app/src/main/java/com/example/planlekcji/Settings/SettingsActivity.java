@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +40,23 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Set a listener for the back button to handle navigation.
         setListenerToBackButton();
+
+        // Set a listener for the switch responsible for changing visibility of replacements on timetable.
+        initReplacementVisibilitySwitch();
+    }
+
+    private void initReplacementVisibilitySwitch() {
+        Switch visibilitySwitch = findViewById(R.id.switch_showReplacementsOnTimetable);
+
+        boolean visibility = sharedPref.getBoolean(getString(R.string.replacementVisibilityOnTimetable), true);
+
+        visibilitySwitch.setChecked(visibility);
+
+        visibilitySwitch.setOnCheckedChangeListener((compoundButton, bool) -> {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(getString(R.string.replacementVisibilityOnTimetable), bool);
+            editor.apply();
+        });
     }
 
     private void initSpinners() {

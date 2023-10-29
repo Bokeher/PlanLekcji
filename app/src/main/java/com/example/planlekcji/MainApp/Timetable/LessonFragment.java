@@ -4,6 +4,10 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.StrikethroughSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,12 +25,14 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.planlekcji.MainActivity;
+import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
 import com.example.planlekcji.R;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -36,14 +42,15 @@ public class LessonFragment extends Fragment {
     private Lessons timetableData;
     private View view;
     private SharedPreferences sharedPreferences;
+    private List<ReplacementToTimetable> replacementsForTimetable;
 
-    public LessonFragment(Lessons timetableData) {
+    public LessonFragment(Lessons timetableData, List<ReplacementToTimetable> replacementsForTimetable) {
         this.timetableData = timetableData;
+        this.replacementsForTimetable = replacementsForTimetable;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_, container, false);
     }
@@ -93,12 +100,54 @@ public class LessonFragment extends Fragment {
             // create pointer for \n (\n cant be used here)
             html = html.replace("<br>", "|nLine|");
 
-
             // create html document to later change it into text
             Document doc = Jsoup.parse(html);
 
             // replace pointer for \n
             String data = doc.text().replace("|nLine|", "\n");
+
+            // showing replacements
+            boolean visibility = sharedPreferences.getBoolean(getString(R.string.replacementVisibilityOnTimetable), false);
+
+            SpannableStringBuilder str = null;
+            if(visibility) {
+                List<ReplacementToTimetable> currTabReplacementList = new ArrayList<>();
+                for (int j = 0; j < replacementsForTimetable.size(); j++) {
+                    ReplacementToTimetable replacement = replacementsForTimetable.get(j);
+                    if(replacement.getDayNumber() == tabNumber && replacement.getLessonNumber() == i+1) {
+                        if(replacement.getGroupNumber() == 0) {
+                            str = new SpannableStringBuilder(data);
+                            str.setSpan(new StrikethroughSpan(), 0, str.length(), 0);
+                        } else {
+                            str = new SpannableStringBuilder();
+                            String[] lines = data.split("\n");
+
+                            for (int k = 0; k < lines.length; k++) {
+                                if (k == replacement.getGroupNumber() - 1) {
+                                    SpannableString spannableString = new SpannableString(lines[k]);
+                                    StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
+                                    spannableString.setSpan(strikethroughSpan, 0, spannableString.length(), 0);
+                                    str.append(spannableString);
+                                } else {
+                                    str.append(lines[k]);
+                                }
+
+                                if (k < lines.length - 1) {
+                                    str.append("\n");
+                                }
+                            }
+                        }
+
+                        // THIS NEEDS TO BE TESTED (AND THINK ABOUT THIS WHEN THERE IS GROUP DIVISION)
+                        if(!replacement.getExtraInfo().equals("")) {
+                            str.append("\n"+replacement.getExtraInfo());
+                        }
+                    }
+                }
+                for (int j = 0; j < currTabReplacementList.size(); j++) {
+                    Log.e("test", ""+currTabReplacementList.get(j).getLessonNumber());
+                }
+            }
 
             LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCards);
 
@@ -135,7 +184,11 @@ public class LessonFragment extends Fragment {
             lessonData.setLayoutParams(layoutParams_matchParent3);
             lessonData.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             lessonData.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
-            lessonData.setText(data);
+
+            if(str != null) {
+                lessonData.setText(str);
+            }
+            else lessonData.setText(data);
             lessonData.setPadding(0, 0, 0, dpToPx(16));
 
             if(currentLesson - 1 == i) {

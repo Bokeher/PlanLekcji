@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
 import com.example.planlekcji.MainApp.Timetable.Adapter;
 import com.example.planlekcji.MainApp.Replacements.GetReplacementsData;
 import com.example.planlekcji.MainApp.Timetable.GetTimetableData;
@@ -32,11 +33,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     private static Context appContext;
     private String replacementData;
     private List<String> replacementsForSearch;
+    private List<ReplacementToTimetable> replacementsForTimetable;
     Lessons lessonsData;
     ViewPager2 viewPager;
 
@@ -133,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAdapterToViewPager() {
-        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonsData);
+        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonsData, replacementsForTimetable);
         viewPager.setAdapter(adapter);
     }
 
@@ -266,7 +270,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
         replacementsForSearch = getReplacementsData.getReplacementsForSearch();
+        replacementsForTimetable = getReplacementsData.getReplacementDataForTimetable();
+
         return getReplacementsData.getAllReplacements();
     }
 
@@ -275,6 +282,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String searchReplacements(String searchingKey) {
+        // all this in case user types '4ptn' instead of '4 ptn'
+        Pattern pattern = Pattern.compile("\\d");
+        Matcher matcher = pattern.matcher(searchingKey.substring(0, 1));
+
+        if(!searchingKey.contains(" ") && searchingKey.length() > 1 && matcher.find()) {
+            searchingKey = searchingKey.substring(0, 1)+" "+searchingKey.substring(1);
+        }
+
+        // searching
         String foundResults = "";
         for (String singleReplacement : replacementsForSearch) {
             if(singleReplacement.toLowerCase().contains(searchingKey.toLowerCase())) {

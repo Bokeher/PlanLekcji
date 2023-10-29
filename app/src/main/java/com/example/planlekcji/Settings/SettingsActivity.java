@@ -1,5 +1,6 @@
 package com.example.planlekcji.Settings;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.planlekcji.R;
@@ -48,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void initReplacementVisibilitySwitch() {
         Switch visibilitySwitch = findViewById(R.id.switch_showReplacementsOnTimetable);
 
-        boolean visibility = sharedPref.getBoolean(getString(R.string.replacementVisibilityOnTimetable), true);
+        boolean visibility = sharedPref.getBoolean(getString(R.string.replacementVisibilityOnTimetable), false);
 
         visibilitySwitch.setChecked(visibility);
 
@@ -56,6 +58,18 @@ public class SettingsActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean(getString(R.string.replacementVisibilityOnTimetable), bool);
             editor.apply();
+
+            if(bool) {
+                AlertDialog alertDialog = new AlertDialog.Builder(this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Zastępstwa na planie")
+                        .setMessage("Na planie lekcji widoczne są tylko zastępstwa dedykowane twojej klasie. Zastępstwa lekcji łączonych z innymi klasami nie są pokazywane.")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {}
+                        })
+                        .show();
+            }
         });
     }
 

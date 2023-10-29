@@ -2,7 +2,6 @@ package com.example.planlekcji.MainApp.Replacements;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.example.planlekcji.MainActivity;
 import com.example.planlekcji.R;
@@ -12,20 +11,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GetReplacementsData implements Runnable {
     private String allReplacements = "";
     private List<String> replacementsForSearch = new ArrayList<>();
-//    private List<ReplacementDataForTimetable> replacementDataForTimetableArr = new ArrayList<>();
+    List<ReplacementToTimetable> replacementDataForTimetable = new ArrayList<>();
 
     @Override
     public void run() {
@@ -35,6 +31,12 @@ public class GetReplacementsData implements Runnable {
             // get all data and teacher names
             Elements tds = doc.select("table tr td");
             Elements teachers = doc.select(".st1");
+            String title = doc.select(".st0").get(0).text();
+
+            boolean singleDay = true;
+            if (title.contains(" - ")) {
+                singleDay = false;
+            }
 
             removeUnwantedData(tds);
 
@@ -72,61 +74,87 @@ public class GetReplacementsData implements Runnable {
             final boolean replacementVisibilityOnTimetable = sharedPreferences.getBoolean(context.getString(R.string.replacementVisibilityOnTimetable), true);
             final String classToken = sharedPreferences.getString(context.getString(R.string.classTokenKey), "");
 
-            // List<ResultMap<dayNumber, lessonNumbers>>
-            List<Map<Integer, List<Integer>>> mapWithAllResults = new ArrayList<>();
-
             if(selectedTypeOfTimetableKey == 0 && replacementVisibilityOnTimetable && !classToken.equals("")) {
-                List<String> res = new ArrayList<>();
                 for (String teacherAndHisReplacements : data) {
-                    String[] linesOfReplacement = teacherAndHisReplacements.split("<br>");
-                    boolean addTeacher = false;
-                    for (int i = 0; i < linesOfReplacement.length; i++) {
-                        String line = linesOfReplacement[i];
-                        if (line.contains(classToken)) {
-                            res.add(line);
-                            addTeacher = true;
-                        }
-                    }
-                    if(addTeacher) {
-                        String teacherName = linesOfReplacement[0];
+                    String[] allLines = teacherAndHisReplacements.split("<br>");
 
-                        // check if single day
-                        // example data: Anna Czaińska / 2023-10-17 wtorek
-                        boolean singleDay = !teacherName.contains("/");
-                        Log.e("test1", "singleDay: "+singleDay);
+                    for (int i = 0; i < allLines.length; i++) {
+                        String line = allLines[i];
+                        if(line.contains(classToken)) {
+                            // get lesson number
+                            int firstSpace = line.indexOf(" "); // get the first occurrence of space and the text before it is lesson number
+                            int lessonNumber = Integer.parseInt(line.substring(0, firstSpace));
 
+                            // get group number
+                            int groupNumber = 0;
 
-                        Map<Integer, List<Integer>> resultMap = new HashMap<>();
-
-
-                        if(singleDay) {
-
-                        } else {
-                            String[] arr = teacherName.split("/");
-                            arr[1] = arr[1].substring(1);
-                            arr[1] = arr[1].substring(0, arr[1].indexOf(" "));
-                            String dateOfReplacement = arr[1];
-
-                            int dayNumber = 0;
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                            try {
-                                Date date = dateFormat.parse(dateOfReplacement);
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.setTime(date);
-                                dayNumber = calendar.get(Calendar.DAY_OF_WEEK);
-                                System.out.println("Data utworzonego obiektu Calendar: " + calendar.getTime());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                            int firstCurlyBracket = line.indexOf("(");
+                            if(firstCurlyBracket != -1) {
+                                int firstClosingCurlyBracket = line.indexOf(")");
+                                groupNumber = Integer.parseInt(line.substring(firstCurlyBracket+1, firstClosingCurlyBracket));
                             }
 
-                            dayNumber--; // mon -> 1, tue -> 2, etc.
+                            // get lesson number
+                            int dayNumber = 0; // 1 - monday, 2 - tuesday, etc...
 
-                            //TODO:
-//                            mapWithAllResults.add()
+                            Calendar calendar = Calendar.getInstance();
+                            if(singleDay) {
+                                String currYear = ""+calendar.get(Calendar.YEAR);
+                                int dateStartingIndex = title.indexOf(currYear);
+                                String yearAndRestOfString = title.substring(dateStartingIndex);
+                                int dateEndingIndex = yearAndRestOfString.indexOf(" ");
 
-                            Log.e("Test2", ""+dayNumber);
+                                String dateStr = yearAndRestOfString.substring(0, dateEndingIndex);
+
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                Date date = sdf.parse(dateStr);
+                                calendar.setTime(date);
+
+                                dayNumber = calendar.get(Calendar.DAY_OF_WEEK)-1;
+                            } else {
+                                String teacherText = allLines[0];
+                                String[] dayNames = {
+                                        "poniedziałek",
+                                        "wtorek",
+                                        "środa",
+                                        "czwartek",
+                                        "piątek"
+                                };
+
+                                for (int j = 0; j < dayNames.length; j++) {
+                                    if(teacherText.contains(dayNames[j])) {
+                                        dayNumber = j;
+                                    }
+                                }
+
+                                dayNumber++;
+                            }
+
+                            // get extra info if necessary
+                            String extraInfo = "";
+
+                            int indexOfReplacementInfo = line.indexOf(" - ")+3;
+                            String replacementInfo = line.substring(indexOfReplacementInfo);
+
+                            String[] allPossibleReplacementInfosOfNoLesson = {
+                                    "Uczniowie przychodzą później",
+                                    "Uczniowie zwolnieni do domu",
+                                    "Okienko dla uczniów",
+                                    "Bez konsekwencji"
+                            };
+
+                            boolean foundNoLesson = false;
+                            for (String text : allPossibleReplacementInfosOfNoLesson) {
+                                if(replacementInfo.contains(text)) foundNoLesson = true;
+                            }
+
+                            if(!foundNoLesson) {
+                                extraInfo = replacementInfo;
+                            }
+
+                            ReplacementToTimetable replacement = new ReplacementToTimetable(lessonNumber, dayNumber, groupNumber, extraInfo);
+                            replacementDataForTimetable.add(replacement);
                         }
-
                     }
                 }
             }
@@ -155,5 +183,9 @@ public class GetReplacementsData implements Runnable {
 
     public List<String> getReplacementsForSearch() {
         return replacementsForSearch;
+    }
+
+    public List<ReplacementToTimetable> getReplacementDataForTimetable() {
+        return replacementDataForTimetable;
     }
 }

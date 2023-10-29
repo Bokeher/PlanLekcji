@@ -74,7 +74,7 @@ public class LessonFragment extends Fragment {
                 break;
         }
 
-        int currentLesson = getCurrentLessonIndex();
+        int currentLesson = getCurrentLessonIndex(tabNumber);
 
         for (int i = 0; i < dataList.size(); i++) {
             // get number of lesson and hour
@@ -187,8 +187,12 @@ public class LessonFragment extends Fragment {
      *
      * @return The index of the current lesson or 0 if there is no active lesson.
      */
-    private int getCurrentLessonIndex() {
+    private int getCurrentLessonIndex(int tabNumber) {
         Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // Monday == 1, Tuesday == 2, etc
+
+        if (dayOfWeek != tabNumber) return 0;
+
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
 

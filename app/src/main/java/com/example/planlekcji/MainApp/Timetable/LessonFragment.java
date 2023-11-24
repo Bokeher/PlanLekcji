@@ -99,7 +99,6 @@ public class LessonFragment extends Fragment {
             // this is to prevent that from making new lines
             if(timetableType == 1 || timetableType == 2) {
                 html = html.replace("<br>", "");
-//                html = html.replace(",", "<br>");
             }
             // create pointer for \n (\n cant be used here)
             html = html.replace("<br>", "|nLine|");
@@ -115,13 +114,13 @@ public class LessonFragment extends Fragment {
 
             SpannableStringBuilder str = null;
             if(visibility) {
-                List<ReplacementToTimetable> currTabReplacementList = new ArrayList<>();
                 for (int j = 0; j < replacementsForTimetable.size(); j++) {
                     ReplacementToTimetable replacement = replacementsForTimetable.get(j);
                     if(replacement.getDayNumber() == tabNumber && replacement.getLessonNumber() == i+1) {
                         if(replacement.getGroupNumber() == 0) {
                             str = new SpannableStringBuilder(data);
                             str.setSpan(new StrikethroughSpan(), 0, str.length(), 0);
+                            if(!replacement.getExtraInfo().equals("")) str.append("\n").append(replacement.getExtraInfo());
                         } else {
                             str = new SpannableStringBuilder();
                             String[] lines = data.split("\n");
@@ -134,7 +133,7 @@ public class LessonFragment extends Fragment {
                                     str.append(spannableString);
 
                                     if(!replacement.getExtraInfo().equals("")) {
-                                        str.append("\n"+replacement.getExtraInfo());
+                                        str.append("\n").append(replacement.getExtraInfo());
                                     }
                                 } else {
                                     str.append(lines[k]);
@@ -146,9 +145,6 @@ public class LessonFragment extends Fragment {
                             }
                         }
                     }
-                }
-                for (int j = 0; j < currTabReplacementList.size(); j++) {
-                    Log.e("test", ""+currTabReplacementList.get(j).getLessonNumber());
                 }
             }
 

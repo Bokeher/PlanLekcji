@@ -58,6 +58,7 @@ public class LessonFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         String argument = getArguments().getString(TITLE);
         this.view = view;
         int tabNumber = Character.getNumericValue(argument.charAt(3));
@@ -65,8 +66,11 @@ public class LessonFragment extends Fragment {
         sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs",0);
         int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
 
-        List<Elements> dataList = timetableData.getMonday();
+        List<Elements> dataList = null;
         switch (tabNumber) {
+            case 1:
+                dataList = timetableData.getMonday();
+                break;
             case 2:
                 dataList = timetableData.getTuesday();
                 break;
@@ -128,6 +132,10 @@ public class LessonFragment extends Fragment {
                                     StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
                                     spannableString.setSpan(strikethroughSpan, 0, spannableString.length(), 0);
                                     str.append(spannableString);
+
+                                    if(!replacement.getExtraInfo().equals("")) {
+                                        str.append("\n"+replacement.getExtraInfo());
+                                    }
                                 } else {
                                     str.append(lines[k]);
                                 }
@@ -136,11 +144,6 @@ public class LessonFragment extends Fragment {
                                     str.append("\n");
                                 }
                             }
-                        }
-
-                        // THIS NEEDS TO BE TESTED (AND THINK ABOUT THIS WHEN THERE IS GROUP DIVISION)
-                        if(!replacement.getExtraInfo().equals("")) {
-                            str.append("\n"+replacement.getExtraInfo());
                         }
                     }
                 }

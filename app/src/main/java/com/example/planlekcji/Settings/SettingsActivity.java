@@ -1,6 +1,5 @@
 package com.example.planlekcji.Settings;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -60,14 +59,11 @@ public class SettingsActivity extends AppCompatActivity {
             editor.apply();
 
             if(bool) {
-                AlertDialog alertDialog = new AlertDialog.Builder(this)
+                new AlertDialog.Builder(this)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Zastępstwa na planie")
                         .setMessage("Na planie lekcji widoczne są tylko zastępstwa dedykowane twojej klasie. Zastępstwa lekcji łączonych z innymi klasami nie są pokazywane.")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {}
-                        })
+                        .setPositiveButton("Ok", (dialogInterface, i) -> {})
                         .show();
             }
         });
@@ -78,25 +74,25 @@ public class SettingsActivity extends AppCompatActivity {
         Spinner spinnerTeacherTokens = findViewById(R.id.spinnerTeacherTokens);
         Spinner spinnerClassroomTokens = findViewById(R.id.spinnerClassroomTokens);
 
-        setSpinner(spinnerClassTokens, classInfoList, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey), "");
-        setSpinner(spinnerTeacherTokens, teachersInfoList, getString(R.string.teacherTokenKey), getString(R.string.teacherTimetableUrlKey), "");
-        setSpinner(spinnerClassroomTokens, classroomsInfoList, getString(R.string.teacherTokenKey), getString(R.string.classroomTimetableUrlKey), "");
+        setSpinner(spinnerClassTokens, classInfoList, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey));
+        setSpinner(spinnerTeacherTokens, teachersInfoList, getString(R.string.teacherTokenKey), getString(R.string.teacherTimetableUrlKey));
+        setSpinner(spinnerClassroomTokens, classroomsInfoList, getString(R.string.teacherTokenKey), getString(R.string.classroomTimetableUrlKey));
 
         setTypeOfTimetableSpinner();
     }
 
-    private void setSpinner(Spinner spinner, List<TimetableInfo> timetableInfoList, String sharedPreferencesToken, String sharedPreferencesUrl, String sharedPreferencesDefaultToken) {
+    private void setSpinner(Spinner spinner, List<TimetableInfo> timetableInfoList, String sharedPreferencesToken, String sharedPreferencesUrl) {
         List<String> tokenList = new ArrayList<>();
         for (TimetableInfo timetableInfo : timetableInfoList) {
             tokenList.add(timetableInfo.getToken());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, tokenList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        String token = sharedPref.getString(sharedPreferencesToken, sharedPreferencesDefaultToken);
+        String token = sharedPref.getString(sharedPreferencesToken, "");
         spinner.setSelection(adapter.getPosition(token));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -181,8 +177,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void setListenerToBackButton() {
         ImageButton imageButton_goBack = findViewById(R.id.imageButton_back);
-        imageButton_goBack.setOnClickListener(view -> {
-            finish();
-        });
+        imageButton_goBack.setOnClickListener(view -> finish());
     }
 }

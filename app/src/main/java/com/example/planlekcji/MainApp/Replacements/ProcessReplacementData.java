@@ -97,7 +97,8 @@ public class ProcessReplacementData {
                 "Uczniowie przychodzą później",
                 "Uczniowie zwolnieni do domu",
                 "Okienko dla uczniów",
-                "Bez konsekwencji"
+                "Bez konsekwencji",
+                "Uczniowie w czytelni"
         };
 
         for (String text : allPossibleReplacementInfosOfNoLesson) {

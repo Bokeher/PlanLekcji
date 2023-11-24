@@ -25,6 +25,12 @@ public class Adapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
+        if (timetableData == null || timetableData.getLessonNumbers() == null || timetableData.getLessonNumbers().get(0) == null) {
+            return new Fragment();
+        }
+
+//        System.out.println("dawdaw");
+
         Fragment fragment = new LessonFragment(timetableData, replacementsForTimetable);
         Bundle args = new Bundle();
         args.putString(LessonFragment.TITLE, "Tab"+(position+1));

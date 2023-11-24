@@ -1,0 +1,106 @@
+package com.example.planlekcji.ViewModels;
+
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import com.example.planlekcji.MainApp.Replacements.ProcessReplacementData;
+import com.example.planlekcji.MainApp.Replacements.ReplacementDataDownloader;
+import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
+import com.example.planlekcji.MainApp.Timetable.Lessons;
+import com.example.planlekcji.MainApp.Timetable.ProcessTimetableData;
+import com.example.planlekcji.MainApp.Timetable.TimetableDataDownloader;
+
+import org.jsoup.nodes.Document;
+
+import java.util.List;
+public class MainViewModel extends ViewModel {
+    private MutableLiveData<List<String>> replacements = new MutableLiveData<>();
+    private MutableLiveData<List<ReplacementToTimetable>> replacementsForTimetable = new MutableLiveData<>();
+    private MutableLiveData<Lessons> timetableLessons = new MutableLiveData<>();
+    private MutableLiveData<Integer> selectedTabNumber = new MutableLiveData<>();
+
+    private DoubleLiveData doubleLiveData = new DoubleLiveData();
+
+    public MainViewModel() {
+        selectedTabNumber.setValue(0); // set default
+    }
+
+    public void fetchData() {
+        startReplacementDownload();
+        startTimetableDownload();
+    }
+
+    private void startReplacementDownload() {
+        ReplacementDataDownloader downloader = new ReplacementDataDownloader(new ReplacementDataDownloader.OnDownloadCompleteListener() {
+            @Override
+            public void onDownloadComplete(Document document) {
+                // Process replacement data
+                ProcessReplacementData processReplacementData = new ProcessReplacementData(document);
+                processReplacementData.process();
+
+                // Update LiveData
+                replacements.postValue(processReplacementData.getReplacements());
+                replacementsForTimetable.postValue(processReplacementData.getReplacementsForTimetable());
+
+                new Handler(Looper.getMainLooper()).post(() -> doubleLiveData.setData1Received(true));
+            }
+
+            @Override
+            public void onDownloadFailed() {
+                Log.e("ERR", "Replacement Download Error");
+            }
+        });
+        new Thread(downloader).start();
+    }
+
+    private void startTimetableDownload() {
+        TimetableDataDownloader downloader = new TimetableDataDownloader(new TimetableDataDownloader.OnDownloadCompleteListener() {
+            @Override
+            public void onDownloadComplete(Document document) {
+                // Process timetable data
+                ProcessTimetableData processTimetableData = new ProcessTimetableData(document);
+                Lessons lessons = processTimetableData.getLessons();
+
+                // Update LiveData
+                timetableLessons.postValue(lessons);
+
+                new Handler(Looper.getMainLooper()).post(() -> doubleLiveData.setData2Received(true));
+            }
+
+            @Override
+            public void onDownloadFailed() {
+                Log.e("ERR", "Timetable Download Error");
+            }
+        });
+        new Thread(downloader).start();
+    }
+
+    public LiveData<Boolean> getCombinedLiveData() {
+        return doubleLiveData.asLiveData();
+    }
+
+    public List<String> getReplacementsValue() {
+        return replacements.getValue();
+    }
+
+    public List<ReplacementToTimetable> getReplacementsForTimetableValue() {
+        return replacementsForTimetable.getValue();
+    }
+
+    public Lessons getTimetableLessonsValue() {
+        return timetableLessons.getValue();
+    }
+
+    public void setSelectedTabNumber(int selectedTabNumber) {
+        this.selectedTabNumber.setValue(selectedTabNumber);
+    }
+
+    public int getSelectedTabNumber() {
+        return selectedTabNumber.getValue();
+    }
+}

@@ -1,9 +1,5 @@
 package com.example.planlekcji;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,12 +16,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
 import com.example.planlekcji.MainApp.Timetable.Adapter;
-import com.example.planlekcji.MainApp.Replacements.GetReplacementsData;
-import com.example.planlekcji.MainApp.Timetable.GetTimetableData;
 import com.example.planlekcji.MainApp.Timetable.Lessons;
 import com.example.planlekcji.Settings.SettingsActivity;
+import com.example.planlekcji.ViewModels.MainViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -38,21 +38,27 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     private static Context appContext;
-    private String replacementData;
-    private List<String> replacementsForSearch;
+
+    // downloaded data
+    private List<String> replacements;
     private List<ReplacementToTimetable> replacementsForTimetable;
-    Lessons lessonsData;
-    ViewPager2 viewPager;
+    private Lessons lessons;
+
+    private ViewPager2 viewPager;
+    private MainViewModel mainViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize the application context for use in other functions.
+        // Initialize the application context for other functions.
         appContext = this;
 
+        // Initialize the ViewModel
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
         // Check for internet connection; exit the app if not connected.
-        if(!isOnline()) {
+        if (!isOnline()) {
             Toast.makeText(this, "Wymagane połączenie z internetem.", Toast.LENGTH_LONG).show();
             MainActivity.this.finish();
             System.exit(0);
@@ -71,45 +77,42 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(6);
 
-        // Set the adapter for ViewPager2.
-        setAdapterToViewPager();
+        mainViewModel.getCombinedLiveData().observe(this, bool -> {
+            if(bool)  {
+                lessons = mainViewModel.getTimetableLessonsValue();
+                replacementsForTimetable = mainViewModel.getReplacementsForTimetableValue();
+                replacements = mainViewModel.getReplacementsValue();
 
-        // Fetch all data for the timetable and replacement schedule from the website.
-        getAllData();
+                if(lessons != null && replacementsForTimetable != null && replacements != null) {
 
-        // Set the currently active day (Monday -> the first tab, etc.).
-        setCurrentDay();
+                    setReplacements();
+                    setEventListenerToSearchBar();
+                    searchReplacements(updateSearchBar());
 
-        // Set headers for the TabLayout.
-        setHeadersToTabLayout();
+                    setAdapterToViewPager();
+
+                    if(mainViewModel.getSelectedTabNumber() == 0) setCurrentDay();
+                    else {
+                        viewPager.setCurrentItem(mainViewModel.getSelectedTabNumber()-1, false);
+                    }
+
+                    setHeadersToTabLayout();
+                    findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
         // Set event listeners for various UI elements.
         setEventListenerToSettingsButton();
         setEventListenersToReplacements();
-        setEventListenerToSearchBar();
-
-        // Populate the text for replacements.
-        setReplacements();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Refresh all data for the timetable and replacements.
-        getAllData();
-
-        // Set the adapter for the ViewPager to update timetable data.
-        setAdapterToViewPager();
-
-        // Refresh replacement data.
-        setReplacements();
-
-        // Set the current day (Monday -> the first tab, etc.).
-        setCurrentDay();
-
-        // Update the search bar.
-        updateSearchBar();
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        mainViewModel.fetchData();
     }
 
     @Override
@@ -121,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.searchKey), String.valueOf(searchBar.getText()));
         editor.apply();
+
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        mainViewModel.setSelectedTabNumber(tabLayout.getSelectedTabPosition()+1);
     }
 
     /**
@@ -137,26 +143,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAdapterToViewPager() {
-        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonsData, replacementsForTimetable);
+        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessons, replacementsForTimetable);
         viewPager.setAdapter(adapter);
-    }
-
-    private void getAllData() {
-        lessonsData = getDataForTimetable();
-        replacementData = getDataForReplacements();
-    }
-
-    private Lessons getDataForTimetable() {
-        GetTimetableData getTimetableData = new GetTimetableData();
-        Thread thread = new Thread(getTimetableData);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        return getTimetableData.getLessons();
     }
 
     private void setEventListenersToReplacements() {
@@ -218,9 +206,13 @@ public class MainActivity extends AppCompatActivity {
     private void setHeadersToTabLayout() {
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            String data = "Pon";
+            String data = "";
             position++;
+
             switch (position) {
+                case 1:
+                    data = "Pon";
+                    break;
                 case 2:
                     data = "Wto";
                     break;
@@ -254,27 +246,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setReplacements() {
         TextView textFieldReplacements = findViewById(R.id.textView_replacements);
-        textFieldReplacements.setText(Html.fromHtml(replacementData, Html.FROM_HTML_MODE_LEGACY));
+        textFieldReplacements.setText(Html.fromHtml(String.join("<br><br>", replacements), Html.FROM_HTML_MODE_LEGACY));
     }
     private void setReplacements(String data) {
-        TextView textFieldReplacements = findViewById(R.id.textView_replacements);
-        textFieldReplacements.setText(Html.fromHtml(data, Html.FROM_HTML_MODE_LEGACY));
-    }
-
-    private String getDataForReplacements() {
-        GetReplacementsData getReplacementsData = new GetReplacementsData();
-        Thread thread = new Thread(getReplacementsData);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if (data != null) {
+            TextView textFieldReplacements = findViewById(R.id.textView_replacements);
+            textFieldReplacements.setText(Html.fromHtml(data, Html.FROM_HTML_MODE_LEGACY));
         }
-
-        replacementsForSearch = getReplacementsData.getReplacementsForSearch();
-        replacementsForTimetable = getReplacementsData.getReplacementDataForTimetable();
-
-        return getReplacementsData.getAllReplacements();
     }
 
     public static Context getContext() {
@@ -282,39 +260,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String searchReplacements(String searchingKey) {
+        if(searchingKey.isEmpty()) return "";
+
         // all this in case user types '4ptn' instead of '4 ptn'
+        searchingKey = handleOtherUserInput(searchingKey);
+
+        // searching
+        boolean firstIteration = true;
+        StringBuilder foundResults = new StringBuilder();
+        for (String singleReplacement : replacements) {
+            if (firstIteration) {
+                firstIteration = false;
+                continue;
+            }
+            if(singleReplacement.toLowerCase().contains(searchingKey.toLowerCase())) {
+                if(foundResults.length() == 0) foundResults.append(singleReplacement);
+                else foundResults.append("<br><br>").append(singleReplacement);
+            }
+        }
+        return foundResults.toString();
+    }
+
+    private String handleOtherUserInput(String searchingKey) {
         Pattern pattern = Pattern.compile("\\d");
         Matcher matcher = pattern.matcher(searchingKey.substring(0, 1));
 
         if(!searchingKey.contains(" ") && searchingKey.length() > 1 && matcher.find()) {
-            searchingKey = searchingKey.substring(0, 1)+" "+searchingKey.substring(1);
+            searchingKey = searchingKey.charAt(0)+" "+searchingKey.substring(1);
         }
 
-        // searching
-        String foundResults = "";
-        for (String singleReplacement : replacementsForSearch) {
-            if(singleReplacement.toLowerCase().contains(searchingKey.toLowerCase())) {
-                if(foundResults.isEmpty()) foundResults += singleReplacement;
-                else foundResults += "<br><br>"+singleReplacement;
-            }
-        }
-        return foundResults;
+        return searchingKey;
     }
 
-    private void updateSearchBar() {
+    private String updateSearchBar() {
         SharedPreferences sharedPref = this.getSharedPreferences("sharedPrefs", 0);
         String searchKey = sharedPref.getString(getString(R.string.searchKey), "");
 
         EditText searchBar = findViewById(R.id.editText_searchBar);
         searchBar.setText(searchKey);
+
+        return searchKey;
     }
 
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

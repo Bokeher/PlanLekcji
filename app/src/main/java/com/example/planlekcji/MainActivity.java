@@ -72,32 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize ViewPager2.
         viewPager = findViewById(R.id.pager);
-        viewPager.setOffscreenPageLimit(6);
+        viewPager.setOffscreenPageLimit(5);
 
-        mainViewModel.getCombinedLiveData().observe(this, bool -> {
-            if(bool)  {
-                lessonRows = mainViewModel.getLessonRows();
-                replacementsForTimetable = mainViewModel.getReplacementsForTimetableValue();
-                replacements = mainViewModel.getReplacementsValue();
-
-                if(lessonRows != null && replacementsForTimetable != null && replacements != null) {
-
-                    setReplacements();
-                    setEventListenerToSearchBar();
-                    searchReplacements(updateSearchBar());
-
-                    setAdapterToViewPager();
-
-                    if(mainViewModel.getSelectedTabNumber() == 0) setCurrentDay();
-                    else {
-                        viewPager.setCurrentItem(mainViewModel.getSelectedTabNumber()-1, false);
-                    }
-
-                    setHeadersToTabLayout();
-                    findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+        observeAndHandleLiveDataChanges();
 
         // Set event listeners for various UI elements.
         setEventListenerToSettingsButton();
@@ -124,6 +101,33 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         mainViewModel.setSelectedTabNumber(tabLayout.getSelectedTabPosition()+1);
+    }
+
+    private void observeAndHandleLiveDataChanges() {
+        mainViewModel.getCombinedLiveData().observe(this, bool -> {
+            if(bool)  {
+                lessonRows = mainViewModel.getLessonRows();
+                replacementsForTimetable = mainViewModel.getReplacementsForTimetableValue();
+                replacements = mainViewModel.getReplacementsValue();
+
+                if(lessonRows != null && replacementsForTimetable != null && replacements != null) {
+
+                    setReplacements();
+                    setEventListenerToSearchBar();
+                    searchReplacements(updateSearchBar());
+
+                    setAdapterToViewPager();
+
+                    if(mainViewModel.getSelectedTabNumber() == 0) setCurrentDay();
+                    else {
+                        viewPager.setCurrentItem(mainViewModel.getSelectedTabNumber()-1, false);
+                    }
+
+                    setHeadersToTabLayout();
+                    findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     /**

@@ -2,7 +2,6 @@ package com.example.planlekcji.MainApp.Replacements;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.example.planlekcji.MainActivity;
 import com.example.planlekcji.R;
@@ -57,7 +56,6 @@ public class ProcessReplacementData {
         if(!needsToContinue()) return null;
         // this method also gets class token from shared preferences
 
-        Log.e("run", classToken);
         List<ReplacementToTimetable> resList = new ArrayList<>();
 
         for (String teacherAndHisReplacements : replacements) {
@@ -83,8 +81,6 @@ public class ProcessReplacementData {
                 }
             }
         }
-
-        Log.e("order", "endOfProcessing");
 
         return resList;
     }

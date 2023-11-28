@@ -11,7 +11,7 @@ import com.example.planlekcji.MainApp.Replacements.ProcessReplacementData;
 import com.example.planlekcji.MainApp.Replacements.ReplacementDataDownloader;
 import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
 import com.example.planlekcji.MainApp.RetryHandler;
-import com.example.planlekcji.MainApp.Timetable.Lessons;
+import com.example.planlekcji.MainApp.Timetable.LessonRow;
 import com.example.planlekcji.MainApp.Timetable.ProcessTimetableData;
 import com.example.planlekcji.MainApp.Timetable.TimetableDataDownloader;
 
@@ -22,7 +22,7 @@ public class MainViewModel extends ViewModel {
     // downloaded data
     private MutableLiveData<List<String>> replacements = new MutableLiveData<>();
     private MutableLiveData<List<ReplacementToTimetable>> replacementsForTimetable = new MutableLiveData<>();
-    private MutableLiveData<Lessons> timetableLessons = new MutableLiveData<>();
+    private MutableLiveData<List<LessonRow>> lessonRows = new MutableLiveData<>();
     private DoubleLiveData doubleLiveData = new DoubleLiveData();
 
     // selected tab
@@ -70,10 +70,10 @@ public class MainViewModel extends ViewModel {
             public void onDownloadComplete(Document document) {
                 // Process timetable data
                 ProcessTimetableData processTimetableData = new ProcessTimetableData(document);
-                Lessons lessons = processTimetableData.getLessons();
+                List<LessonRow> lessonRows = processTimetableData.getLessonRows();
 
                 // Update LiveData
-                timetableLessons.postValue(lessons);
+                MainViewModel.this.lessonRows.postValue(lessonRows);
 
                 new Handler(Looper.getMainLooper()).post(() -> doubleLiveData.setData2Received(true));
             }
@@ -98,8 +98,8 @@ public class MainViewModel extends ViewModel {
         return replacementsForTimetable.getValue();
     }
 
-    public Lessons getTimetableLessonsValue() {
-        return timetableLessons.getValue();
+    public List<LessonRow> getLessonRows() {
+        return lessonRows.getValue();
     }
 
     public void setSelectedTabNumber(int selectedTabNumber) {

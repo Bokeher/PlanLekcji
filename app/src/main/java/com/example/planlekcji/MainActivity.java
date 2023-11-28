@@ -22,7 +22,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
 import com.example.planlekcji.MainApp.Timetable.Adapter;
-import com.example.planlekcji.MainApp.Timetable.Lessons;
+import com.example.planlekcji.MainApp.Timetable.LessonRow;
 import com.example.planlekcji.Settings.SettingsActivity;
 import com.example.planlekcji.ViewModels.MainViewModel;
 import com.google.android.material.tabs.TabLayout;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     // downloaded data
     private List<String> replacements;
     private List<ReplacementToTimetable> replacementsForTimetable;
-    private Lessons lessons;
+    private List<LessonRow> lessonRows;
 
     private ViewPager2 viewPager;
     private MainViewModel mainViewModel;
@@ -76,11 +76,11 @@ public class MainActivity extends AppCompatActivity {
 
         mainViewModel.getCombinedLiveData().observe(this, bool -> {
             if(bool)  {
-                lessons = mainViewModel.getTimetableLessonsValue();
+                lessonRows = mainViewModel.getLessonRows();
                 replacementsForTimetable = mainViewModel.getReplacementsForTimetableValue();
                 replacements = mainViewModel.getReplacementsValue();
 
-                if(lessons != null && replacementsForTimetable != null && replacements != null) {
+                if(lessonRows != null && replacementsForTimetable != null && replacements != null) {
 
                     setReplacements();
                     setEventListenerToSearchBar();
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAdapterToViewPager() {
-        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessons, replacementsForTimetable);
+        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonRows, replacementsForTimetable);
         viewPager.setAdapter(adapter);
     }
 

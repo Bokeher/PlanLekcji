@@ -13,27 +13,25 @@ import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
 import java.util.List;
 
 public class Adapter extends FragmentStateAdapter {
-    private Lessons timetableData;
+    private List<LessonRow> lessonRows;
     private List<ReplacementToTimetable> replacementsForTimetable;
 
-    public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, Lessons timetableData, List<ReplacementToTimetable> replacementsForTimetable) {
+    public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, List<LessonRow> lessonRows, List<ReplacementToTimetable> replacementsForTimetable) {
         super(fragmentManager, lifecycle);
-        this.timetableData = timetableData;
+        this.lessonRows = lessonRows;
         this.replacementsForTimetable = replacementsForTimetable;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        if (timetableData == null || timetableData.getLessonNumbers() == null || timetableData.getLessonNumbers().get(0) == null) {
+        if (lessonRows == null || lessonRows.get(0).getLessonNumbers() == null || lessonRows.get(0) == null) {
             return new Fragment();
         }
 
-//        System.out.println("dawdaw");
-
-        Fragment fragment = new LessonFragment(timetableData, replacementsForTimetable);
+        Fragment fragment = new LessonFragment(lessonRows, replacementsForTimetable);
         Bundle args = new Bundle();
-        args.putString(LessonFragment.TITLE, "Tab"+(position+1));
+        args.putString(LessonFragment.TITLE, "Tab" + (position + 1));
         fragment.setArguments(args);
         return fragment;
     }

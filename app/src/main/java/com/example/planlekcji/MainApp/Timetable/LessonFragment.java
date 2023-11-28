@@ -29,7 +29,6 @@ import com.example.planlekcji.R;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import java.util.Calendar;
 import java.util.List;
@@ -37,13 +36,13 @@ import java.util.List;
 public class LessonFragment extends Fragment {
 
     public static final String TITLE = "title";
-    private Lessons timetableData;
     private View view;
     private SharedPreferences sharedPreferences;
-    private List<ReplacementToTimetable> replacementsForTimetable;
+    List<LessonRow> lessonRows;
+    List<ReplacementToTimetable> replacementsForTimetable;
 
-    public LessonFragment(Lessons timetableData, List<ReplacementToTimetable> replacementsForTimetable) {
-        this.timetableData = timetableData;
+    public LessonFragment(List<LessonRow> lessonRows, List<ReplacementToTimetable> replacementsForTimetable) {
+        this.lessonRows = lessonRows;
         this.replacementsForTimetable = replacementsForTimetable;
     }
 
@@ -64,34 +63,34 @@ public class LessonFragment extends Fragment {
         sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs",0);
         int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
 
-        List<Elements> dataList = null;
+        int mapKey = 0;
         switch (tabNumber) {
             case 1:
-                dataList = timetableData.getMonday();
+                mapKey = LessonRow.MONDAY;
                 break;
             case 2:
-                dataList = timetableData.getTuesday();
+                mapKey = LessonRow.TUESDAY;
                 break;
             case 3:
-                dataList = timetableData.getWednesday();
+                mapKey = LessonRow.WEDNESDAY;
                 break;
             case 4:
-                dataList = timetableData.getThursday();
+                mapKey = LessonRow.THURSDAY;
                 break;
             case 5:
-                dataList = timetableData.getFriday();
+                mapKey = LessonRow.FRIDAY;
                 break;
         }
 
         int currentLesson = getCurrentLessonIndex(tabNumber);
 
-        for (int i = 0; i < dataList.size(); i++) {
+        for (int i = 0; i < lessonRows.size(); i++) {
             // get number of lesson and hour
-            String number = timetableData.getLessonNumbers().get(i).text();
-            String hour = timetableData.getLessonHours().get(i).text();
+            String number = lessonRows.get(i).getLessonNumbers().text();
+            String hour = lessonRows.get(i).getLessonHours().text();
 
             // get html to change <br> tag into \n
-            String html = dataList.get(i).html();
+            String html = lessonRows.get(i).getDayElements().get(mapKey).html();
 
             // for some reason when timetable is for classrooms or teachers there is br at the end of cell
             // this is to prevent that from making new lines

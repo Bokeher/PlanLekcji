@@ -86,11 +86,11 @@ public class LessonFragment extends Fragment {
 
         for (int i = 0; i < lessonRows.size(); i++) {
             // get number of lesson and hour
-            String number = lessonRows.get(i).getLessonNumbers().text();
-            String hour = lessonRows.get(i).getLessonHours().text();
+            String number = lessonRows.get(i).getLessonNumbers();
+            String hour = lessonRows.get(i).getLessonHours();
 
             // get html to change <br> tag into \n
-            String html = lessonRows.get(i).getDayElements().get(mapKey).html();
+            String html = lessonRows.get(i).getDayData().get(mapKey);
 
             // for some reason when timetable is for classrooms or teachers there is br at the end of cell
             // this is to prevent that from making new lines

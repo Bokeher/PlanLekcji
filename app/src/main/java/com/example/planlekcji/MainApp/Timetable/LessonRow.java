@@ -1,13 +1,11 @@
 package com.example.planlekcji.MainApp.Timetable;
 
-import org.jsoup.nodes.Element;
-
 import java.util.Map;
 
 public class LessonRow {
-    private Element lessonNumbers;
-    private Element lessonHours;
-    private Map<Integer, Element> dayElements;
+    private String lessonNumbers;
+    private String lessonHours;
+    private Map<Integer, String> dayData;
 
     public static final int MONDAY = 1;
     public static final int TUESDAY = 2;
@@ -15,25 +13,25 @@ public class LessonRow {
     public static final int THURSDAY = 4;
     public static final int FRIDAY = 5;
 
-    public LessonRow(Element lessonNumbers, Element lessonHours, Map<Integer, Element> dayElements) {
+    public LessonRow(String lessonNumbers, String lessonHours, Map<Integer, String> dayData) {
         this.lessonNumbers = lessonNumbers;
         this.lessonHours = lessonHours;
-        this.dayElements = dayElements;
+        this.dayData = dayData;
     }
 
-    public Element getLessonNumbers() {
+    public String getLessonNumbers() {
         return lessonNumbers;
     }
 
-    public Element getLessonHours() {
+    public String getLessonHours() {
         return lessonHours;
     }
 
-    public Element getDayElement(int day) {
-        return dayElements.get(day);
+    public String getDayElement(int day) {
+        return dayData.get(day);
     }
 
-    public Map<Integer, Element> getDayElements() {
-        return dayElements;
+    public Map<Integer, String> getDayData() {
+        return dayData;
     }
 }

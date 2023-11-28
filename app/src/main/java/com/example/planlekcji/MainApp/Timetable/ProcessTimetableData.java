@@ -31,17 +31,17 @@ public class ProcessTimetableData {
     }
 
     private LessonRow createLessonRow(Element tr) {
-        Map<Integer, Element> dayElements = new HashMap<>();
+        Map<Integer, String> dayElements = new HashMap<>();
 
         int[] dayNumbs = { LessonRow.MONDAY, LessonRow.TUESDAY, LessonRow.WEDNESDAY, LessonRow.THURSDAY, LessonRow.FRIDAY };
         for (int dayNumb : dayNumbs) {
             String searchingPhrase = "td:nth-child(" + (dayNumb+2) + ")";
-            dayElements.put(dayNumb, tr.selectFirst(searchingPhrase));
+            dayElements.put(dayNumb, tr.selectFirst(searchingPhrase).html());
         }
 
         return new LessonRow(
-            tr.selectFirst("td:nth-child(1)"),
-            tr.selectFirst("td:nth-child(2)"),
+            tr.selectFirst("td:nth-child(1)").text(),
+            tr.selectFirst("td:nth-child(2)").text(),
             dayElements
         );
     }

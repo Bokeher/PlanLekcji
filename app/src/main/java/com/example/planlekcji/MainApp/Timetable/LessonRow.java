@@ -2,10 +2,9 @@ package com.example.planlekcji.MainApp.Timetable;
 
 import org.jsoup.nodes.Element;
 
-import java.io.Serializable;
 import java.util.Map;
 
-public class LessonRow implements Serializable {
+public class LessonRow {
     private Element lessonNumbers;
     private Element lessonHours;
     private Map<Integer, Element> dayElements;

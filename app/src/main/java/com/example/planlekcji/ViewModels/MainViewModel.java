@@ -2,7 +2,6 @@ package com.example.planlekcji.ViewModels;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -11,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.planlekcji.MainApp.Replacements.ProcessReplacementData;
 import com.example.planlekcji.MainApp.Replacements.ReplacementDataDownloader;
 import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
+import com.example.planlekcji.MainApp.RetryHandler;
 import com.example.planlekcji.MainApp.Timetable.Lessons;
 import com.example.planlekcji.MainApp.Timetable.ProcessTimetableData;
 import com.example.planlekcji.MainApp.Timetable.TimetableDataDownloader;
@@ -19,12 +19,18 @@ import org.jsoup.nodes.Document;
 
 import java.util.List;
 public class MainViewModel extends ViewModel {
+    // downloaded data
     private MutableLiveData<List<String>> replacements = new MutableLiveData<>();
     private MutableLiveData<List<ReplacementToTimetable>> replacementsForTimetable = new MutableLiveData<>();
     private MutableLiveData<Lessons> timetableLessons = new MutableLiveData<>();
+    private DoubleLiveData doubleLiveData = new DoubleLiveData();
+
+    // selected tab
     private MutableLiveData<Integer> selectedTabNumber = new MutableLiveData<>();
 
-    private DoubleLiveData doubleLiveData = new DoubleLiveData();
+    // retry handlers
+    RetryHandler replaceRetryHandler = replaceRetryHandler = new RetryHandler(() -> startReplacementDownload());
+    RetryHandler timetableRetryHandler = timetableRetryHandler = new RetryHandler(() -> startReplacementDownload());
 
     public MainViewModel() {
         selectedTabNumber.setValue(0); // set default
@@ -52,7 +58,7 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onDownloadFailed() {
-                Log.e("ERR", "Replacement Download Error");
+                replaceRetryHandler.handleRetry();
             }
         });
         new Thread(downloader).start();
@@ -74,7 +80,7 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onDownloadFailed() {
-                Log.e("ERR", "Timetable Download Error");
+                timetableRetryHandler.handleRetry();
             }
         });
         new Thread(downloader).start();

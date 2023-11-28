@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -59,9 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Check for internet connection; exit the app if not connected.
         if (!isOnline()) {
-            Toast.makeText(this, "Wymagane połączenie z internetem.", Toast.LENGTH_LONG).show();
-            MainActivity.this.finish();
-            System.exit(0);
+            ToastUtils.showToast(this, "Wymagane połączenie z internetem.", true);
         }
 
         // Lock the orientation of the screen to portrait mode.

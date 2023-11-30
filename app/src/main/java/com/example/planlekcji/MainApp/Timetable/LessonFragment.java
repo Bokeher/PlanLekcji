@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.StrikethroughSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -114,30 +115,47 @@ public class LessonFragment extends Fragment {
                 for (int j = 0; j < replacementsForTimetable.size(); j++) {
                     ReplacementToTimetable replacement = replacementsForTimetable.get(j);
                     if(replacement.getDayNumber() == tabNumber && replacement.getLessonNumber() == i+1) {
-                        if(replacement.getGroupNumber() == 0) {
+                        int groupNumber = replacement.getGroupNumber();
+                        if(groupNumber == 0) {
                             str = new SpannableStringBuilder(data);
                             str.setSpan(new StrikethroughSpan(), 0, str.length(), 0);
                             if(!replacement.getExtraInfo().equals("")) str.append("\n").append(replacement.getExtraInfo());
                         } else {
-                            str = new SpannableStringBuilder();
                             String[] lines = data.split("\n");
 
-                            for (int k = 0; k < lines.length; k++) {
-                                if (k == replacement.getGroupNumber() - 1) {
-                                    SpannableString spannableString = new SpannableString(lines[k]);
-                                    StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
-                                    spannableString.setSpan(strikethroughSpan, 0, spannableString.length(), 0);
-                                    str.append(spannableString);
+                            if(str != null) {
+                                int beginIndex = 0;
+                                int foundIndex = 1;
 
-                                    if(!replacement.getExtraInfo().equals("")) {
-                                        str.append("\n").append(replacement.getExtraInfo());
+                                int iterator = 0;
+                                while(beginIndex < foundIndex) {
+                                    foundIndex = str.toString().indexOf("\n");
+
+                                    if(iterator == groupNumber - 1) {
+                                        str.setSpan(new StrikethroughSpan(), beginIndex, foundIndex, 0);
                                     }
-                                } else {
-                                    str.append(lines[k]);
-                                }
 
-                                if (k < lines.length - 1) {
-                                    str.append("\n");
+                                    iterator++;
+                                    beginIndex = foundIndex;
+                                }
+                            } else {
+                                str = new SpannableStringBuilder();
+
+                                for (int k = 0; k < lines.length; k++) {
+                                    if (k == replacement.getGroupNumber() - 1) {
+                                        String line = lines[k];
+                                        str.append(getStrikethroughSpannableString(line));
+
+                                        if(!replacement.getExtraInfo().equals("")) {
+                                            str.append("\n").append(replacement.getExtraInfo());
+                                        }
+                                    } else {
+                                        str.append(lines[k]);
+                                    }
+
+                                    if (k < lines.length - 1) {
+                                        str.append("\n");
+                                    }
                                 }
                             }
                         }
@@ -281,5 +299,12 @@ public class LessonFragment extends Fragment {
     private int dpToPx(int dp) {
         Resources r = getResources();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+    }
+
+    private SpannableString getStrikethroughSpannableString(String text) {
+        SpannableString spannableString = new SpannableString(text);
+        StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
+        spannableString.setSpan(strikethroughSpan, 0, spannableString.length(), 0);
+        return spannableString;
     }
 }

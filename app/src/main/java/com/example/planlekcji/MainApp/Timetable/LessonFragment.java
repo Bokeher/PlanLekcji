@@ -58,28 +58,29 @@ public class LessonFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         String argument = getArguments().getString(TITLE);
-        this.view = view;
         int tabNumber = Character.getNumericValue(argument.charAt(3));
+
+        this.view = view;
 
         sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs",0);
         int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
 
-        int mapKey = 0;
+        int dayNumber = 0;
         switch (tabNumber) {
             case 1:
-                mapKey = LessonRow.MONDAY;
+                dayNumber = LessonRow.MONDAY;
                 break;
             case 2:
-                mapKey = LessonRow.TUESDAY;
+                dayNumber = LessonRow.TUESDAY;
                 break;
             case 3:
-                mapKey = LessonRow.WEDNESDAY;
+                dayNumber = LessonRow.WEDNESDAY;
                 break;
             case 4:
-                mapKey = LessonRow.THURSDAY;
+                dayNumber = LessonRow.THURSDAY;
                 break;
             case 5:
-                mapKey = LessonRow.FRIDAY;
+                dayNumber = LessonRow.FRIDAY;
                 break;
         }
 
@@ -91,17 +92,17 @@ public class LessonFragment extends Fragment {
             String hour = lessonRows.get(i).getLessonHours();
 
             // get html to change <br> tag into \n
-            String html = lessonRows.get(i).getDayData().get(mapKey);
+            String html = lessonRows.get(i).getDayData().get(dayNumber);
 
             // for some reason when timetable is for classrooms or teachers there is br at the end of cell
             // this is to prevent that from making new lines
-            if(timetableType == 1 || timetableType == 2) {
+            if(timetableType != 0) {
                 html = html.replace("<br>", "");
             }
-            // create pointer for \n (\n cant be used here)
+            // create pointer for line breaks (\n cant be used here)
             html = html.replace("<br>", "|nLine|");
 
-            // create html document to later change it into text
+            // create html document to remove unnecessary html tags
             Document doc = Jsoup.parse(html);
 
             // replace pointer for \n
@@ -130,6 +131,8 @@ public class LessonFragment extends Fragment {
                                 int iterator = 0;
                                 while(beginIndex < foundIndex) {
                                     foundIndex = str.toString().indexOf("\n");
+
+                                    if(foundIndex == -1) break;
 
                                     if(iterator == groupNumber - 1) {
                                         str.setSpan(new StrikethroughSpan(), beginIndex, foundIndex, 0);
@@ -199,13 +202,12 @@ public class LessonFragment extends Fragment {
             lessonData.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             lessonData.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
 
-            if(str != null) {
-                lessonData.setText(str);
-            }
+            if(str != null) lessonData.setText(str);
             else lessonData.setText(data);
+
             lessonData.setPadding(0, 0, 0, dpToPx(16));
 
-            if(currentLesson - 1 == i) {
+            if(i == currentLesson - 1) {
                 int bgColor =  ContextCompat.getColor(getActivity(), R.color.primaryDark);
                 int textColor = ContextCompat.getColor(getActivity(), R.color.black);
 
@@ -279,7 +281,10 @@ public class LessonFragment extends Fragment {
             "19:20",
             "20:10",
             "21:00",
-            "21:50"
+            "21:50",
+            "22:40",
+            "23:30",
+            "00:20"
         };
 
         for (int i = 0; i < lessonEndTimers.length; i++) {

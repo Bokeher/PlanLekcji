@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -110,22 +111,22 @@ public class MainActivity extends AppCompatActivity {
                 replacementsForTimetable = mainViewModel.getReplacementsForTimetableValue();
                 replacements = mainViewModel.getReplacementsValue();
 
-                if(lessonRows != null && replacementsForTimetable != null && replacements != null) {
+                SharedPreferences sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs",0);
+                int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
 
-                    setReplacements();
-                    setEventListenerToSearchBar();
-                    searchReplacements(updateSearchBar());
+                if(lessonRows == null || replacements == null || (replacementsForTimetable == null && timetableType == 0)) return;
 
-                    setAdapterToViewPager();
+                setReplacements();
+                setEventListenerToSearchBar();
+                searchReplacements(updateSearchBar());
 
-                    if(mainViewModel.getSelectedTabNumber() == 0) setCurrentDay();
-                    else {
-                        viewPager.setCurrentItem(mainViewModel.getSelectedTabNumber()-1, false);
-                    }
+                setAdapterToViewPager();
 
-                    setHeadersToTabLayout();
-                    findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-                }
+                if(mainViewModel.getSelectedTabNumber() == 0) setCurrentDay();
+                else viewPager.setCurrentItem(mainViewModel.getSelectedTabNumber() - 1, false);
+
+                setHeadersToTabLayout();
+                findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
             }
         });
     }

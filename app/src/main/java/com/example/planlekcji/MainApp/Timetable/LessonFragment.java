@@ -111,7 +111,7 @@ public class LessonFragment extends Fragment {
             boolean visibility = sharedPreferences.getBoolean(getString(R.string.replacementVisibilityOnTimetable), false);
 
             SpannableStringBuilder str = null;
-            if(visibility) {
+            if(visibility && timetableType == 0) {
                 for (int j = 0; j < replacementsForTimetable.size(); j++) {
                     ReplacementToTimetable replacement = replacementsForTimetable.get(j);
                     if(replacement.getDayNumber() == tabNumber && replacement.getLessonNumber() == i+1) {

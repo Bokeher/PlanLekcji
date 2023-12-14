@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -107,59 +108,17 @@ public class LessonFragment extends Fragment {
             // replace pointer for \n
             String data = doc.text().replace("|nLine|", "\n");
 
-            // showing replacements
-            boolean visibility = sharedPreferences.getBoolean(getString(R.string.replacementVisibilityOnTimetable), false);
+            SpannableStringBuilder str = new SpannableStringBuilder(data);
 
-            SpannableStringBuilder str = null;
-            if(visibility && timetableType == 0) {
-                for (int j = 0; j < replacementsForTimetable.size(); j++) {
-                    ReplacementToTimetable replacement = replacementsForTimetable.get(j);
-                    if(replacement.getDayNumber() == tabNumber && replacement.getLessonNumber() == i+1) {
-                        int groupNumber = replacement.getGroupNumber();
-                        if(groupNumber == 0) {
-                            str = new SpannableStringBuilder(data);
-                            str.setSpan(new StrikethroughSpan(), 0, str.length(), 0);
-                            if(!replacement.getExtraInfo().equals("")) str.append("\n").append(replacement.getExtraInfo());
+            if(shouldShowReplacementsOnTimetable()) {
+                for (ReplacementToTimetable replacement : replacementsForTimetable) {
+                    if(isLessonWithReplacement(replacement, tabNumber, i)) {
+                        // 0 means there is no group division
+                        if(replacement.getGroupNumber() == 0) {
+                            str.setSpan(new StrikethroughSpan(), 0, str.length(), 0); // apply strikethrough to entire lesson
+                            appendExtraInfoIfNeeded(str, replacement.getExtraInfo());
                         } else {
-                            String[] lines = data.split("\n");
-
-                            if(str != null) {
-                                int beginIndex = 0;
-                                int foundIndex = 1;
-
-                                int iterator = 0;
-                                while(beginIndex < foundIndex) {
-                                    foundIndex = str.toString().indexOf("\n");
-
-                                    if(foundIndex == -1) break;
-
-                                    if(iterator == groupNumber - 1) {
-                                        str.setSpan(new StrikethroughSpan(), beginIndex, foundIndex, 0);
-                                    }
-
-                                    iterator++;
-                                    beginIndex = foundIndex;
-                                }
-                            } else {
-                                str = new SpannableStringBuilder();
-
-                                for (int k = 0; k < lines.length; k++) {
-                                    if (k == replacement.getGroupNumber() - 1) {
-                                        String line = lines[k];
-                                        str.append(getStrikethroughSpannableString(line));
-
-                                        if(!replacement.getExtraInfo().equals("")) {
-                                            str.append("\n").append(replacement.getExtraInfo());
-                                        }
-                                    } else {
-                                        str.append(lines[k]);
-                                    }
-
-                                    if (k < lines.length - 1) {
-                                        str.append("\n");
-                                    }
-                                }
-                            }
+                            applyStrikethroughToCorrectPartsOfSpan(str, replacement);
                         }
                     }
                 }
@@ -184,25 +143,24 @@ public class LessonFragment extends Fragment {
 
             TextView lessonNumber = new TextView(getActivity());
             lessonNumber.setId(R.id.textViewLessonNumber);
+            lessonNumber.setText(number);
             lessonNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 36f);
             lessonNumber.setGravity(Gravity.CENTER);
-            lessonNumber.setText(number);
             lessonNumber.setPadding(dpToPx(10), 0, 0, 0);
 
             TextView lessonHours = new TextView(getActivity());
             lessonHours.setId(R.id.textViewLessonHours);
-            lessonHours.setLayoutParams(layoutParams_matchParent2);
-            lessonHours.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             lessonHours.setText(hour);
+            lessonHours.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            lessonHours.setLayoutParams(layoutParams_matchParent2);
 
             TextView lessonData = new TextView(getActivity());
             lessonData.setId(R.id.textViewLessonData);
-            lessonData.setLayoutParams(layoutParams_matchParent3);
-            lessonData.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            lessonData.setText(str);
             lessonData.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
+            lessonData.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            lessonData.setLayoutParams(layoutParams_matchParent3);
 
-            if(str != null) lessonData.setText(str);
-            else lessonData.setText(data);
 
             lessonData.setPadding(0, 0, 0, dpToPx(16));
 
@@ -245,6 +203,42 @@ public class LessonFragment extends Fragment {
             cardView.setLayoutParams(layoutParams);
             linearLayout.addView(cardView);
         }
+    }
+
+    private boolean shouldShowReplacementsOnTimetable() {
+        boolean visibility = sharedPreferences.getBoolean(getString(R.string.replacementVisibilityOnTimetable), false);
+        int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
+        return visibility && timetableType == 0;
+    }
+
+    private boolean isLessonWithReplacement(ReplacementToTimetable replacement, int tabNumber, int i) {
+        return replacement.getDayNumber() == tabNumber && replacement.getLessonNumber() == i + 1;
+    }
+
+    private void applyStrikethroughToCorrectPartsOfSpan(SpannableStringBuilder str, ReplacementToTimetable replacement) {
+        int beginIndex = 0;
+        int foundIndex = 0;
+
+        for (int k = 0; foundIndex != -1 && beginIndex < str.length(); k++) {
+            foundIndex = str.toString().indexOf("\n", beginIndex);
+
+            if (foundIndex == -1) {
+                foundIndex = str.length();
+            }
+
+            if (k == replacement.getGroupNumber() - 1) {
+                str.setSpan(new StrikethroughSpan(), beginIndex, foundIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                appendExtraInfoIfNeeded(str, replacement.getExtraInfo());
+            }
+
+            beginIndex = foundIndex + 1;
+        }
+    }
+
+    private void appendExtraInfoIfNeeded(SpannableStringBuilder str, String extraInfo) {
+        if(extraInfo.equals("")) return;
+
+        str.append("\n"+extraInfo);
     }
 
     /**
@@ -303,12 +297,5 @@ public class LessonFragment extends Fragment {
     private int dpToPx(int dp) {
         Resources r = getResources();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
-    }
-
-    private SpannableString getStrikethroughSpannableString(String text) {
-        SpannableString spannableString = new SpannableString(text);
-        StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
-        spannableString.setSpan(strikethroughSpan, 0, spannableString.length(), 0);
-        return spannableString;
     }
 }

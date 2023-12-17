@@ -188,18 +188,18 @@ public class ProcessReplacementData {
         return Arrays.asList(data);
     }
 
-    private boolean skipThisReplacement(Calendar calendar) {
+    private boolean skipThisReplacement(Calendar replacementCalendar) {
         Calendar currentCalendar = Calendar.getInstance();
 
-        int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
+        int replacementWeekNumber = replacementCalendar.get(Calendar.WEEK_OF_YEAR);
         int currentWeekNumber = currentCalendar.get(Calendar.WEEK_OF_YEAR);
 
         int currentDayOfWeek = currentCalendar.get(Calendar.DAY_OF_WEEK);
-        if(currentDayOfWeek == Calendar.SUNDAY || currentDayOfWeek == Calendar.SATURDAY) {
-            weekNumber++;
-        }
 
-        return weekNumber > currentWeekNumber;
+        // only check for saturday, because week starts from sunday
+        if(currentDayOfWeek == Calendar.SATURDAY) currentWeekNumber++;
+
+        return replacementWeekNumber != currentWeekNumber;
     }
 
     private void removeUnwantedData(Elements tds) {

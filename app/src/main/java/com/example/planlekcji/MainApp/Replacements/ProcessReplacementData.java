@@ -196,8 +196,9 @@ public class ProcessReplacementData {
 
         int currentDayOfWeek = currentCalendar.get(Calendar.DAY_OF_WEEK);
 
-        // only check for saturday, because week starts from sunday
-        if(currentDayOfWeek == Calendar.SATURDAY) currentWeekNumber++;
+        if(currentDayOfWeek == Calendar.SATURDAY || currentDayOfWeek == Calendar.SUNDAY) {
+            currentWeekNumber++;
+        }
 
         return replacementWeekNumber != currentWeekNumber;
     }

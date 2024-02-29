@@ -24,6 +24,8 @@ import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
 import com.example.planlekcji.MainApp.Timetable.Adapter;
 import com.example.planlekcji.MainApp.Timetable.LessonRow;
 import com.example.planlekcji.Settings.SettingsActivity;
+import com.example.planlekcji.Tools.BoyerMooreSearch;
+import com.example.planlekcji.Tools.ToastUtils;
 import com.example.planlekcji.ViewModels.MainViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -179,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setEventListenerToSearchBar() {
         EditText searchBar = findViewById(R.id.editText_searchBar);
-        TextView textView_resultsNumber = findViewById(R.id.textView_noResults);
+        TextView textView_noResults = findViewById(R.id.textView_noResults);
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -188,10 +190,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     String foundData = searchReplacements(String.valueOf(charSequence));
                     if(foundData.isEmpty() || charSequence.equals("")) {
-                        textView_resultsNumber.setVisibility(View.VISIBLE);
+                        textView_noResults.setVisibility(View.VISIBLE);
                         setReplacements();
                     } else {
-                        textView_resultsNumber.setVisibility(View.GONE);
+                        textView_noResults.setVisibility(View.GONE);
                         setReplacements(foundData);
                     }
                 }
@@ -263,18 +265,20 @@ public class MainActivity extends AppCompatActivity {
     private String searchReplacements(String searchingKey) {
         if(searchingKey.isEmpty()) return "";
 
-        // all this in case user types '4ptn' instead of '4 ptn'
-        searchingKey = handleOtherUserInput(searchingKey);
+        // in case user types '4ptn' instead of '4 ptn'
+        searchingKey = handleOtherUserInput(searchingKey).toLowerCase();
+
+        BoyerMooreSearch boyerMooreSearch = new BoyerMooreSearch();
 
         // searching
-        boolean firstIteration = true;
         StringBuilder foundResults = new StringBuilder();
-        for (String singleReplacement : replacements) {
-            if (firstIteration) {
-                firstIteration = false;
-                continue;
-            }
-            if(singleReplacement.toLowerCase().contains(searchingKey.toLowerCase())) {
+        for (int i = 1; i < replacements.size(); i++) {
+            String singleReplacement = replacements.get(i);
+
+            String text = singleReplacement.toLowerCase();
+            String pattern = searchingKey;
+
+            if(boyerMooreSearch.search(text, pattern)) {
                 if(foundResults.length() == 0) foundResults.append(singleReplacement);
                 else foundResults.append("<br><br>").append(singleReplacement);
             }

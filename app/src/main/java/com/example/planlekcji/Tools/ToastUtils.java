@@ -1,4 +1,4 @@
-package com.example.planlekcji;
+package com.example.planlekcji.Tools;
 
 import android.app.Activity;
 import android.content.Context;

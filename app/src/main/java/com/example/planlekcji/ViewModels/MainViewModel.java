@@ -29,8 +29,8 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<Integer> selectedTabNumber = new MutableLiveData<>();
 
     // retry handlers
-    RetryHandler replaceRetryHandler = replaceRetryHandler = new RetryHandler(() -> startReplacementDownload());
-    RetryHandler timetableRetryHandler = timetableRetryHandler = new RetryHandler(() -> startReplacementDownload());
+    RetryHandler replaceRetryHandler = new RetryHandler(() -> startReplacementDownload());
+    RetryHandler timetableRetryHandler = new RetryHandler(() -> startReplacementDownload());
 
     public MainViewModel() {
         selectedTabNumber.setValue(0); // set default

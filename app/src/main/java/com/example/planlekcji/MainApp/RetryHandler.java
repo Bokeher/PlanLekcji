@@ -3,7 +3,7 @@ package com.example.planlekcji.MainApp;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.example.planlekcji.ToastUtils;
+import com.example.planlekcji.Tools.ToastUtils;
 import com.example.planlekcji.MainActivity;
 
 public class RetryHandler {

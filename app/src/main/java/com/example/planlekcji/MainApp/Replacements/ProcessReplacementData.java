@@ -122,7 +122,7 @@ public class ProcessReplacementData {
         }
 
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             Date date = sdf.parse(dateStr);
             calendar.setTime(date);
         } catch (ParseException ex) {

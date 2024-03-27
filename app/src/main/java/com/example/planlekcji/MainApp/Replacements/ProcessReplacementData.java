@@ -38,7 +38,6 @@ public class ProcessReplacementData {
     }
 
     public void process() {
-        // get all data and teacher names
         Elements tds = document.select("table tr td");
         Elements teachers = document.select(".st1");
 
@@ -47,13 +46,20 @@ public class ProcessReplacementData {
 
         removeUnwantedData(tds);
 
-        // String containing all replacements with html tags (used for showing all replacements in replacement tab)
+        // in case of 0 replacements just return empty lists
+        if(title.equals("")) {
+            replacements = new ArrayList<>();
+            replacements.add(teachers.get(0).text()); // teachers are in st1 class and the info about zero replacements too
+            replacementsForTimetable = new ArrayList<>();
+            return;
+        }
+
         replacements = processReplacements(tds, teachers);
         replacementsForTimetable = processReplacementsForTimetable(replacements, singleDay, title);
     }
 
     private List<ReplacementToTimetable> processReplacementsForTimetable(List<String> replacements, boolean singleDay, String title) {
-        if(!needsToContinue()) return null;
+        if(!needsToContinue()) return new ArrayList<>();
         // this method also gets class token from shared preferences
 
         List<ReplacementToTimetable> resList = new ArrayList<>();

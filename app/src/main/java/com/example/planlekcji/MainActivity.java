@@ -7,9 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,6 +23,7 @@ import com.example.planlekcji.MainApp.Timetable.Adapter;
 import com.example.planlekcji.MainApp.Timetable.LessonRow;
 import com.example.planlekcji.Settings.SettingsActivity;
 import com.example.planlekcji.Tools.BoyerMooreSearch;
+import com.example.planlekcji.Tools.DelayedSearchTextWatcher;
 import com.example.planlekcji.Tools.ToastUtils;
 import com.example.planlekcji.ViewModels.MainViewModel;
 import com.google.android.material.tabs.TabLayout;
@@ -182,28 +181,21 @@ public class MainActivity extends AppCompatActivity {
     private void setEventListenerToSearchBar() {
         EditText searchBar = findViewById(R.id.editText_searchBar);
         TextView textView_noResults = findViewById(R.id.textView_noResults);
-        searchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length() == 0) {
+
+        searchBar.addTextChangedListener(new DelayedSearchTextWatcher(query -> {
+            if(query.length() == 0) {
+                setReplacements();
+            } else {
+                String foundData = searchReplacements(query);
+                if(foundData.isEmpty() || query.equals("")) {
+                    textView_noResults.setVisibility(View.VISIBLE);
                     setReplacements();
                 } else {
-                    String foundData = searchReplacements(String.valueOf(charSequence));
-                    if(foundData.isEmpty() || charSequence.equals("")) {
-                        textView_noResults.setVisibility(View.VISIBLE);
-                        setReplacements();
-                    } else {
-                        textView_noResults.setVisibility(View.GONE);
-                        setReplacements(foundData);
-                    }
+                    textView_noResults.setVisibility(View.GONE);
+                    setReplacements(foundData);
                 }
             }
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            @Override
-            public void afterTextChanged(Editable editable) {}
-        });
+        }));
     }
 
     private void setHeadersToTabLayout() {

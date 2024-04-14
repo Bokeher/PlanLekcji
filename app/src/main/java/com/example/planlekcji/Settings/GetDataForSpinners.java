@@ -5,9 +5,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class GetDataForSpinners implements Runnable {
     private List<TimetableInfo> classInfoList = new ArrayList<>();
@@ -70,7 +72,7 @@ public class GetDataForSpinners implements Runnable {
 
             // sort all lists
             classInfoList.sort(Comparator.comparing(TimetableInfo::getToken));
-            teachersInfoList.sort(Comparator.comparing(TimetableInfo::getToken));
+            teachersInfoList.sort(Comparator.comparing(TimetableInfo::getToken, Collator.getInstance(new Locale("pl"))));
             classroomsInfoList.sort(Comparator.comparing(TimetableInfo::getToken));
         } catch (Exception e) {
             System.out.println(e);

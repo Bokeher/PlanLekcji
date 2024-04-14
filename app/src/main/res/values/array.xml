@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="timetableTypeSpinnerItems">
-        <item>Klasy</item>
-        <item>Nauczyciele</item>
-        <item>Sale</item>
+        <item>@string/classes</item>
+        <item>@string/teachers</item>
+        <item>@string/classrooms</item>
     </string-array>
     <string-array name="exampleClassesSpinnerItems">
         <item>1 ATN</item>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Plan lekcji</string>
+    <string name="timetable_header">Plan lekcji</string>
+    <string name="replacements_header">Zastępstwa</string>
+    <string name="settingsButton_description">Otwórz ustawienia</string>
+    <string name="mondayShortcut">Pon</string>
+    <string name="tuesdayShortcut">Wto</string>
+    <string name="wednesdayShortcut">Śrd</string>
+    <string name="fridayShortcut">Ptk</string>
+    <string name="thursdayShortcut">Czw</string>
+    <string name="searchHint_searchBar">Wyszukaj</string>
+    <string name="noResults_text">Brak wyników. Poniżej znajdują się wszystkie nieprzefiltrowane zastępstwa.</string>
+    <string name="settings_header">Ustawienia</string>
+    <string name="timetableType">Rodzaj planu</string>
+    <string name="selectClass">Wybierz klasę</string>
+    <string name="selectTeacher">Wybierz nauczyciela</string>
+    <string name="selectClassroom">Wybierz salę</string>
+    <string name="showReplacements">Pokaż zastępstwa na planie</string>
+    <string name="classes">Klasy</string>
+    <string name="teachers">Nauczyciele</string>
+    <string name="classrooms">Sale</string>
+    <string name="goBackButton_description">Powrót</string>
+    <string name="replacementsOnTimetable_title">Zastępstwa na planie</string>
+    <string name="replacementsOnTimetable_description">Widoczne są tylko zastępstwa dedykowane twojej klasie. Zastępstwa lekcji łączonych z innymi klasami nie są pokazywane.</string>
+</resources>

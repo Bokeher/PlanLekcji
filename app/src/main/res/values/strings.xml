@@ -1,14 +1,36 @@
 <resources>
-    <string name="app_name">Plan lekcji</string>
-    <string name="classTokenKey">classToken</string>
-    <string name="teacherTokenKey">teacherToken</string>
-    <string name="classroomTokenKey">classroomToken</string>
+    <string name="app_name">Timetable</string>
+    <string name="classTokenKey" translatable="false">classToken</string>
+    <string name="teacherTokenKey" translatable="false">teacherToken</string>
+    <string name="classroomTokenKey" translatable="false">classroomToken</string>
 
-    <string name="classTimetableUrlKey">classTimetableUrl</string>
-    <string name="teacherTimetableUrlKey">teacherTimetableUrl</string>
-    <string name="classroomTimetableUrlKey">classroomTimetableUrl</string>
+    <string name="classTimetableUrlKey" translatable="false">classTimetableUrl</string>
+    <string name="teacherTimetableUrlKey" translatable="false">teacherTimetableUrl</string>
+    <string name="classroomTimetableUrlKey" translatable="false">classroomTimetableUrl</string>
 
-    <string name="selectedTypeOfTimetableKey">selectedTypeOfTimetable</string>
-    <string name="replacementVisibilityOnTimetable">replacementVisibilityOnTimetable</string>
-    <string name="searchKey">searchingKey</string>
+    <string name="selectedTypeOfTimetableKey" translatable="false">selectedTypeOfTimetable</string>
+    <string name="replacementVisibilityOnTimetable" translatable="false">replacementVisibilityOnTimetable</string>
+    <string name="searchKey" translatable="false">searchingKey</string>
+    <string name="timetable_header">Timetable</string>
+    <string name="replacements_header">Replacements</string>
+    <string name="settingsButton_description">Open settings</string>
+    <string name="mondayShortcut">Mon</string>
+    <string name="tuesdayShortcut">Tue</string>
+    <string name="wednesdayShortcut">Wed</string>
+    <string name="thursdayShortcut">Thu</string>
+    <string name="fridayShortcut">Fri</string>
+    <string name="searchHint_searchBar">Search</string>
+    <string name="noResults_text">No results. Below are all unfiltered replacements.</string>
+    <string name="settings_header">Settings</string>
+    <string name="timetableType">Timetable type</string>
+    <string name="selectClass">Select class</string>
+    <string name="selectTeacher">Select teacher</string>
+    <string name="selectClassroom">Select classroom</string>
+    <string name="showReplacements">Show replacements on timetable</string>
+    <string name="classes">Classes</string>
+    <string name="teachers">Teachers</string>
+    <string name="classrooms">Classrooms</string>
+    <string name="goBackButton_description">Go back</string>
+    <string name="replacementsOnTimetable_title">Replacements on timetable</string>
+    <string name="replacementsOnTimetable_description">Only replacements dedicated to your class are visible. Replacements for combined lessons with other classes are not displayed.</string>
 </resources>

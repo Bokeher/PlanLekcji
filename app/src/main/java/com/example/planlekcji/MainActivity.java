@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                 setReplacements();
             } else {
                 String foundData = searchReplacements(query);
-                if(foundData.isEmpty() || query.equals("")) {
+                if(foundData.isEmpty()) {
                     textView_noResults.setVisibility(View.VISIBLE);
                     setReplacements();
                 } else {
@@ -206,19 +206,19 @@ public class MainActivity extends AppCompatActivity {
 
             switch (position) {
                 case 1:
-                    data = "Pon";
+                    data = getResources().getString(R.string.mondayShortcut);
                     break;
                 case 2:
-                    data = "Wto";
+                    data = getResources().getString(R.string.tuesdayShortcut);
                     break;
                 case 3:
-                    data = "Śrd";
+                    data = getResources().getString(R.string.wednesdayShortcut);
                     break;
                 case 4:
-                    data = "Czw";
+                    data = getResources().getString(R.string.thursdayShortcut);
                     break;
                 case 5:
-                    data = "Ptk";
+                    data = getResources().getString(R.string.fridayShortcut);
                     break;
             }
             tab.setText(data);
@@ -268,9 +268,8 @@ public class MainActivity extends AppCompatActivity {
             String singleReplacement = replacements.get(i);
 
             String text = singleReplacement.toLowerCase();
-            String pattern = searchingKey;
 
-            if(boyerMooreSearch.search(text, pattern)) {
+            if(boyerMooreSearch.search(text, searchingKey)) {
                 if(foundResults.length() == 0) foundResults.append(singleReplacement);
                 else foundResults.append("<br><br>").append(singleReplacement);
             }

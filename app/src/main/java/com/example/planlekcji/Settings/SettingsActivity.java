@@ -7,11 +7,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.Switch;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.planlekcji.R;
 
@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initReplacementVisibilitySwitch() {
-        Switch visibilitySwitch = findViewById(R.id.switch_showReplacementsOnTimetable);
+        SwitchCompat visibilitySwitch = findViewById(R.id.switch_showReplacementsOnTimetable);
 
         boolean visibility = sharedPref.getBoolean(getString(R.string.replacementVisibilityOnTimetable), false);
 
@@ -61,9 +61,9 @@ public class SettingsActivity extends AppCompatActivity {
             if(bool) {
                 new AlertDialog.Builder(this)
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle("Zastępstwa na planie")
-                        .setMessage("Na planie lekcji widoczne są tylko zastępstwa dedykowane twojej klasie. Zastępstwa lekcji łączonych z innymi klasami nie są pokazywane.")
-                        .setPositiveButton("Ok", (dialogInterface, i) -> {})
+                        .setTitle(getResources().getString(R.string.replacementsOnTimetable_title))
+                        .setMessage(getResources().getString(R.string.replacementsOnTimetable_description))
+                        .setPositiveButton(getResources().getString(android.R.string.ok), (dialogInterface, i) -> {})
                         .show();
             }
         });
@@ -107,9 +107,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
     }
 

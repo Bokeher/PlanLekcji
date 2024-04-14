@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
-        android:text="Ustawienia"
+        android:text="@string/settings_header"
         android:textSize="42sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
         android:gravity="center_vertical"
-        android:text="Rodzaj planu"
+        android:text="@string/timetableType"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView_settingsTitle"
         app:layout_constraintTop_toBottomOf="@+id/textView_settingsTitle" />
@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:gravity="center_vertical"
-        android:text="Wybierz klasę"
+        android:text="@string/selectClass"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView_selectTimetableType"
         app:layout_constraintTop_toBottomOf="@+id/textView_selectTimetableType" />
@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:gravity="center_vertical"
-        android:text="Wybierz nauczyciela"
+        android:text="@string/selectTeacher"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView_selectClass"
         app:layout_constraintTop_toBottomOf="@+id/textView_selectClass" />
@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:gravity="center_vertical"
-        android:text="Wybierz salę"
+        android:text="@string/selectClassroom"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView_selectTeacher"
         app:layout_constraintTop_toBottomOf="@+id/textView_selectTeacher" />
@@ -101,7 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:gravity="center_vertical"
-        android:text="Pokaż zastępstwa na planie"
+        android:text="@string/showReplacements"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView_selectClassroom"
         app:layout_constraintTop_toBottomOf="@+id/textView_selectClassroom" />
@@ -125,26 +125,25 @@
         android:layout_height="60dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/roundcorner"
-        android:backgroundTint="#FFC300"
+        android:background="@drawable/round_corner"
         android:clickable="true"
-        android:contentDescription="Powrót"
+        android:contentDescription="@string/goBackButton_description"
         android:contextClickable="true"
+        android:focusable="true"
         android:padding="8dp"
         android:scaleType="fitStart"
         android:src="@android:drawable/ic_menu_revert"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_showReplacementsOnTimetable"
-        android:layout_width="0dp"
+        android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="24dp"
         android:theme="@style/SwitchStyle"
         app:layout_constraintBottom_toBottomOf="@+id/textView_showReplacementsOnTimetable"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textView_showReplacementsOnTimetable"
         app:layout_constraintTop_toTopOf="@+id/textView_showReplacementsOnTimetable" />
 
 

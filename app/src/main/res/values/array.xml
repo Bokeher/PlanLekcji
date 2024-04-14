@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="spinnerItems">
+    <string-array name="timetableTypeSpinnerItems">
         <item>Klasy</item>
         <item>Nauczyciele</item>
         <item>Sale</item>
+    </string-array>
+    <string-array name="exampleClassesSpinnerItems">
+        <item>1 ATN</item>
+        <item>1 BTN</item>
+        <item>1 CTN</item>
+    </string-array>
+    <string-array name="exampleTeachersSpinnerItems">
+        <item>AA</item>
+        <item>AB</item>
+        <item>AC</item>
+    </string-array>
+    <string-array name="exampleClassroomsSpinnerItems">
+        <item>A10</item>
+        <item>B20</item>
+        <item>C30</item>
     </string-array>
 </resources>

@@ -9,9 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:text="Ustawienia"
-        android:textSize="30sp"
+        android:textSize="42sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,20 +19,22 @@
     <TextView
         android:id="@+id/textView_selectTimetableType"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginTop="8dp"
-        android:text="Rodzaj planu:"
-        android:textSize="16sp"
+        android:gravity="center_vertical"
+        android:text="Rodzaj planu"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView_settingsTitle"
         app:layout_constraintTop_toBottomOf="@+id/textView_settingsTitle" />
 
     <Spinner
         android:id="@+id/spinnerUserType"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
-        android:entries="@array/spinnerItems"
+        android:entries="@array/timetableTypeSpinnerItems"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView_selectTimetableType"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView_selectTimetableType"
@@ -41,19 +43,21 @@
     <TextView
         android:id="@+id/textView_selectClass"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Wybierz klasę:"
-        android:textSize="16sp"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="Wybierz klasę"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView_selectTimetableType"
         app:layout_constraintTop_toBottomOf="@+id/textView_selectTimetableType" />
 
     <Spinner
         android:id="@+id/spinnerClassTokens"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
+        android:entries="@array/exampleClassesSpinnerItems"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView_selectClass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView_selectClass"
@@ -62,19 +66,21 @@
     <TextView
         android:id="@+id/textView_selectTeacher"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Wybierz nauczyciela:"
-        android:textSize="16sp"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="Wybierz nauczyciela"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView_selectClass"
         app:layout_constraintTop_toBottomOf="@+id/textView_selectClass" />
 
     <Spinner
         android:id="@+id/spinnerTeacherTokens"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
+        android:entries="@array/exampleTeachersSpinnerItems"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView_selectTeacher"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView_selectTeacher"
@@ -83,66 +89,62 @@
     <TextView
         android:id="@+id/textView_selectClassroom"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Wybierz salę:"
-        android:textSize="16sp"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="Wybierz salę"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView_selectTeacher"
         app:layout_constraintTop_toBottomOf="@+id/textView_selectTeacher" />
 
     <TextView
         android:id="@+id/textView_showReplacementsOnTimetable"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Pokaż zastępstwa na planie:"
-        android:textSize="16sp"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="Pokaż zastępstwa na planie"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView_selectClassroom"
         app:layout_constraintTop_toBottomOf="@+id/textView_selectClassroom" />
 
     <Spinner
         android:id="@+id/spinnerClassroomTokens"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
+        android:entries="@array/exampleClassroomsSpinnerItems"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView_selectClassroom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView_selectClassroom"
         app:layout_constraintTop_toTopOf="@+id/textView_selectClassroom" />
 
-    <TextView
-        android:id="@+id/textView_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Stworzył: Szymon Rychter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <ImageButton
         android:id="@+id/imageButton_back"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/roundcorner"
         android:backgroundTint="#FFC300"
         android:clickable="true"
+        android:contentDescription="Powrót"
         android:contextClickable="true"
+        android:padding="8dp"
+        android:scaleType="fitStart"
         android:src="@android:drawable/ic_menu_revert"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Switch
         android:id="@+id/switch_showReplacementsOnTimetable"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="24dp"
         android:theme="@style/SwitchStyle"
         app:layout_constraintBottom_toBottomOf="@+id/textView_showReplacementsOnTimetable"
-        app:layout_constraintStart_toEndOf="@+id/textView_showReplacementsOnTimetable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView_showReplacementsOnTimetable"
         app:layout_constraintTop_toTopOf="@+id/textView_showReplacementsOnTimetable" />
 
 

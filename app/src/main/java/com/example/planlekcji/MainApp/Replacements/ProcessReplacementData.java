@@ -2,12 +2,14 @@ package com.example.planlekcji.MainApp.Replacements;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.planlekcji.MainActivity;
 import com.example.planlekcji.R;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 import java.text.ParseException;
@@ -40,6 +42,31 @@ public class ProcessReplacementData {
     public void process() {
         Elements tds = document.select("table tr td");
         Elements teachers = document.select(".st1");
+
+        Log.e("dawd", teachers.toString());
+
+        Elements newTeachers = new Elements();
+        for (Element teacher : teachers) {
+            String str = teacher.text();
+
+            int start = str.indexOf(" ");
+            int end = str.indexOf("/");
+
+            if (start >= 0 && end > start) {
+                str = str.substring(start + 1, end);
+
+                String[] names = str.split("-");
+
+                StringBuilder finalName = new StringBuilder();
+                for (String name : names) {
+                    finalName.append(getInitial(name)).append(". ");
+                }
+                Element finalNameElement = new Element(Tag.valueOf("span"), "")
+                        .text(finalName.toString().trim());
+
+                newTeachers.add(finalNameElement);
+            }
+        }
 
         String title = document.select(".st0").get(0).text();
         boolean singleDay = !title.contains(" - ");
@@ -220,5 +247,27 @@ public class ProcessReplacementData {
 
     private boolean tdIsLessonNumber(Element td) {
         return td.text().length() <= 1;
+    }
+
+    private String getInitial(String str) {
+        if (str == null || str.length() < 2) {
+            throw new IllegalArgumentException("Input string must have at least two character");
+        }
+
+        str = str.toLowerCase();
+        char firstChar = str.charAt(0);
+        char secondChar = str.charAt(1);
+
+        final String[] polishDigraphs = { "sz", "cz", "dż", "dź", "rz", "ch", "dz" };
+
+        for (String digraph : polishDigraphs) {
+            if(digraph.charAt(0) == firstChar) {
+                if(digraph.charAt(1) == secondChar) {
+                    return digraph;
+                }
+            }
+        }
+
+        return String.valueOf(firstChar);
     }
 }

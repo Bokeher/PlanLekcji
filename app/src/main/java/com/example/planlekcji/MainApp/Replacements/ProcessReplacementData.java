@@ -2,14 +2,12 @@ package com.example.planlekcji.MainApp.Replacements;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.example.planlekcji.MainActivity;
 import com.example.planlekcji.R;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 import java.text.ParseException;
@@ -43,30 +41,7 @@ public class ProcessReplacementData {
         Elements tds = document.select("table tr td");
         Elements teachers = document.select(".st1");
 
-        Log.e("dawd", teachers.toString());
-
-        Elements newTeachers = new Elements();
-        for (Element teacher : teachers) {
-            String str = teacher.text();
-
-            int start = str.indexOf(" ");
-            int end = str.indexOf("/");
-
-            if (start >= 0 && end > start) {
-                str = str.substring(start + 1, end);
-
-                String[] names = str.split("-");
-
-                StringBuilder finalName = new StringBuilder();
-                for (String name : names) {
-                    finalName.append(getInitial(name)).append(". ");
-                }
-                Element finalNameElement = new Element(Tag.valueOf("span"), "")
-                        .text(finalName.toString().trim());
-
-                newTeachers.add(finalNameElement);
-            }
-        }
+        changeTeacherLastNamesToInitials(teachers);
 
         String title = document.select(".st0").get(0).text();
         boolean singleDay = !title.contains(" - ");
@@ -83,6 +58,59 @@ public class ProcessReplacementData {
 
         replacements = processReplacements(tds, teachers);
         replacementsForTimetable = processReplacementsForTimetable(replacements, singleDay, title);
+    }
+
+    private void changeTeacherLastNamesToInitials(Elements teachers) {
+        for (Element teacher : teachers) {
+            String originalText = teacher.text();
+
+            int start = originalText.indexOf(" ");
+            int end = originalText.indexOf("/");
+
+            if (start >= 0 && end > start) {
+                String[] names = originalText.substring(start + 1, end).split("-");
+
+                StringBuilder finalName = new StringBuilder();
+                for (String name : names) {
+                    finalName.append(getInitial(name)).append(". ");
+                }
+
+                String newName = finalName.toString();
+
+                if (!newName.isEmpty()) {
+                    StringBuilder modifiedText = new StringBuilder();
+                    modifiedText.append(originalText, 0, start + 1)
+                            .append(newName)
+                            .append(originalText.substring(end));
+
+                    teacher.text(modifiedText.toString());
+                }
+            }
+        }
+    }
+
+    private String getInitial(String str) {
+        if (str == null || str.length() < 2) {
+            throw new IllegalArgumentException("Input string must have at least two character");
+        }
+
+        str = str.toLowerCase();
+        char firstChar = str.charAt(0);
+        char secondChar = str.charAt(1);
+
+        final String[] polishDigraphs = { "sz", "cz", "dż", "dź", "rz", "ch", "dz" };
+
+        for (String digraph : polishDigraphs) {
+            if(digraph.charAt(0) == firstChar) {
+                if(digraph.charAt(1) == secondChar) {
+                    String ch1 = digraph.substring(0, 1).toUpperCase();
+                    String ch2 = digraph.substring(1, 2);
+                    return ch1.concat(ch2);
+                }
+            }
+        }
+
+        return String.valueOf(firstChar).toUpperCase();
     }
 
     private List<ReplacementToTimetable> processReplacementsForTimetable(List<String> replacements, boolean singleDay, String title) {
@@ -249,25 +277,4 @@ public class ProcessReplacementData {
         return td.text().length() <= 1;
     }
 
-    private String getInitial(String str) {
-        if (str == null || str.length() < 2) {
-            throw new IllegalArgumentException("Input string must have at least two character");
-        }
-
-        str = str.toLowerCase();
-        char firstChar = str.charAt(0);
-        char secondChar = str.charAt(1);
-
-        final String[] polishDigraphs = { "sz", "cz", "dż", "dź", "rz", "ch", "dz" };
-
-        for (String digraph : polishDigraphs) {
-            if(digraph.charAt(0) == firstChar) {
-                if(digraph.charAt(1) == secondChar) {
-                    return digraph;
-                }
-            }
-        }
-
-        return String.valueOf(firstChar);
-    }
 }

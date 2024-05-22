@@ -65,7 +65,9 @@ public class ProcessReplacementData {
             String originalText = teacher.text();
 
             int start = originalText.indexOf(" ");
+
             int end = originalText.indexOf("/");
+            if(end == -1) end = originalText.length();
 
             if (start >= 0 && end > start) {
                 String[] names = originalText.substring(start + 1, end).split("-");

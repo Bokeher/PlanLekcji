@@ -33,4 +33,5 @@
     <string name="goBackButton_description">Go back</string>
     <string name="replacementsOnTimetable_title">Replacements on timetable</string>
     <string name="replacementsOnTimetable_description">Only replacements dedicated to your class are visible. Replacements for combined lessons with other classes are not displayed.</string>
+    <string name="settings_extraInfo">This application was created by a graduate of the CKZiU Elektryk school</string>
 </resources>

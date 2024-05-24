@@ -46,6 +46,8 @@ public class ProcessReplacementData {
         String title = document.select(".st0").get(0).text();
         boolean singleDay = !title.contains(" - ");
 
+        if(singleDay) addDatesToTeachers(teachers, title);
+
         removeUnwantedData(tds);
 
         // in case of 0 replacements just return empty lists
@@ -58,6 +60,14 @@ public class ProcessReplacementData {
 
         replacements = processReplacements(tds, teachers);
         replacementsForTimetable = processReplacementsForTimetable(replacements, singleDay, title);
+    }
+
+    private void addDatesToTeachers(Elements teachers, String title) {
+        for(Element teacher : teachers) {
+            String words[] = title.split(" ");
+            String date = words[3] + " " + words[4];
+            teacher.text(teacher.text() + " / " + date);
+        }
     }
 
     private void changeTeacherLastNamesToInitials(Elements teachers) {

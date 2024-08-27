@@ -41,6 +41,9 @@ public class ProcessReplacementData {
         Elements tds = document.select("table tr td");
         Elements teachers = document.select(".st1");
 
+        // return early if there are no replacements
+        if(teachers.first().text().contains("nie zaplanowano")) return;
+
         changeTeacherLastNamesToInitials(teachers);
 
         String title = document.select(".st0").get(0).text();

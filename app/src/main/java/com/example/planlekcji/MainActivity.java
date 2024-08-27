@@ -241,7 +241,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void setReplacements() {
         TextView textFieldReplacements = findViewById(R.id.textView_replacements);
-        textFieldReplacements.setText(Html.fromHtml(String.join("<br><br>", replacements), Html.FROM_HTML_MODE_LEGACY));
+        EditText searchBar = findViewById(R.id.editText_searchBar);
+
+        if(replacements.isEmpty()) {
+            searchBar.setVisibility(View.GONE);
+            textFieldReplacements.setText(getString(R.string.no_replacements));
+        } else {
+            searchBar.setVisibility(View.VISIBLE);
+            textFieldReplacements.setText(Html.fromHtml(String.join("<br><br>", replacements), Html.FROM_HTML_MODE_LEGACY));
+        }
     }
     private void setReplacements(String data) {
         if (data != null) {

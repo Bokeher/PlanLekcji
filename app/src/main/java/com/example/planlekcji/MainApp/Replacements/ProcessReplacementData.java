@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ProcessReplacementData {
-    private Document document;
+    private final Document document;
     private List<String> replacements = new ArrayList<>();
     private List<ReplacementToTimetable> replacementsForTimetable = new ArrayList<>();
 
@@ -42,7 +42,7 @@ public class ProcessReplacementData {
         Elements teachers = document.select(".st1");
 
         // return early if there are no replacements
-        if(teachers.first().text().contains("nie zaplanowano")) return;
+        if(teachers.isEmpty() || teachers.first().text().contains("nie zaplanowano")) return;
 
         changeTeacherLastNamesToInitials(teachers);
 
@@ -54,7 +54,7 @@ public class ProcessReplacementData {
         removeUnwantedData(tds);
 
         // in case of 0 replacements just return empty lists
-        if(title.equals("")) {
+        if(title.isEmpty()) {
             replacements = new ArrayList<>();
             replacements.add(teachers.get(0).text()); // teachers are in st1 class and the info about zero replacements too
             replacementsForTimetable = new ArrayList<>();
@@ -67,7 +67,7 @@ public class ProcessReplacementData {
 
     private void addDatesToTeachers(Elements teachers, String title) {
         for(Element teacher : teachers) {
-            String words[] = title.split(" ");
+            String[] words = title.split(" ");
             String date = words[3] + " " + words[4];
             teacher.text(teacher.text() + " / " + date);
         }
@@ -93,12 +93,11 @@ public class ProcessReplacementData {
                 String newName = finalName.toString();
 
                 if (!newName.isEmpty()) {
-                    StringBuilder modifiedText = new StringBuilder();
-                    modifiedText.append(originalText, 0, start + 1)
-                            .append(newName)
-                            .append(originalText.substring(end));
+                    String modifiedText = originalText.substring(0, start + 1) +
+                            newName +
+                            originalText.substring(end);
 
-                    teacher.text(modifiedText.toString());
+                    teacher.text(modifiedText);
                 }
             }
         }
@@ -235,7 +234,7 @@ public class ProcessReplacementData {
         final boolean replacementVisibilityOnTimetable = sharedPreferences.getBoolean(context.getString(R.string.replacementVisibilityOnTimetable), true);
         classToken = sharedPreferences.getString(context.getString(R.string.classTokenKey), "");
 
-        return selectedTypeOfTimetableKey == 0 && replacementVisibilityOnTimetable && !classToken.equals("");
+        return selectedTypeOfTimetableKey == 0 && replacementVisibilityOnTimetable && !classToken.isEmpty();
     }
 
     private List<String> processReplacements(Elements tds, Elements teachers) {

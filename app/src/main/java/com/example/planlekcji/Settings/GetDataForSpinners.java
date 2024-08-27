@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class GetDataForSpinners implements Runnable {
-    private List<TimetableInfo> classInfoList = new ArrayList<>();
-    private List<TimetableInfo> teachersInfoList = new ArrayList<>();
-    private List<TimetableInfo> classroomsInfoList = new ArrayList<>();
+    private final List<TimetableInfo> classInfoList = new ArrayList<>();
+    private final List<TimetableInfo> teachersInfoList = new ArrayList<>();
+    private final List<TimetableInfo> classroomsInfoList = new ArrayList<>();
 
     @Override
     public void run() {
@@ -25,7 +25,7 @@ public class GetDataForSpinners implements Runnable {
             for (Element classData : classes) {
                 // get class token
                 String token = classData.text();
-                token = token.substring(0, 1) + " " + token.substring(1);
+                token = token.charAt(0) + " " + token.substring(1);
 
                 // get url of timetable
                 String href = classData.selectFirst("[href]").attr("href");
@@ -56,7 +56,7 @@ public class GetDataForSpinners implements Runnable {
 
             Elements classrooms = doc.select("#sale .el");
             for (Element classroomsData : classrooms) {
-                //get teacher token
+                //get classroom token
                 String token = classroomsData.text();
 
                 // get url of timetable

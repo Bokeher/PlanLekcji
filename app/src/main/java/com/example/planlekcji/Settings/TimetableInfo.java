@@ -1,8 +1,8 @@
 package com.example.planlekcji.Settings;
 
 public class TimetableInfo {
-    private String token;
-    private String url;
+    private final String token;
+    private final String url;
 
     public TimetableInfo(String token, String url) {
         this.token = token;

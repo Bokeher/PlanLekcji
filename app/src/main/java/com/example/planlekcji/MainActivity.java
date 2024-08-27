@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         TextView textView_noResults = findViewById(R.id.textView_noResults);
 
         searchBar.addTextChangedListener(new DelayedSearchTextWatcher(query -> {
-            if(query.length() == 0) {
+            if(query.isEmpty()) {
                 setReplacements();
             } else {
                 String foundData = searchReplacements(query);

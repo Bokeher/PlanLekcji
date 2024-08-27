@@ -36,7 +36,6 @@ import java.util.List;
 public class LessonFragment extends Fragment {
 
     public static final String TITLE = "title";
-    private View view;
     private SharedPreferences sharedPreferences;
     List<LessonRow> lessonRows;
     List<ReplacementToTimetable> replacementsForTimetable;
@@ -60,8 +59,6 @@ public class LessonFragment extends Fragment {
 
         String argument = getArguments().getString(TITLE);
         int tabNumber = Character.getNumericValue(argument.charAt(3));
-
-        this.view = view;
 
         sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs", 0);
         int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
@@ -239,9 +236,9 @@ public class LessonFragment extends Fragment {
     }
 
     private void appendExtraInfoIfNeeded(SpannableStringBuilder str, String extraInfo) {
-        if(extraInfo.equals("")) return;
+        if(extraInfo.isEmpty()) return;
 
-        str.append("\n"+extraInfo);
+        str.append("\n").append(extraInfo);
     }
 
     /**

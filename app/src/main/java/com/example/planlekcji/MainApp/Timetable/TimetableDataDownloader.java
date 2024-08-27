@@ -11,7 +11,7 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 
 public class TimetableDataDownloader implements Runnable {
-    private OnDownloadCompleteListener listener;
+    private final OnDownloadCompleteListener listener;
 
     public TimetableDataDownloader(OnDownloadCompleteListener listener) {
         this.listener = listener;

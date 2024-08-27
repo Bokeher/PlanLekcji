@@ -20,17 +20,17 @@ import org.jsoup.nodes.Document;
 import java.util.List;
 public class MainViewModel extends ViewModel {
     // downloaded data
-    private MutableLiveData<List<String>> replacements = new MutableLiveData<>();
-    private MutableLiveData<List<ReplacementToTimetable>> replacementsForTimetable = new MutableLiveData<>();
-    private MutableLiveData<List<LessonRow>> lessonRows = new MutableLiveData<>();
-    private DoubleLiveData doubleLiveData = new DoubleLiveData();
+    private final MutableLiveData<List<String>> replacements = new MutableLiveData<>();
+    private final MutableLiveData<List<ReplacementToTimetable>> replacementsForTimetable = new MutableLiveData<>();
+    private final MutableLiveData<List<LessonRow>> lessonRows = new MutableLiveData<>();
+    private final DoubleLiveData doubleLiveData = new DoubleLiveData();
 
     // selected tab
-    private MutableLiveData<Integer> selectedTabNumber = new MutableLiveData<>();
+    private final MutableLiveData<Integer> selectedTabNumber = new MutableLiveData<>();
 
     // retry handlers
-    RetryHandler replaceRetryHandler = new RetryHandler(() -> startReplacementDownload());
-    RetryHandler timetableRetryHandler = new RetryHandler(() -> startReplacementDownload());
+    RetryHandler replaceRetryHandler = new RetryHandler(this::startReplacementDownload);
+    RetryHandler timetableRetryHandler = new RetryHandler(this::startReplacementDownload);
 
     public MainViewModel() {
         selectedTabNumber.setValue(0); // set default

@@ -6,9 +6,9 @@ import android.text.TextWatcher;
 
 public class DelayedSearchTextWatcher implements TextWatcher {
     private static final long DELAY_MS = 500;
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private Runnable runnable;
-    private OnSearchListener listener;
+    private final OnSearchListener listener;
 
     public DelayedSearchTextWatcher(OnSearchListener listener) {
         this.listener = listener;

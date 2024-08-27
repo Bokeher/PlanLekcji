@@ -6,7 +6,7 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 
 public class ReplacementDataDownloader implements Runnable {
-    private OnDownloadCompleteListener listener;
+    private final OnDownloadCompleteListener listener;
 
     public ReplacementDataDownloader(OnDownloadCompleteListener listener) {
         this.listener = listener;

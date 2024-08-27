@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BoyerMooreSearch {
-    private Map<Character, Integer> lastOccurrence;
+    private final Map<Character, Integer> lastOccurrence;
 
     public BoyerMooreSearch() {
         lastOccurrence = new HashMap<>();

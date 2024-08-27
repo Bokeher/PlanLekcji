@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ProcessTimetableData {
-    private List<LessonRow> lessonRows = new ArrayList<>();
+    private final List<LessonRow> lessonRows = new ArrayList<>();
 
     // Constructor that takes a Document as a parameter
     public ProcessTimetableData(Document document) {

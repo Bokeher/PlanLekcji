@@ -13,8 +13,8 @@ import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
 import java.util.List;
 
 public class Adapter extends FragmentStateAdapter {
-    private List<LessonRow> lessonRows;
-    private List<ReplacementToTimetable> replacementsForTimetable;
+    private final List<LessonRow> lessonRows;
+    private final List<ReplacementToTimetable> replacementsForTimetable;
 
     public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, List<LessonRow> lessonRows, List<ReplacementToTimetable> replacementsForTimetable) {
         super(fragmentManager, lifecycle);

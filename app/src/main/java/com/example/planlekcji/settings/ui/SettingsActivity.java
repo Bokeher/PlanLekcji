@@ -78,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         setSpinner(spinnerClassTokens, classInfoList, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey));
         setSpinner(spinnerTeacherTokens, teachersInfoList, getString(R.string.teacherTokenKey), getString(R.string.teacherTimetableUrlKey));
-        setSpinner(spinnerClassroomTokens, classroomsInfoList, getString(R.string.teacherTokenKey), getString(R.string.classroomTimetableUrlKey));
+        setSpinner(spinnerClassroomTokens, classroomsInfoList, getString(R.string.classroomTokenKey), getString(R.string.classroomTimetableUrlKey));
 
         setTypeOfTimetableSpinner();
     }

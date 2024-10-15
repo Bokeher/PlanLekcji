@@ -1,9 +1,10 @@
-package com.example.planlekcji.MainApp.Timetable;
+package com.example.planlekcji.timetable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.planlekcji.MainActivity;
+import com.example.planlekcji.listener.DownloadCompleteListener;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,9 +12,9 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 
 public class TimetableDataDownloader implements Runnable {
-    private final OnDownloadCompleteListener listener;
+    private final DownloadCompleteListener listener;
 
-    public TimetableDataDownloader(OnDownloadCompleteListener listener) {
+    public TimetableDataDownloader(DownloadCompleteListener listener) {
         this.listener = listener;
     }
 
@@ -43,10 +44,5 @@ public class TimetableDataDownloader implements Runnable {
             sharedPrefUrl = sharedPreferences.getString("classroomTimetableUrl", "http://plan.ckziu-elektryk.pl/plany/o1.html");
         }
         return sharedPrefUrl;
-    }
-
-    public interface OnDownloadCompleteListener {
-        void onDownloadComplete(Document document);
-        void onDownloadFailed();
     }
 }

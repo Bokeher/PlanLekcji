@@ -1,4 +1,4 @@
-package com.example.planlekcji.ViewModels;
+package com.example.planlekcji;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -7,17 +7,20 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.planlekcji.MainApp.Replacements.ProcessReplacementData;
-import com.example.planlekcji.MainApp.Replacements.ReplacementDataDownloader;
-import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
-import com.example.planlekcji.MainApp.RetryHandler;
-import com.example.planlekcji.MainApp.Timetable.LessonRow;
-import com.example.planlekcji.MainApp.Timetable.ProcessTimetableData;
-import com.example.planlekcji.MainApp.Timetable.TimetableDataDownloader;
+import com.example.planlekcji.listener.DownloadCompleteListener;
+import com.example.planlekcji.replacements.ReplacementDataProcessor;
+import com.example.planlekcji.replacements.ReplacementDataDownloader;
+import com.example.planlekcji.replacements.model.ReplacementToTimetable;
+import com.example.planlekcji.utils.RetryHandler;
+import com.example.planlekcji.timetable.model.LessonRow;
+import com.example.planlekcji.timetable.TimetableDataProcessor;
+import com.example.planlekcji.timetable.TimetableDataDownloader;
+import com.example.planlekcji.utils.DoubleLiveData;
 
 import org.jsoup.nodes.Document;
 
 import java.util.List;
+
 public class MainViewModel extends ViewModel {
     // downloaded data
     private final MutableLiveData<List<String>> replacements = new MutableLiveData<>();
@@ -29,8 +32,8 @@ public class MainViewModel extends ViewModel {
     private final MutableLiveData<Integer> selectedTabNumber = new MutableLiveData<>();
 
     // retry handlers
-    RetryHandler replaceRetryHandler = new RetryHandler(this::startReplacementDownload);
-    RetryHandler timetableRetryHandler = new RetryHandler(this::startReplacementDownload);
+    private final RetryHandler replaceRetryHandler = new RetryHandler(this::startReplacementDownload);
+    private final RetryHandler timetableRetryHandler = new RetryHandler(this::startReplacementDownload);
 
     public MainViewModel() {
         selectedTabNumber.setValue(0); // set default
@@ -42,16 +45,16 @@ public class MainViewModel extends ViewModel {
     }
 
     private void startReplacementDownload() {
-        ReplacementDataDownloader downloader = new ReplacementDataDownloader(new ReplacementDataDownloader.OnDownloadCompleteListener() {
+        ReplacementDataDownloader downloader = new ReplacementDataDownloader(new DownloadCompleteListener() {
             @Override
             public void onDownloadComplete(Document document) {
                 // Process replacement data
-                ProcessReplacementData processReplacementData = new ProcessReplacementData(document);
-                processReplacementData.process();
+                ReplacementDataProcessor replacementDataProcessor = new ReplacementDataProcessor(document);
+                replacementDataProcessor.process();
 
                 // Update LiveData
-                replacements.postValue(processReplacementData.getReplacements());
-                replacementsForTimetable.postValue(processReplacementData.getReplacementsForTimetable());
+                replacements.postValue(replacementDataProcessor.getReplacements());
+                replacementsForTimetable.postValue(replacementDataProcessor.getReplacementsForTimetable());
 
                 new Handler(Looper.getMainLooper()).post(() -> doubleLiveData.setData1Received(true));
             }
@@ -65,11 +68,11 @@ public class MainViewModel extends ViewModel {
     }
 
     private void startTimetableDownload() {
-        TimetableDataDownloader downloader = new TimetableDataDownloader(new TimetableDataDownloader.OnDownloadCompleteListener() {
+        TimetableDataDownloader downloader = new TimetableDataDownloader(new DownloadCompleteListener() {
             @Override
             public void onDownloadComplete(Document document) {
                 // Process timetable data
-                ProcessTimetableData processTimetableData = new ProcessTimetableData(document);
+                TimetableDataProcessor processTimetableData = new TimetableDataProcessor(document);
                 List<LessonRow> lessonRows = processTimetableData.getLessonRows();
 
                 // Update LiveData

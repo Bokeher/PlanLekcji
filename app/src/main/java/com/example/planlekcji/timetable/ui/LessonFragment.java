@@ -1,4 +1,4 @@
-package com.example.planlekcji.MainApp.Timetable;
+package com.example.planlekcji.timetable.ui;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -24,8 +24,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.planlekcji.MainActivity;
-import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
+import com.example.planlekcji.replacements.model.ReplacementToTimetable;
 import com.example.planlekcji.R;
+import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.timetable.model.LessonRow;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,10 +39,11 @@ public class LessonFragment extends Fragment {
 
     public static final String TITLE = "title";
     private SharedPreferences sharedPreferences;
-    List<LessonRow> lessonRows;
-    List<ReplacementToTimetable> replacementsForTimetable;
+    private List<LessonRow> lessonRows;
+    private List<ReplacementToTimetable> replacementsForTimetable;
 
-    public LessonFragment() {}
+    public LessonFragment() {
+    }
 
     public LessonFragment(List<LessonRow> lessonRows, List<ReplacementToTimetable> replacementsForTimetable) {
         this.lessonRows = lessonRows;
@@ -63,24 +66,7 @@ public class LessonFragment extends Fragment {
         sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs", 0);
         int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
 
-        int dayNumber = 0;
-        switch (tabNumber) {
-            case 1:
-                dayNumber = LessonRow.MONDAY;
-                break;
-            case 2:
-                dayNumber = LessonRow.TUESDAY;
-                break;
-            case 3:
-                dayNumber = LessonRow.WEDNESDAY;
-                break;
-            case 4:
-                dayNumber = LessonRow.THURSDAY;
-                break;
-            case 5:
-                dayNumber = LessonRow.FRIDAY;
-                break;
-        }
+        int dayNumber = DayOfWeek.getDayOfWeek(tabNumber).getDayOfWeekAsNumber();
 
         int currentLesson = getCurrentLessonIndex(tabNumber);
 
@@ -236,14 +222,14 @@ public class LessonFragment extends Fragment {
     }
 
     private void appendExtraInfoIfNeeded(SpannableStringBuilder str, String extraInfo) {
-        if(extraInfo.isEmpty()) return;
+        if (extraInfo.isEmpty()) return;
 
         str.append("\n").append(extraInfo);
     }
 
     /**
      * Determines the index of the current lesson based on the current time.
-     *
+     * <p>
      * This method calculates the current lesson index by comparing the current hour
      * and minutes with the predefined ending times of lessons.
      *
@@ -259,25 +245,25 @@ public class LessonFragment extends Fragment {
         int minutes = calendar.get(Calendar.MINUTE);
 
         String[] lessonEndTimers = {
-            "8:45", // time of 1st lesson ending
-            "9:35",
-            "10:30",
-            "11:35",
-            "12:30",
-            "13:25",
-            "14:20",
-            "15:10",
-            "16:00",
-            "16:50",
-            "17:40",
-            "18:30",
-            "19:20",
-            "20:10",
-            "21:00",
-            "21:50",
-            "22:40",
-            "23:30",
-            "00:20"
+                "8:45", // time of 1st lesson ending
+                "9:35",
+                "10:30",
+                "11:35",
+                "12:30",
+                "13:25",
+                "14:20",
+                "15:10",
+                "16:00",
+                "16:50",
+                "17:40",
+                "18:30",
+                "19:20",
+                "20:10",
+                "21:00",
+                "21:50",
+                "22:40",
+                "23:30",
+                "00:20"
         };
 
         for (int i = 0; i < lessonEndTimers.length; i++) {
@@ -285,8 +271,8 @@ public class LessonFragment extends Fragment {
             int lessonHour = Integer.parseInt(args[0]);
             int lessonMinutes = Integer.parseInt(args[1]);
 
-            if(hour == lessonHour) {
-                if(minutes < lessonMinutes) return i + 1;
+            if (hour == lessonHour) {
+                if (minutes < lessonMinutes) return i + 1;
                 return i + 2;
             }
         }

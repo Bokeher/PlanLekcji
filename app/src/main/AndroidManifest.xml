@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Settings.SettingsActivity"
+            android:name=".settings.ui.SettingsActivity"
             android:screenOrientation="nosensor">
         </activity>
     </application>

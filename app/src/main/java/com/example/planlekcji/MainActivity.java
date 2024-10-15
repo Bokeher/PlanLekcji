@@ -18,14 +18,13 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
-import com.example.planlekcji.MainApp.Timetable.Adapter;
-import com.example.planlekcji.MainApp.Timetable.LessonRow;
-import com.example.planlekcji.Settings.SettingsActivity;
-import com.example.planlekcji.Tools.BoyerMooreSearch;
-import com.example.planlekcji.Tools.DelayedSearchTextWatcher;
-import com.example.planlekcji.Tools.ToastUtils;
-import com.example.planlekcji.ViewModels.MainViewModel;
+import com.example.planlekcji.replacements.model.ReplacementToTimetable;
+import com.example.planlekcji.timetable.ui.Adapter;
+import com.example.planlekcji.timetable.model.LessonRow;
+import com.example.planlekcji.settings.ui.SettingsActivity;
+import com.example.planlekcji.utils.BoyerMooreSearch;
+import com.example.planlekcji.utils.DelayedSearchTextWatcher;
+import com.example.planlekcji.utils.ToastUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 

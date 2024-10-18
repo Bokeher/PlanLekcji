@@ -11,12 +11,16 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutChangeView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItemTimetable"
@@ -30,22 +34,27 @@
             android:layout_height="wrap_content"
             android:text="@string/replacements_header" />
 
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItemSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ustawienia" />
+
     </com.google.android.material.tabs.TabLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayoutChangeView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayoutChangeView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabLayout">
@@ -94,7 +103,7 @@
                 android:text="@string/noResults_text"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
             <View
                 android:id="@+id/divider"
@@ -122,7 +131,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="70dp"
         android:background="@drawable/round_corner"
         android:clickable="true"
         android:contentDescription="@string/settingsButton_description"

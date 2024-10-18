@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initialize ViewPager2.
-        viewPager = findViewById(R.id.pager);
+        viewPager = findViewById(R.id.viewPager2_timetable);
         viewPager.setOffscreenPageLimit(5);
 
         observeAndHandleLiveDataChanges();
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        findViewById(R.id.progressBar_loading).setVisibility(View.VISIBLE);
         mainViewModel.fetchData();
     }
 
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(getString(R.string.searchKey), String.valueOf(searchBar.getText()));
         editor.apply();
 
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        TabLayout tabLayout = findViewById(R.id.tabLayout_timetableDays);
         mainViewModel.setSelectedTabNumber(tabLayout.getSelectedTabPosition()+1);
     }
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 else viewPager.setCurrentItem(mainViewModel.getSelectedTabNumber() - 1, false);
 
                 setHeadersToTabLayout();
-                findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+                findViewById(R.id.progressBar_loading).setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setEventListenersToReplacements() {
         TabLayout guiTabs;
-        guiTabs = findViewById(R.id.tabLayoutChangeView);
+        guiTabs = findViewById(R.id.tabLayout_navigate);
         guiTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setHeadersToTabLayout() {
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        TabLayout tabLayout = findViewById(R.id.tabLayout_timetableDays);
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             String data = "";
             position++;
@@ -232,8 +232,8 @@ public class MainActivity extends AppCompatActivity {
             replacementsVisibility = View.VISIBLE;
         }
 
-        findViewById(R.id.tabLayout).setVisibility(timetableVisibility);
-        findViewById(R.id.pager).setVisibility(timetableVisibility);
+        findViewById(R.id.tabLayout_timetableDays).setVisibility(timetableVisibility);
+        findViewById(R.id.viewPager2_timetable).setVisibility(timetableVisibility);
 
         findViewById(R.id.scrollView_replacements).setVisibility(replacementsVisibility);
     }

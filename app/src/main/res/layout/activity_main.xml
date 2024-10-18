@@ -9,7 +9,7 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayoutChangeView"
+        android:id="@+id/tabLayout_navigate"
         android:layout_width="0dp"
         android:layout_height="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -17,25 +17,25 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItem2"
+            android:id="@+id/tabItem_navigate_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Start" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItemTimetable"
+            android:id="@+id/tabItem_navigate_timetable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/timetable_header" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItemReplacements"
+            android:id="@+id/tabItem_navigate_replacements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/replacements_header" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabItemSettings"
+            android:id="@+id/tabItem_navigate_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ustawienia" />
@@ -43,7 +43,7 @@
     </com.google.android.material.tabs.TabLayout>
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+        android:id="@+id/tabLayout_timetableDays"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,13 +51,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pager"
+        android:id="@+id/viewPager2_timetable"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/tabLayoutChangeView"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayout_navigate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout">
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout_timetableDays">
 
     </androidx.viewpager2.widget.ViewPager2>
 
@@ -73,7 +73,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayoutChangeView">
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout_navigate">
 
         <LinearLayout
             android:id="@+id/linearLayout_replacements"
@@ -142,7 +142,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBar_loading"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

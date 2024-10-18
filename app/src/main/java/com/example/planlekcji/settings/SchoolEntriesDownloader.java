@@ -1,4 +1,6 @@
-package com.example.planlekcji.Settings;
+package com.example.planlekcji.settings;
+
+import com.example.planlekcji.settings.model.TimetableInfo;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,7 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class GetDataForSpinners implements Runnable {
+public class SchoolEntriesDownloader implements Runnable {
     private final List<TimetableInfo> classInfoList = new ArrayList<>();
     private final List<TimetableInfo> teachersInfoList = new ArrayList<>();
     private final List<TimetableInfo> classroomsInfoList = new ArrayList<>();

@@ -1,4 +1,4 @@
-package com.example.planlekcji.MainApp.Replacements;
+package com.example.planlekcji.replacements.model;
 
 /**
  * This class is used for transferring data from replacement (got from website) to data needed to show this replacement on timetable.

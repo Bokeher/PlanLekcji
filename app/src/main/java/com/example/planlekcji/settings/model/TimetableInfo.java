@@ -1,4 +1,4 @@
-package com.example.planlekcji.Settings;
+package com.example.planlekcji.settings.model;
 
 public class TimetableInfo {
     private final String token;

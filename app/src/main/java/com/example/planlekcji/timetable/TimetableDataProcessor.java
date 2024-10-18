@@ -1,4 +1,7 @@
-package com.example.planlekcji.MainApp.Timetable;
+package com.example.planlekcji.timetable;
+
+import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.timetable.model.LessonRow;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,11 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProcessTimetableData {
+public class TimetableDataProcessor {
     private final List<LessonRow> lessonRows = new ArrayList<>();
 
     // Constructor that takes a Document as a parameter
-    public ProcessTimetableData(Document document) {
+    public TimetableDataProcessor(Document document) {
         processDocument(document);
     }
 
@@ -33,7 +36,7 @@ public class ProcessTimetableData {
     private LessonRow createLessonRow(Element tr) {
         Map<Integer, String> dayElements = new HashMap<>();
 
-        int[] dayNumbs = { LessonRow.MONDAY, LessonRow.TUESDAY, LessonRow.WEDNESDAY, LessonRow.THURSDAY, LessonRow.FRIDAY };
+        Integer[] dayNumbs = DayOfWeek.getDaysOfWeekAsNumbers();
         for (int dayNumb : dayNumbs) {
             String searchingPhrase = "td:nth-child(" + (dayNumb+2) + ")";
             dayElements.put(dayNumb, tr.selectFirst(searchingPhrase).html());

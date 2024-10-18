@@ -1,4 +1,6 @@
-package com.example.planlekcji.MainApp.Replacements;
+package com.example.planlekcji.replacements;
+
+import com.example.planlekcji.listener.DownloadCompleteListener;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -6,9 +8,9 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 
 public class ReplacementDataDownloader implements Runnable {
-    private final OnDownloadCompleteListener listener;
+    private final DownloadCompleteListener listener;
 
-    public ReplacementDataDownloader(OnDownloadCompleteListener listener) {
+    public ReplacementDataDownloader(DownloadCompleteListener listener) {
         this.listener = listener;
     }
 
@@ -21,10 +23,5 @@ public class ReplacementDataDownloader implements Runnable {
             e.printStackTrace();
             listener.onDownloadFailed();
         }
-    }
-
-    public interface OnDownloadCompleteListener {
-        void onDownloadComplete(Document document);
-        void onDownloadFailed();
     }
 }

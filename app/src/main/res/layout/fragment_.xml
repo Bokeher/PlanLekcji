@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainApp.Timetable.LessonFragment">
+    tools:context=".timetable.ui.LessonFragment">
 
     <ScrollView
         android:id="@+id/scrollView"

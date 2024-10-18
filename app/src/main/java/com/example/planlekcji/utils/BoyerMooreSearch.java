@@ -1,4 +1,5 @@
-package com.example.planlekcji.Tools;
+package com.example.planlekcji.utils;
+
 import java.util.HashMap;
 import java.util.Map;
 

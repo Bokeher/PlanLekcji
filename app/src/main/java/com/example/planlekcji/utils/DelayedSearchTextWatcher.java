@@ -1,16 +1,18 @@
-package com.example.planlekcji.Tools;
+package com.example.planlekcji.utils;
 
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import com.example.planlekcji.listener.SearchListener;
+
 public class DelayedSearchTextWatcher implements TextWatcher {
     private static final long DELAY_MS = 500;
     private final Handler handler = new Handler();
     private Runnable runnable;
-    private final OnSearchListener listener;
+    private final SearchListener listener;
 
-    public DelayedSearchTextWatcher(OnSearchListener listener) {
+    public DelayedSearchTextWatcher(SearchListener listener) {
         this.listener = listener;
     }
 
@@ -29,9 +31,5 @@ public class DelayedSearchTextWatcher implements TextWatcher {
             }
         };
         handler.postDelayed(runnable, DELAY_MS);
-    }
-
-    public interface OnSearchListener {
-        void onSearch(String query);
     }
 }

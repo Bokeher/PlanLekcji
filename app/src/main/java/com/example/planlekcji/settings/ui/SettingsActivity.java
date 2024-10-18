@@ -1,4 +1,4 @@
-package com.example.planlekcji.Settings;
+package com.example.planlekcji.settings.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.planlekcji.R;
+import com.example.planlekcji.settings.SchoolEntriesDownloader;
+import com.example.planlekcji.settings.model.TimetableInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         setSpinner(spinnerClassTokens, classInfoList, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey));
         setSpinner(spinnerTeacherTokens, teachersInfoList, getString(R.string.teacherTokenKey), getString(R.string.teacherTimetableUrlKey));
-        setSpinner(spinnerClassroomTokens, classroomsInfoList, getString(R.string.teacherTokenKey), getString(R.string.classroomTimetableUrlKey));
+        setSpinner(spinnerClassroomTokens, classroomsInfoList, getString(R.string.classroomTokenKey), getString(R.string.classroomTimetableUrlKey));
 
         setTypeOfTimetableSpinner();
     }
@@ -159,8 +161,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        GetDataForSpinners getDataForSpinners = new GetDataForSpinners();
-        Thread thread = new Thread(getDataForSpinners);
+        SchoolEntriesDownloader spinnersDataDownloader = new SchoolEntriesDownloader();
+        Thread thread = new Thread(spinnersDataDownloader);
         thread.start();
         try {
             thread.join();
@@ -168,9 +170,9 @@ public class SettingsActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        classInfoList = getDataForSpinners.getClassInfoList();
-        teachersInfoList = getDataForSpinners.getTeachersInfoList();
-        classroomsInfoList = getDataForSpinners.getClassroomsInfoList();
+        classInfoList = spinnersDataDownloader.getClassInfoList();
+        teachersInfoList = spinnersDataDownloader.getTeachersInfoList();
+        classroomsInfoList = spinnersDataDownloader.getClassroomsInfoList();
     }
 
     private void setListenerToBackButton() {

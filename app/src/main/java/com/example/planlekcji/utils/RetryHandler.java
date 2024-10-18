@@ -1,9 +1,8 @@
-package com.example.planlekcji.MainApp;
+package com.example.planlekcji.utils;
 
 import android.os.Handler;
 import android.os.Looper;
 
-import com.example.planlekcji.Tools.ToastUtils;
 import com.example.planlekcji.MainActivity;
 
 public class RetryHandler {

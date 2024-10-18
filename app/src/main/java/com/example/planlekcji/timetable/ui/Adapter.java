@@ -1,4 +1,4 @@
-package com.example.planlekcji.MainApp.Timetable;
+package com.example.planlekcji.timetable.ui;
 
 import android.os.Bundle;
 
@@ -8,7 +8,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.planlekcji.MainApp.Replacements.ReplacementToTimetable;
+import com.example.planlekcji.replacements.model.ReplacementToTimetable;
+import com.example.planlekcji.timetable.model.LessonRow;
 
 import java.util.List;
 

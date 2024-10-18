@@ -20,25 +20,25 @@
             android:id="@+id/tabItem_navigate_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start" />
+            android:text="@string/navigate_home" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem_navigate_timetable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/timetable_header" />
+            android:text="@string/navigate_timetable" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem_navigate_replacements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/replacements_header" />
+            android:text="@string/navigate_replacements" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem_navigate_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ustawienia" />
+            android:text="@string/navigate_settings" />
 
     </com.google.android.material.tabs.TabLayout>
 

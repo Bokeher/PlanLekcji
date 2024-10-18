@@ -11,8 +11,10 @@
     <string name="selectedTypeOfTimetableKey" translatable="false">selectedTypeOfTimetable</string>
     <string name="replacementVisibilityOnTimetable" translatable="false">replacementVisibilityOnTimetable</string>
     <string name="searchKey" translatable="false">searchingKey</string>
-    <string name="timetable_header">Timetable</string>
-    <string name="replacements_header">Replacements</string>
+    <string name="navigate_home">Home</string>
+    <string name="navigate_timetable">Timetable</string>
+    <string name="navigate_replacements">Replacements</string>
+    <string name="navigate_settings">Settings</string>
     <string name="settingsButton_description">Open settings</string>
     <string name="mondayShortcut">Mon</string>
     <string name="tuesdayShortcut">Tue</string>

@@ -40,14 +40,12 @@ public class LessonFragment extends Fragment {
     public static final String TITLE = "title";
     private SharedPreferences sharedPreferences;
     private List<LessonRow> lessonRows;
-    private List<ReplacementToTimetable> replacementsForTimetable;
 
     public LessonFragment() {
     }
 
     public LessonFragment(List<LessonRow> lessonRows, List<ReplacementToTimetable> replacementsForTimetable) {
         this.lessonRows = lessonRows;
-        this.replacementsForTimetable = replacementsForTimetable;
     }
 
     @Override
@@ -94,20 +92,20 @@ public class LessonFragment extends Fragment {
                 String data = doc.text().replace("|nLine|", "\n");
 
                 SpannableStringBuilder str = new SpannableStringBuilder(data);
-
-                if (shouldShowReplacementsOnTimetable()) {
-                    for (ReplacementToTimetable replacement : replacementsForTimetable) {
-                        if (isLessonWithReplacement(replacement, tabNumber, i)) {
-                            // 0 means there is no group division
-                            if (replacement.getGroupNumber() == 0) {
-                                str.setSpan(new StrikethroughSpan(), 0, str.length(), 0); // apply strikethrough to entire lesson
-                                appendExtraInfoIfNeeded(str, replacement.getExtraInfo());
-                            } else {
-                                applyStrikethroughToCorrectPartsOfSpan(str, replacement);
-                            }
-                        }
-                    }
-                }
+//
+//                if (shouldShowReplacementsOnTimetable()) {
+//                    for (ReplacementToTimetable replacement : replacementsForTimetable) {
+//                        if (isLessonWithReplacement(replacement, tabNumber, i)) {
+//                            // 0 means there is no group division
+//                            if (replacement.getGroupNumber() == 0) {
+//                                str.setSpan(new StrikethroughSpan(), 0, str.length(), 0); // apply strikethrough to entire lesson
+//                                appendExtraInfoIfNeeded(str, replacement.getExtraInfo());
+//                            } else {
+//                                applyStrikethroughToCorrectPartsOfSpan(str, replacement);
+//                            }
+//                        }
+//                    }
+//                }
 
                 LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCards);
 

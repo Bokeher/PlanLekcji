@@ -1,13 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.SettingsFragment">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/navigate_settings" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView_settingsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/settings_header"
+            android:textSize="42sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_selectTimetableType"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/timetableType"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_settingsTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textView_settingsTitle" />
+
+        <Spinner
+            android:id="@+id/spinnerUserType"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:entries="@array/timetableTypeSpinnerItems"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_selectTimetableType"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView_selectTimetableType"
+            app:layout_constraintTop_toTopOf="@+id/textView_selectTimetableType" />
+
+        <TextView
+            android:id="@+id/textView_selectClass"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:text="@string/selectClass"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_selectTimetableType"
+            app:layout_constraintTop_toBottomOf="@+id/textView_selectTimetableType" />
+
+        <Spinner
+            android:id="@+id/spinnerClassTokens"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:entries="@array/exampleClassesSpinnerItems"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_selectClass"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView_selectClass"
+            app:layout_constraintTop_toTopOf="@+id/textView_selectClass" />
+
+        <TextView
+            android:id="@+id/textView_selectTeacher"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:text="@string/selectTeacher"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_selectClass"
+            app:layout_constraintTop_toBottomOf="@+id/textView_selectClass" />
+
+        <Spinner
+            android:id="@+id/spinnerTeacherTokens"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:entries="@array/exampleTeachersSpinnerItems"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_selectTeacher"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView_selectTeacher"
+            app:layout_constraintTop_toTopOf="@+id/textView_selectTeacher" />
+
+        <TextView
+            android:id="@+id/textView_selectClassroom"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:text="@string/selectClassroom"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_selectTeacher"
+            app:layout_constraintTop_toBottomOf="@+id/textView_selectTeacher" />
+
+        <TextView
+            android:id="@+id/textView_showReplacementsOnTimetable"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:text="@string/showReplacements"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_selectClassroom"
+            app:layout_constraintTop_toBottomOf="@+id/textView_selectClassroom" />
+
+        <Spinner
+            android:id="@+id/spinnerClassroomTokens"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:entries="@array/exampleClassroomsSpinnerItems"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_selectClassroom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView_selectClassroom"
+            app:layout_constraintTop_toTopOf="@+id/textView_selectClassroom" />
+
+        <ImageButton
+            android:id="@+id/imageButton_back"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/round_corner"
+            android:backgroundTint="#FFC300"
+            android:clickable="true"
+            android:contentDescription="@string/goBackButton_description"
+            android:contextClickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:scaleType="fitStart"
+            android:src="@android:drawable/ic_menu_revert"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_showReplacementsOnTimetable"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:theme="@style/SwitchStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_showReplacementsOnTimetable"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView_showReplacementsOnTimetable" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            android:text="@string/settings_extraInfo"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageButton_back"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

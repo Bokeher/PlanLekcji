@@ -1,19 +1,16 @@
 package com.example.planlekcji;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.planlekcji.fragments.ViewPagerAdapter;
-import com.example.planlekcji.settings.ui.SettingsActivity;
 import com.example.planlekcji.utils.ToastUtils;
 
 import com.google.android.material.tabs.TabLayout;
@@ -47,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
         // Set the content view for the main activity.
         setContentView(R.layout.activity_main);
 
-        // Set event listeners for various UI elements.
-        setEventListenerToSettingsButton();
-
         viewPager2_appContent = findViewById(R.id.viewPager2_appContent);
         TabLayout tabLayout = findViewById(R.id.tabLayout_navigate);
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
@@ -72,14 +66,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }).attach();
-    }
-
-    private void setEventListenerToSettingsButton() {
-        ImageButton button = findViewById(R.id.imageButton_goSettings);
-        button.setOnClickListener(view -> {
-            Intent settingsIntent = new Intent(view.getContext(), SettingsActivity.class);
-            startActivity(settingsIntent);
-        });
     }
 
     public static Context getContext() {

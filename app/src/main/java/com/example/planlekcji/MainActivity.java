@@ -15,13 +15,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.planlekcji.fragments.ViewPagerAdapter;
-import com.example.planlekcji.replacements.model.ReplacementToTimetable;
-import com.example.planlekcji.timetable.ui.Adapter;
-import com.example.planlekcji.timetable.model.LessonRow;
 import com.example.planlekcji.settings.ui.SettingsActivity;
 import com.example.planlekcji.utils.BoyerMooreSearch;
 import com.example.planlekcji.utils.DelayedSearchTextWatcher;
@@ -29,9 +25,6 @@ import com.example.planlekcji.utils.ToastUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -42,15 +42,6 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout_timetableDays"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager2_appContent"
         android:layout_width="match_parent"
@@ -59,18 +50,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager2_timetable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/tabLayout_navigate"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout_timetableDays">
-
-    </androidx.viewpager2.widget.ViewPager2>
 
     <ScrollView
         android:id="@+id/scrollView_replacements"
@@ -159,6 +138,7 @@
         android:layout_height="wrap_content"
         android:indeterminateTint="#FFFFFF"
         android:progressTint="#FFFFFF"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -37,16 +37,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
+
     private static Context appContext;
 
-    // downloaded data
     private List<String> replacements;
-    private List<ReplacementToTimetable> replacementsForTimetable;
-    private List<LessonRow> lessonRows;
-
-    private ViewPager2 viewPager2_timetable;
     private ViewPager2 viewPager2_appContent;
-    private MainViewModel mainViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize the application context for other functions.
         appContext = this;
-
-        // Initialize the ViewModel
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         // Check for internet connection; exit the app if not connected.
         if (!isOnline()) {
@@ -66,21 +58,14 @@ public class MainActivity extends AppCompatActivity {
         // Lock the orientation of the screen to portrait mode.
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        // Enable night mode for the entire application.
+        // Force night mode for the entire application.
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
         // Set the content view for the main activity.
         setContentView(R.layout.activity_main);
 
-        // Initialize ViewPager2.
-        viewPager2_timetable = findViewById(R.id.viewPager2_timetable);
-        viewPager2_timetable.setOffscreenPageLimit(5);
-
-        observeAndHandleLiveDataChanges();
-
         // Set event listeners for various UI elements.
         setEventListenerToSettingsButton();
-//        setEventListenersToReplacements();
 
         viewPager2_appContent = findViewById(R.id.viewPager2_appContent);
         TabLayout tabLayout = findViewById(R.id.tabLayout_navigate);
@@ -107,94 +92,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        EditText searchBar = findViewById(R.id.editText_searchBar);
+//
+//        SharedPreferences sharedPref = this.getSharedPreferences("sharedPrefs", 0);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        editor.putString(getString(R.string.searchKey), String.valueOf(searchBar.getText()));
+//        editor.apply();
+//
+//        TabLayout tabLayout = findViewById(R.id.tabLayout_timetableDays);
+//        mainViewModel.setSelectedTabNumber(tabLayout.getSelectedTabPosition() + 1);
+//    }
 
-        findViewById(R.id.progressBar_loading).setVisibility(View.VISIBLE);
-        mainViewModel.fetchData();
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EditText searchBar = findViewById(R.id.editText_searchBar);
-
-        SharedPreferences sharedPref = this.getSharedPreferences("sharedPrefs", 0);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.searchKey), String.valueOf(searchBar.getText()));
-        editor.apply();
-
-        TabLayout tabLayout = findViewById(R.id.tabLayout_timetableDays);
-        mainViewModel.setSelectedTabNumber(tabLayout.getSelectedTabPosition()+1);
-    }
-
-    private void observeAndHandleLiveDataChanges() {
-        mainViewModel.getCombinedLiveData().observe(this, bool -> {
-            if(bool)  {
-                lessonRows = mainViewModel.getLessonRows();
-                replacementsForTimetable = mainViewModel.getReplacementsForTimetableValue();
-                replacements = mainViewModel.getReplacementsValue();
-
-                SharedPreferences sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs",0);
-                int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
-
-                if(lessonRows == null || replacements == null || (replacementsForTimetable == null && timetableType == 0)) return;
-
-                setReplacements();
-                setEventListenerToSearchBar();
-                searchReplacements(updateSearchBar());
-
-                setAdapterToViewPager();
-
-                if(mainViewModel.getSelectedTabNumber() == 0) setCurrentDay();
-                else viewPager2_timetable.setCurrentItem(mainViewModel.getSelectedTabNumber() - 1, false);
-
-                setHeadersToTabLayout();
-                findViewById(R.id.progressBar_loading).setVisibility(View.INVISIBLE);
-            }
-        });
-    }
-
-    /**
-     * Sets the current item of the ViewPager based on the current day of the week.
-     * Monday corresponds to the first tab, Tuesday to the second tab, and so on.
-     */
-    private void setCurrentDay() {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTime(new Date());
-        int dayNumb = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-        if(dayNumb < 1 || dayNumb > 5) dayNumb = 1;
-
-        viewPager2_timetable.setCurrentItem(dayNumb - 1);
-    }
-
-    private void setAdapterToViewPager() {
-        Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonRows, replacementsForTimetable);
-        viewPager2_timetable.setAdapter(adapter);
-    }
-
-    private void setEventListenersToReplacements() {
-        TabLayout guiTabs;
-        guiTabs = findViewById(R.id.tabLayout_navigate);
-        guiTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                switch(tab.getPosition()) {
-                    case 0:
-                        changeVisibilityOfReplacements(false);
-                        break;
-                    case 1:
-                        changeVisibilityOfReplacements(true);
-                        break;
-                }
-            }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
-    }
     private void setEventListenerToSettingsButton() {
         ImageButton button = findViewById(R.id.imageButton_goSettings);
         button.setOnClickListener(view -> {
@@ -221,47 +133,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }));
-    }
-
-    private void setHeadersToTabLayout() {
-        TabLayout tabLayout = findViewById(R.id.tabLayout_timetableDays);
-        new TabLayoutMediator(tabLayout, viewPager2_timetable, (tab, position) -> {
-            String data = "";
-            position++;
-
-            switch (position) {
-                case 1:
-                    data = getResources().getString(R.string.mondayShortcut);
-                    break;
-                case 2:
-                    data = getResources().getString(R.string.tuesdayShortcut);
-                    break;
-                case 3:
-                    data = getResources().getString(R.string.wednesdayShortcut);
-                    break;
-                case 4:
-                    data = getResources().getString(R.string.thursdayShortcut);
-                    break;
-                case 5:
-                    data = getResources().getString(R.string.fridayShortcut);
-                    break;
-            }
-            tab.setText(data);
-        }).attach();
-    }
-    private void changeVisibilityOfReplacements(boolean change) {
-        int timetableVisibility = View.VISIBLE;
-        int replacementsVisibility = View.GONE;
-
-        if(change) {
-            timetableVisibility = View.GONE;
-            replacementsVisibility = View.VISIBLE;
-        }
-
-        findViewById(R.id.tabLayout_timetableDays).setVisibility(timetableVisibility);
-        findViewById(R.id.viewPager2_timetable).setVisibility(timetableVisibility);
-
-        findViewById(R.id.scrollView_replacements).setVisibility(replacementsVisibility);
     }
 
     private void setReplacements() {

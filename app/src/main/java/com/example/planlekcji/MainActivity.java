@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.planlekcji.fragments.ViewPagerAdapter;
 import com.example.planlekcji.replacements.model.ReplacementToTimetable;
 import com.example.planlekcji.timetable.ui.Adapter;
 import com.example.planlekcji.timetable.model.LessonRow;
@@ -43,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private List<ReplacementToTimetable> replacementsForTimetable;
     private List<LessonRow> lessonRows;
 
-    private ViewPager2 viewPager;
+    private ViewPager2 viewPager2_timetable;
+    private ViewPager2 viewPager2_appContent;
     private MainViewModel mainViewModel;
 
     @Override
@@ -71,14 +73,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initialize ViewPager2.
-        viewPager = findViewById(R.id.viewPager2_timetable);
-        viewPager.setOffscreenPageLimit(5);
+        viewPager2_timetable = findViewById(R.id.viewPager2_timetable);
+        viewPager2_timetable.setOffscreenPageLimit(5);
 
         observeAndHandleLiveDataChanges();
 
         // Set event listeners for various UI elements.
         setEventListenerToSettingsButton();
-        setEventListenersToReplacements();
+//        setEventListenersToReplacements();
+
+        viewPager2_appContent = findViewById(R.id.viewPager2_appContent);
+        TabLayout tabLayout = findViewById(R.id.tabLayout_navigate);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+        viewPager2_appContent.setAdapter(adapter);
+
+        // Connect the TabLayout with the ViewPager2
+        new TabLayoutMediator(tabLayout, viewPager2_appContent, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText(R.string.navigate_home);
+                    break;
+                case 1:
+                    tab.setText(R.string.navigate_timetable);
+                    break;
+                case 2:
+                    tab.setText(R.string.navigate_replacements);
+                    break;
+                case 3:
+                    tab.setText(R.string.navigate_settings);
+                    break;
+            }
+        }).attach();
+
     }
 
     @Override
@@ -122,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 setAdapterToViewPager();
 
                 if(mainViewModel.getSelectedTabNumber() == 0) setCurrentDay();
-                else viewPager.setCurrentItem(mainViewModel.getSelectedTabNumber() - 1, false);
+                else viewPager2_timetable.setCurrentItem(mainViewModel.getSelectedTabNumber() - 1, false);
 
                 setHeadersToTabLayout();
                 findViewById(R.id.progressBar_loading).setVisibility(View.INVISIBLE);
@@ -140,12 +166,12 @@ public class MainActivity extends AppCompatActivity {
         int dayNumb = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         if(dayNumb < 1 || dayNumb > 5) dayNumb = 1;
 
-        viewPager.setCurrentItem(dayNumb - 1);
+        viewPager2_timetable.setCurrentItem(dayNumb - 1);
     }
 
     private void setAdapterToViewPager() {
         Adapter adapter = new Adapter(getSupportFragmentManager(), getLifecycle(), lessonRows, replacementsForTimetable);
-        viewPager.setAdapter(adapter);
+        viewPager2_timetable.setAdapter(adapter);
     }
 
     private void setEventListenersToReplacements() {
@@ -199,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setHeadersToTabLayout() {
         TabLayout tabLayout = findViewById(R.id.tabLayout_timetableDays);
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+        new TabLayoutMediator(tabLayout, viewPager2_timetable, (tab, position) -> {
             String data = "";
             position++;
 

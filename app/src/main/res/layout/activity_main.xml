@@ -51,21 +51,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/imageButton_goSettings"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="70dp"
-        android:background="@drawable/round_corner"
-        android:clickable="true"
-        android:contentDescription="@string/settingsButton_description"
-        android:contextClickable="true"
-        android:focusable="true"
-        android:src="@android:drawable/ic_menu_preferences"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <ProgressBar
         android:id="@+id/progressBar_loading"
         style="?android:attr/progressBarStyle"

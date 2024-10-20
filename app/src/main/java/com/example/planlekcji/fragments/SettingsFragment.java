@@ -3,8 +3,6 @@ package com.example.planlekcji.fragments;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -42,34 +40,7 @@ public class SettingsFragment extends Fragment {
         // Initialize spinners and populate them with data.
         initSpinners();
 
-        // Set a listener for the switch responsible for changing visibility of replacements on timetable.
-        initReplacementVisibilitySwitch();
-
         return view;
-    }
-
-
-    private void initReplacementVisibilitySwitch() {
-        SwitchCompat visibilitySwitch = view.findViewById(R.id.switch_showReplacementsOnTimetable);
-
-        boolean visibility = sharedPref.getBoolean(getString(R.string.replacementVisibilityOnTimetable), false);
-
-        visibilitySwitch.setChecked(visibility);
-
-        visibilitySwitch.setOnCheckedChangeListener((compoundButton, bool) -> {
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean(getString(R.string.replacementVisibilityOnTimetable), bool);
-            editor.apply();
-
-            if(bool) {
-                new AlertDialog.Builder(MainActivity.getContext())
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle(getResources().getString(R.string.replacementsOnTimetable_title))
-                        .setMessage(getResources().getString(R.string.replacementsOnTimetable_description))
-                        .setPositiveButton(getResources().getString(android.R.string.ok), (dialogInterface, i) -> {})
-                        .show();
-            }
-        });
     }
 
     private void initSpinners() {
@@ -155,9 +126,6 @@ public class SettingsFragment extends Fragment {
         view.findViewById(R.id.spinnerClassTokens).setVisibility(classVisibility);
         view.findViewById(R.id.spinnerTeacherTokens).setVisibility(teacherVisibility);
         view.findViewById(R.id.spinnerClassroomTokens).setVisibility(classroomVisibility);
-
-        view.findViewById(R.id.switch_showReplacementsOnTimetable).setVisibility(classVisibility);
-        view.findViewById(R.id.textView_showReplacementsOnTimetable).setVisibility(classVisibility);
     }
 
     private void getData() {

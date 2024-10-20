@@ -14,12 +14,13 @@
             android:id="@+id/textView_selectTimetableType"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:text="@string/timetableType"
             android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/textView_settingsTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textView_settingsTitle" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
             android:id="@+id/spinnerUserType"
@@ -90,16 +91,6 @@
             app:layout_constraintStart_toStartOf="@+id/textView_selectTeacher"
             app:layout_constraintTop_toBottomOf="@+id/textView_selectTeacher" />
 
-        <TextView
-            android:id="@+id/textView_showReplacementsOnTimetable"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:text="@string/showReplacements"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/textView_selectClassroom"
-            app:layout_constraintTop_toBottomOf="@+id/textView_selectClassroom" />
-
         <Spinner
             android:id="@+id/spinnerClassroomTokens"
             android:layout_width="0dp"
@@ -112,16 +103,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView_selectClassroom"
             app:layout_constraintTop_toTopOf="@+id/textView_selectClassroom" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_showReplacementsOnTimetable"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="24dp"
-            android:theme="@style/SwitchStyle"
-            app:layout_constraintBottom_toBottomOf="@+id/textView_showReplacementsOnTimetable"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView_showReplacementsOnTimetable" />
 
         <TextView
             android:id="@+id/textView"

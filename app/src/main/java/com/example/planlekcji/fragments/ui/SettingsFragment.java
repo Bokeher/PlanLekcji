@@ -1,4 +1,4 @@
-package com.example.planlekcji.fragments;
+package com.example.planlekcji.fragments.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

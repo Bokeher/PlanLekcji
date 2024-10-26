@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
         viewPager2_appContent.setAdapter(adapter);
 
+        viewPager2_appContent.setUserInputEnabled(false);
+
         // Connect the TabLayout with the ViewPager2
         new TabLayoutMediator(tabLayout, viewPager2_appContent, (tab, position) -> {
             switch (position) {

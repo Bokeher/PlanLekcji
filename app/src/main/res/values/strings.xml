@@ -11,7 +11,6 @@
     <string name="selectedTypeOfTimetableKey" translatable="false">selectedTypeOfTimetable</string>
     <string name="replacementVisibilityOnTimetable" translatable="false">replacementVisibilityOnTimetable</string>
     <string name="searchKey" translatable="false">searchingKey</string>
-    <string name="navigate_home">Home</string>
     <string name="navigate_timetable">Timetable</string>
     <string name="navigate_replacements">Replacements</string>
     <string name="navigate_settings">Settings</string>

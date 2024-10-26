@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.planlekcji.fragments.ui.HomeFragment;
 import com.example.planlekcji.fragments.ui.ReplacementsFragment;
 import com.example.planlekcji.fragments.ui.SettingsFragment;
 import com.example.planlekcji.fragments.ui.TimetableFragment;
@@ -19,15 +18,14 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         return switch (position) {
-            case 1 -> new TimetableFragment();
-            case 2 -> new ReplacementsFragment();
-            case 3 -> new SettingsFragment();
-            default -> new HomeFragment();
+            case 1 -> new ReplacementsFragment();
+            case 2 -> new SettingsFragment();
+            default -> new TimetableFragment();
         };
     }
 
     @Override
     public int getItemCount() {
-        return 4; // Number of tabs
+        return 3; // Number of tabs
     }
 }

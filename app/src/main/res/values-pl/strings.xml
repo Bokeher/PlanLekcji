@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Plan lekcji</string>
-    <string name="navigate_home">Start</string>
     <string name="navigate_timetable">Plan lekcji</string>
     <string name="navigate_replacements">Zastępstwa</string>
     <string name="navigate_settings">Ustawienia</string>

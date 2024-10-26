@@ -53,15 +53,12 @@ public class MainActivity extends AppCompatActivity {
         new TabLayoutMediator(tabLayout, viewPager2_appContent, (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText(R.string.navigate_home);
-                    break;
-                case 1:
                     tab.setText(R.string.navigate_timetable);
                     break;
-                case 2:
+                case 1:
                     tab.setText(R.string.navigate_replacements);
                     break;
-                case 3:
+                case 2:
                     tab.setText(R.string.navigate_settings);
                     break;
             }

@@ -11,7 +11,7 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout_navigate"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -20,18 +20,21 @@
             android:id="@+id/tabItem_navigate_timetable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:icon="@drawable/timetable_icon"
             android:text="@string/navigate_timetable" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem_navigate_replacements"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:icon="@drawable/replacement_icon"
             android:text="@string/navigate_replacements" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem_navigate_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:icon="@drawable/settings_icon"
             android:text="@string/navigate_settings" />
 
     </com.google.android.material.tabs.TabLayout>

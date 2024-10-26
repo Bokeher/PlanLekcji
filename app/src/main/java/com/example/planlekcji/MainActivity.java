@@ -54,12 +54,15 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     tab.setText(R.string.navigate_timetable);
+                    tab.setIcon(R.drawable.timetable_icon);
                     break;
                 case 1:
                     tab.setText(R.string.navigate_replacements);
+                    tab.setIcon(R.drawable.replacement_icon);
                     break;
                 case 2:
                     tab.setText(R.string.navigate_settings);
+                    tab.setIcon(R.drawable.settings_icon);
                     break;
             }
         }).attach();

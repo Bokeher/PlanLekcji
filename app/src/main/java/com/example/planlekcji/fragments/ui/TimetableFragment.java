@@ -38,7 +38,7 @@ public class TimetableFragment extends Fragment {
         viewPager_timetable = view.findViewById(R.id.viewPager_timetable);
         viewPager_timetable.setOffscreenPageLimit(5);
 
-        observeAndHandleLiveDataChanges();
+        observeAndHandleTimetableLiveData();
 
         setAdapterToViewPager();
 
@@ -50,16 +50,14 @@ public class TimetableFragment extends Fragment {
         viewPager_timetable.setAdapter(adapter);
     }
 
-    private void observeAndHandleLiveDataChanges() {
-        mainViewModel.getCombinedLiveData().observe(getViewLifecycleOwner(), bool -> {
-            if(bool) {
-                lessonRows = mainViewModel.getLessonRows();
+    private void observeAndHandleTimetableLiveData() {
+        mainViewModel.getTimetableLiveData().observe(getViewLifecycleOwner(), (newLessonRows) -> {
+            lessonRows = newLessonRows;
 
-                setAdapterToViewPager();
+            setAdapterToViewPager();
 
-                setHeadersToTabLayout();
-                setCurrentDay();
-            }
+            setHeadersToTabLayout();
+            setCurrentDay();
         });
     }
 

@@ -32,13 +32,15 @@ public class TimetableFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_timetable, container, false);
 
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+
+        observeAndHandleTimetableLiveData();
+
         mainViewModel.fetchData();
 
         viewPager_timetable = view.findViewById(R.id.viewPager_timetable);
         viewPager_timetable.setOffscreenPageLimit(5);
 
-        observeAndHandleTimetableLiveData();
 
         setAdapterToViewPager();
 

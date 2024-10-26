@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.planlekcji.MainActivity;
+import com.example.planlekcji.MainViewModel;
 import com.example.planlekcji.R;
 import com.example.planlekcji.settings.SchoolEntriesDownloader;
 import com.example.planlekcji.settings.model.TimetableInfo;
@@ -26,10 +28,14 @@ public class SettingsFragment extends Fragment {
     private List<TimetableInfo> teachersInfoList = new ArrayList<>();
     private List<TimetableInfo> classroomsInfoList = new ArrayList<>();
     private View view;
+    private MainViewModel mainViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        // Obtain the MainViewModel instance to update data on settings changes
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         // Initialize SharedPreferences for storing application settings.
         sharedPref = MainActivity.getContext().getSharedPreferences("sharedPrefs", 0);
@@ -77,6 +83,9 @@ public class SettingsFragment extends Fragment {
                 editor.putString(sharedPreferencesToken, timetableInfo.getToken());
                 editor.putString(sharedPreferencesUrl, timetableInfo.getUrl());
                 editor.apply();
+
+                // Update timetable and replacements
+                mainViewModel.fetchData();
             }
 
             @Override
@@ -98,6 +107,9 @@ public class SettingsFragment extends Fragment {
                 editor.apply();
 
                 changeVisibility();
+
+                // Update timetable and replacements
+                mainViewModel.fetchData();
             }
 
             @Override

@@ -21,16 +21,9 @@ public class MainViewModel extends ViewModel {
     private final MutableLiveData<List<String>> replacements = new MutableLiveData<>();
     private final MutableLiveData<List<LessonRow>> lessonRows = new MutableLiveData<>();
 
-    // selected tab
-    private final MutableLiveData<Integer> selectedTabNumber = new MutableLiveData<>();
-
     // retry handlers
     private final RetryHandler replaceRetryHandler = new RetryHandler(this::startReplacementDownload);
     private final RetryHandler timetableRetryHandler = new RetryHandler(this::startReplacementDownload);
-
-    public MainViewModel() {
-        selectedTabNumber.setValue(0); // set default
-    }
 
     public void fetchData() {
         startReplacementDownload();
@@ -76,15 +69,6 @@ public class MainViewModel extends ViewModel {
         });
         new Thread(downloader).start();
     }
-
-    public void setSelectedTabNumber(int selectedTabNumber) {
-        this.selectedTabNumber.setValue(selectedTabNumber);
-    }
-
-    public int getSelectedTabNumber() {
-        return selectedTabNumber.getValue();
-    }
-
 
     public LiveData<List<LessonRow>> getTimetableLiveData() {
         return lessonRows;

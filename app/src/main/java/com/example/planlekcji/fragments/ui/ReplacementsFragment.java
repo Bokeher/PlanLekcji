@@ -92,7 +92,7 @@ public class ReplacementsFragment extends Fragment {
     private String searchReplacements(String searchingKey) {
         if(searchingKey.isEmpty()) return "";
 
-        // in case user types '4ptn' instead of '4 ptn'
+        // In case user types '4ptn' instead of '4 ptn'
         searchingKey = handleOtherUserInput(searchingKey).toLowerCase();
 
         BoyerMooreSearch boyerMooreSearch = new BoyerMooreSearch();
@@ -109,9 +109,11 @@ public class ReplacementsFragment extends Fragment {
                 else foundResults.append("<br><br>").append(singleReplacement);
             }
         }
+
         return foundResults.toString();
     }
 
+    // In case user types '4ptn' instead of '4 ptn'
     private String handleOtherUserInput(String searchingKey) {
         Pattern pattern = Pattern.compile("\\d");
         Matcher matcher = pattern.matcher(searchingKey.substring(0, 1));

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.planlekcji.MainActivity;
+import com.example.planlekcji.MainViewModel;
 import com.example.planlekcji.R;
 import com.example.planlekcji.utils.BoyerMooreSearch;
 import com.example.planlekcji.utils.DelayedSearchTextWatcher;
@@ -22,16 +24,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReplacementsFragment extends Fragment {
-    View view;
+    private View view;
     private List<String> replacements;
+    private MainViewModel mainViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_replacements, container, false);
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
-        // TODO: download and show replacements here
+        observeAndHandleReplacementsLiveData();
+        mainViewModel.fetchReplacements();
+
+        setEventListenerToSearchBar();
 
         return view;
+    }
+
+    private void observeAndHandleReplacementsLiveData() {
+        mainViewModel.getReplacementsLiveData().observe(getViewLifecycleOwner(), newReplacements -> {
+            replacements = newReplacements;
+
+            setReplacements();
+        });
     }
 
     private void setEventListenerToSearchBar() {
@@ -58,7 +73,7 @@ public class ReplacementsFragment extends Fragment {
         TextView textFieldReplacements = view.findViewById(R.id.textView_replacements);
         EditText searchBar = view.findViewById(R.id.editText_searchBar);
 
-        if(replacements.isEmpty()) {
+        if(replacements == null || replacements.isEmpty()) {
             searchBar.setVisibility(View.GONE);
             textFieldReplacements.setText(getString(R.string.no_replacements));
         } else {
@@ -68,10 +83,10 @@ public class ReplacementsFragment extends Fragment {
     }
 
     private void setReplacements(String data) {
-        if (data != null) {
-            TextView textFieldReplacements = view.findViewById(R.id.textView_replacements);
-            textFieldReplacements.setText(Html.fromHtml(data, Html.FROM_HTML_MODE_LEGACY));
-        }
+        if (data == null) return;
+
+        TextView textFieldReplacements = view.findViewById(R.id.textView_replacements);
+        textFieldReplacements.setText(Html.fromHtml(data, Html.FROM_HTML_MODE_LEGACY));
     }
 
     private String searchReplacements(String searchingKey) {

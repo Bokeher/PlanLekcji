@@ -21,7 +21,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 public class MainActivity extends AppCompatActivity {
     private static Context appContext;
 
-    private ViewPager2 viewPager2_appContent;
     private MainViewModel mainViewModel;
 
     @Override
@@ -48,15 +47,18 @@ public class MainActivity extends AppCompatActivity {
         // Set the content view for the main activity.
         setContentView(R.layout.activity_main);
 
-        viewPager2_appContent = findViewById(R.id.viewPager2_appContent);
-        TabLayout tabLayout = findViewById(R.id.tabLayout_navigate);
+        ViewPager2 viewPager2_appContent = findViewById(R.id.viewPager2_appContent);
+
+        // Set adapter
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
         viewPager2_appContent.setAdapter(adapter);
 
+        // Disable user input to allow input of timetable ViewPager
         viewPager2_appContent.setUserInputEnabled(false);
 
-        // Connect the TabLayout with the ViewPager2
-        new TabLayoutMediator(tabLayout, viewPager2_appContent, (tab, position) -> {
+        // Connect the TabLayout (navigation) with the ViewPager2 (app content)
+        TabLayout tabLayout_navigate = findViewById(R.id.tabLayout_navigate);
+        new TabLayoutMediator(tabLayout_navigate, viewPager2_appContent, (tab, position) -> {
             switch (position) {
                 case 0:
                     tab.setText(R.string.navigate_timetable);
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attach();
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout_navigate.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {}
 

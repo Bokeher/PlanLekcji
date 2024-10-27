@@ -30,6 +30,14 @@ public class MainViewModel extends ViewModel {
         startTimetableDownload();
     }
 
+    public void fetchReplacements() {
+        startReplacementDownload();
+    }
+
+    public void fetchTimetable() {
+        startTimetableDownload();
+    }
+
     private void startReplacementDownload() {
         ReplacementDataDownloader downloader = new ReplacementDataDownloader(new DownloadCompleteListener() {
             @Override

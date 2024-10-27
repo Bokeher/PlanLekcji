@@ -10,6 +10,8 @@ import com.example.planlekcji.fragments.ui.SettingsFragment;
 import com.example.planlekcji.fragments.ui.TimetableFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
+    public static final int NUMBER_OF_TABS = 3;
+
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
@@ -26,6 +28,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 3; // Number of tabs
+        return NUMBER_OF_TABS;
     }
 }

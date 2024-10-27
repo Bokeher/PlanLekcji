@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.planlekcji.fragments.model.ViewPagerAdapter;
@@ -18,10 +19,10 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 
 public class MainActivity extends AppCompatActivity {
-
     private static Context appContext;
 
     private ViewPager2 viewPager2_appContent;
+    private MainViewModel mainViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize the application context for other functions.
         appContext = this;
+
+        // Obtain the MainViewModel instance to update data on settings changes
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         // Check for internet connection; exit the app if not connected.
         if (!isOnline()) {
@@ -68,6 +72,22 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }).attach();
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // Update data upon exiting settings
+                if(tab.getPosition() == ViewPagerAdapter.SETTINGS_TAB_ID) {
+                    mainViewModel.fetchData();
+                }
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
     }
 
     public static Context getContext() {

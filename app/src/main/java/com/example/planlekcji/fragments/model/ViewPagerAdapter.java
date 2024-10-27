@@ -10,6 +10,7 @@ import com.example.planlekcji.fragments.ui.SettingsFragment;
 import com.example.planlekcji.fragments.ui.TimetableFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
+    public static final int SETTINGS_TAB_ID = 2;
     public static final int NUMBER_OF_TABS = 3;
 
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {

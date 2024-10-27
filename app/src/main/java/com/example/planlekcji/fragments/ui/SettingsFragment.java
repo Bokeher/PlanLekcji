@@ -1,18 +1,18 @@
-package com.example.planlekcji.settings.ui;
+package com.example.planlekcji.fragments.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
-
+import com.example.planlekcji.MainActivity;
 import com.example.planlekcji.R;
 import com.example.planlekcji.settings.SchoolEntriesDownloader;
 import com.example.planlekcji.settings.model.TimetableInfo;
@@ -20,20 +20,19 @@ import com.example.planlekcji.settings.model.TimetableInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsFragment extends Fragment {
     private SharedPreferences sharedPref;
     private List<TimetableInfo> classInfoList = new ArrayList<>();
     private List<TimetableInfo> teachersInfoList = new ArrayList<>();
     private List<TimetableInfo> classroomsInfoList = new ArrayList<>();
+    private View view;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Set the content view to display the settings layout.
-        setContentView(R.layout.settings_layout);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         // Initialize SharedPreferences for storing application settings.
-        sharedPref = this.getSharedPreferences("sharedPrefs", 0);
+        sharedPref = MainActivity.getContext().getSharedPreferences("sharedPrefs", 0);
 
         // Fetch data relevant to settings.
         getData();
@@ -41,40 +40,13 @@ public class SettingsActivity extends AppCompatActivity {
         // Initialize spinners and populate them with data.
         initSpinners();
 
-        // Set a listener for the back button to handle navigation.
-        setListenerToBackButton();
-
-        // Set a listener for the switch responsible for changing visibility of replacements on timetable.
-        initReplacementVisibilitySwitch();
-    }
-
-    private void initReplacementVisibilitySwitch() {
-        SwitchCompat visibilitySwitch = findViewById(R.id.switch_showReplacementsOnTimetable);
-
-        boolean visibility = sharedPref.getBoolean(getString(R.string.replacementVisibilityOnTimetable), false);
-
-        visibilitySwitch.setChecked(visibility);
-
-        visibilitySwitch.setOnCheckedChangeListener((compoundButton, bool) -> {
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean(getString(R.string.replacementVisibilityOnTimetable), bool);
-            editor.apply();
-
-            if(bool) {
-                new AlertDialog.Builder(this)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle(getResources().getString(R.string.replacementsOnTimetable_title))
-                        .setMessage(getResources().getString(R.string.replacementsOnTimetable_description))
-                        .setPositiveButton(getResources().getString(android.R.string.ok), (dialogInterface, i) -> {})
-                        .show();
-            }
-        });
+        return view;
     }
 
     private void initSpinners() {
-        Spinner spinnerClassTokens = findViewById(R.id.spinnerClassTokens);
-        Spinner spinnerTeacherTokens = findViewById(R.id.spinnerTeacherTokens);
-        Spinner spinnerClassroomTokens = findViewById(R.id.spinnerClassroomTokens);
+        Spinner spinnerClassTokens = view.findViewById(R.id.spinnerClassTokens);
+        Spinner spinnerTeacherTokens = view.findViewById(R.id.spinnerTeacherTokens);
+        Spinner spinnerClassroomTokens = view.findViewById(R.id.spinnerClassroomTokens);
 
         setSpinner(spinnerClassTokens, classInfoList, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey));
         setSpinner(spinnerTeacherTokens, teachersInfoList, getString(R.string.teacherTokenKey), getString(R.string.teacherTimetableUrlKey));
@@ -89,8 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
             tokenList.add(timetableInfo.getToken());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, tokenList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.getContext(), android.R.layout.simple_list_item_1, tokenList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
@@ -114,7 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setTypeOfTimetableSpinner() {
-        Spinner spinnerUserType = findViewById(R.id.spinnerUserType);
+        Spinner spinnerUserType = view.findViewById(R.id.spinnerUserType);
 
         int typeIndex = sharedPref.getInt(getString(R.string.selectedTypeOfTimetableKey), 0);
         spinnerUserType.setSelection(typeIndex);
@@ -148,22 +119,20 @@ public class SettingsActivity extends AppCompatActivity {
         else if(whichIsVisible == 2) teacherVisibility = View.VISIBLE;
         else if(whichIsVisible == 3) classroomVisibility = View.VISIBLE;
 
-        findViewById(R.id.textView_selectClass).setVisibility(classVisibility);
-        findViewById(R.id.textView_selectTeacher).setVisibility(teacherVisibility);
-        findViewById(R.id.textView_selectClassroom).setVisibility(classroomVisibility);
+        view.findViewById(R.id.textView_selectClass).setVisibility(classVisibility);
+        view.findViewById(R.id.textView_selectTeacher).setVisibility(teacherVisibility);
+        view.findViewById(R.id.textView_selectClassroom).setVisibility(classroomVisibility);
 
-        findViewById(R.id.spinnerClassTokens).setVisibility(classVisibility);
-        findViewById(R.id.spinnerTeacherTokens).setVisibility(teacherVisibility);
-        findViewById(R.id.spinnerClassroomTokens).setVisibility(classroomVisibility);
-
-        findViewById(R.id.switch_showReplacementsOnTimetable).setVisibility(classVisibility);
-        findViewById(R.id.textView_showReplacementsOnTimetable).setVisibility(classVisibility);
+        view.findViewById(R.id.spinnerClassTokens).setVisibility(classVisibility);
+        view.findViewById(R.id.spinnerTeacherTokens).setVisibility(teacherVisibility);
+        view.findViewById(R.id.spinnerClassroomTokens).setVisibility(classroomVisibility);
     }
 
     private void getData() {
         SchoolEntriesDownloader spinnersDataDownloader = new SchoolEntriesDownloader();
         Thread thread = new Thread(spinnersDataDownloader);
         thread.start();
+
         try {
             thread.join();
         } catch (InterruptedException e) {
@@ -173,10 +142,5 @@ public class SettingsActivity extends AppCompatActivity {
         classInfoList = spinnersDataDownloader.getClassInfoList();
         teachersInfoList = spinnersDataDownloader.getTeachersInfoList();
         classroomsInfoList = spinnersDataDownloader.getClassroomsInfoList();
-    }
-
-    private void setListenerToBackButton() {
-        ImageButton imageButton_goBack = findViewById(R.id.imageButton_back);
-        imageButton_goBack.setOnClickListener(view -> finish());
     }
 }

@@ -52,7 +52,7 @@ public class TimetableFragment extends Fragment {
     }
 
     private void observeAndHandleTimetableLiveData() {
-        mainViewModel.getTimetableLiveData().observe(getViewLifecycleOwner(), (newLessonRows) -> {
+        mainViewModel.getTimetableLiveData().observe(getViewLifecycleOwner(), newLessonRows -> {
             lessonRows = newLessonRows;
 
             setAdapterToViewPager();

@@ -72,12 +72,17 @@ public class ReplacementsFragment extends Fragment {
     private void setReplacements() {
         TextView textFieldReplacements = view.findViewById(R.id.textView_replacements);
         EditText searchBar = view.findViewById(R.id.editText_searchBar);
+        View divider = view.findViewById(R.id.divider);
 
         if(replacements == null || replacements.isEmpty()) {
             searchBar.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
+
             textFieldReplacements.setText(getString(R.string.no_replacements));
         } else {
             searchBar.setVisibility(View.VISIBLE);
+            divider.setVisibility(View.VISIBLE);
+
             textFieldReplacements.setText(Html.fromHtml(String.join("<br><br>", replacements), Html.FROM_HTML_MODE_LEGACY));
         }
     }

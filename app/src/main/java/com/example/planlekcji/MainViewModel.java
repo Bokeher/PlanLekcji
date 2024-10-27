@@ -82,7 +82,7 @@ public class MainViewModel extends ViewModel {
         return lessonRows;
     }
 
-    public LiveData<List<LessonRow>> getReplacementsLiveData() {
-        return lessonRows;
+    public LiveData<List<String>> getReplacementsLiveData() {
+        return replacements;
     }
 }

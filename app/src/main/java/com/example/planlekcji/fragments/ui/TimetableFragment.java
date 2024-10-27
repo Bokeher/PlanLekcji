@@ -36,11 +36,10 @@ public class TimetableFragment extends Fragment {
 
         observeAndHandleTimetableLiveData();
 
-        mainViewModel.fetchData();
+        mainViewModel.fetchTimetable();
 
         viewPager_timetable = view.findViewById(R.id.viewPager_timetable);
         viewPager_timetable.setOffscreenPageLimit(5);
-
 
         setAdapterToViewPager();
 

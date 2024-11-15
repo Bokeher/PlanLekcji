@@ -9,12 +9,8 @@ public class ErrorResponse extends APIResponse {
         this.message = message;
     }
 
-    public ErrorResponse(int httpStatus) {
-        super(httpStatus);
-        this.message = "";
-    }
-
     public String getMessage() {
-        return message;
+        return message == null ? "Status: " + getHttpStatus()
+                : message;
     }
 }

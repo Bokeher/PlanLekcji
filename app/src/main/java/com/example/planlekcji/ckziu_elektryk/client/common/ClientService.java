@@ -1,15 +1,18 @@
-package com.example.planlekcji.ckziu_elektryk.client;
+package com.example.planlekcji.ckziu_elektryk.client.common;
 
 import android.util.Log;
 
-import com.example.planlekcji.ckziu_elektryk.client.response.APIResponse;
+import androidx.annotation.NonNull;
+
+import com.example.planlekcji.ckziu_elektryk.client.Config;
 import com.example.planlekcji.ckziu_elektryk.client.response.ErrorResponse;
 import com.example.planlekcji.ckziu_elektryk.client.response.SuccessResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.function.Consumer;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,12 +31,14 @@ public abstract class ClientService {
         this.gson = new Gson();
     }
 
-    protected Optional<APIResponse> getData(Endpoint endpoint) {
+    protected APIResponseCall getData(@NonNull Endpoint endpoint) {
         Request request = new Request.Builder()
                 .addHeader("Authorization", config.getToken())
-                .url(config.getAPIUrl())
+                .url(config.getAPIUrl() + "/" + endpoint.getName())
                 .get()
                 .build();
+
+        APIResponseCall apiResponseCall = new APIResponseCall();
 
         try (Response response = this.httpClient.newCall(request).execute()) {
             ResponseBody body = response.body();
@@ -41,17 +46,28 @@ public abstract class ClientService {
 
             if (body != null) bodyContent = body.string();
 
-            if (!response.isSuccessful())
-                return Optional.of(new ErrorResponse(response.code(), bodyContent));
-
             JsonElement jsonElement = gson.fromJson(bodyContent, JsonElement.class);
+            if (!response.isSuccessful()) {
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-            return Optional.of(new SuccessResponse(response.code(), jsonElement));
+                if (jsonObject.has("message")) {
+                    bodyContent = jsonObject.get("message").getAsString();
+                }
 
+                apiResponseCall.setErrorResponse(new ErrorResponse(response.code(), bodyContent));
+
+                return apiResponseCall;
+            }
+
+            apiResponseCall.setSuccessResponse(new SuccessResponse(response.code(), jsonElement));
         } catch (IOException exception) {
-            Log.e("error", exception.getMessage(), exception);
+            throw new IllegalStateException(exception);
         }
 
-        return Optional.empty();
+        return apiResponseCall;
+    }
+
+    protected @NonNull Consumer<ErrorResponse> printError() {
+        return errorResponse -> Log.e("error", errorResponse.getMessage());
     }
 }

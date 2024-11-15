@@ -1,4 +1,4 @@
-package com.example.planlekcji.ckziu_elektryk.client;
+package com.example.planlekcji.ckziu_elektryk.client.common;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -7,7 +7,8 @@ import java.util.Map;
 public enum Endpoint {
 
     LATEST_REPLACEMENTS("replacements"),
-    REPLACEMENTS_FROM_FILE("replacements/{file_name}");
+    REPLACEMENTS_BY_FILE_NAME("replacements/{file_name}"),
+    TIMETABLE_INFO("timetables/info");
 
     private String name;
 
@@ -16,7 +17,7 @@ public enum Endpoint {
     }
 
     public Endpoint withPlaceholders(@NotNull Map<String, String> placeholders) {
-        if (!this.name.contains("{") || !this.name.contains("}")) {
+        if (!this.name.contains("{") && !this.name.contains("}")) {
             throw new IllegalStateException("This endpoint hasn't placeholders");
         }
 

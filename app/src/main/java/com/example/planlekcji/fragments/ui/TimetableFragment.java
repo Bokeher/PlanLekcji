@@ -85,7 +85,7 @@ public class TimetableFragment extends Fragment {
      */
     private void setCurrentDay() {
         Calendar calendar = GregorianCalendar.getInstance();
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
         int dayNumb = switch (dayOfWeek) {
             case Calendar.TUESDAY -> 1;
@@ -95,6 +95,6 @@ public class TimetableFragment extends Fragment {
             default -> 0;
         };
 
-        viewPager_timetable.setCurrentItem(dayNumb - 1);
+        viewPager_timetable.setCurrentItem(dayNumb);
     }
 }

@@ -65,12 +65,12 @@ public class TimetableFragment extends Fragment {
     private void setHeadersToTabLayout() {
         TabLayout tabLayout = view.findViewById(R.id.tabLayout_dayNames);
         new TabLayoutMediator(tabLayout, viewPager_timetable, (tab, position) -> {
-            String data = switch (position + 1) {
-                case 1 -> getResources().getString(R.string.mondayShortcut);
-                case 2 -> getResources().getString(R.string.tuesdayShortcut);
-                case 3 -> getResources().getString(R.string.wednesdayShortcut);
-                case 4 -> getResources().getString(R.string.thursdayShortcut);
-                case 5 -> getResources().getString(R.string.fridayShortcut);
+            String data = switch (position) {
+                case 0 -> getResources().getString(R.string.mondayShortcut);
+                case 1 -> getResources().getString(R.string.tuesdayShortcut);
+                case 2 -> getResources().getString(R.string.wednesdayShortcut);
+                case 3 -> getResources().getString(R.string.thursdayShortcut);
+                case 4 -> getResources().getString(R.string.fridayShortcut);
                 default -> "";
             };
 

@@ -47,7 +47,7 @@ public class MainViewModel extends ViewModel {
     }
 
     private void startReplacementDownload() {
-        ReplacementDataDownloader downloader = new ReplacementDataDownloader(new DownloadCompleteListener() {
+        ReplacementDataDownloader downloader = new ReplacementDataDownloader(client, new DownloadCompleteListener() {
             @Override
             public void onDownloadComplete(Document document) {
                 // Process replacement data

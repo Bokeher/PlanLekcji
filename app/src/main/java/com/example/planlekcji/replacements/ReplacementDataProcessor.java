@@ -39,31 +39,23 @@ public class ReplacementDataProcessor {
     }
 
     public void process() {
-        Elements tds = document.select("table tr td");
-        Elements teachers = document.select(".st1");
+        replacements = new ArrayList<>();
+        String rawText = document.text();
 
-        // return early if there are no replacements
-        if (teachers.isEmpty() || teachers.first().text().contains("nie zaplanowano")) return;
-
-        changeTeacherLastNamesToInitials(teachers);
-
-        String title = document.select(".st0").get(0).text();
-        boolean singleDay = !title.contains(" - ");
-
-        if (singleDay) addDatesToTeachers(teachers, title);
-
-        removeUnwantedData(tds);
-
-        // in case of 0 replacements just return empty lists
-        if (title.isEmpty()) {
-            replacements = new ArrayList<>();
-            replacements.add(teachers.get(0).text()); // teachers are in st1 class and the info about zero replacements too
-            replacementsForTimetable = new ArrayList<>();
-            return;
+        // Find index of first word after skipped 14 words
+        // These 14 words are unnecessary for this processing
+        int index = -1;
+        for (int i = 0; i < 14; i++) {
+            index = rawText.indexOf(" ", index + 1);
+            if (index == -1) break;
         }
 
-        replacements = processReplacements(tds, teachers);
-        replacementsForTimetable = processReplacementsForTimetable(replacements, singleDay, title);
+        // +3 to skip first number, so theres no empty element at first index
+        rawText = rawText.substring(index + 3);
+
+        // "FirstName SecondName extraInfo 0 FirstName ... " => [FirstName SecondName extraInfo, FirstName ...]
+        String[] replacementsArray = rawText.split(" \\d ");
+        replacements.addAll(Arrays.asList(replacementsArray));
     }
 
     private void addDatesToTeachers(Elements teachers, String title) {

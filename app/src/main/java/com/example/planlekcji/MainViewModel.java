@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.planlekcji.ckziu_elektryk.client.CKZiUElektrykClient;
 import com.example.planlekcji.listener.DownloadCompleteListener;
 import com.example.planlekcji.replacements.ReplacementDataProcessor;
 import com.example.planlekcji.replacements.ReplacementDataDownloader;
@@ -17,6 +18,8 @@ import org.jsoup.nodes.Document;
 import java.util.List;
 
 public class MainViewModel extends ViewModel {
+    private final CKZiUElektrykClient client;
+
     // downloaded data
     private final MutableLiveData<List<String>> replacements = new MutableLiveData<>();
     private final MutableLiveData<List<LessonRow>> lessonRows = new MutableLiveData<>();
@@ -24,6 +27,11 @@ public class MainViewModel extends ViewModel {
     // retry handlers
     private final RetryHandler replaceRetryHandler = new RetryHandler(this::startReplacementDownload);
     private final RetryHandler timetableRetryHandler = new RetryHandler(this::startReplacementDownload);
+
+    public MainViewModel() {
+        // Initialize the client
+        client = new CKZiUElektrykClient();
+    }
 
     public void fetchData() {
         startReplacementDownload();

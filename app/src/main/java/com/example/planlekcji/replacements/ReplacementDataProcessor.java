@@ -19,20 +19,20 @@ public class ReplacementDataProcessor {
     public void process() {
         String rawText = document;
 
-        // Find index of first word after skipped 14 words
-        // These 14 words are unnecessary for this processing
-        int index = -1;
-        for (int i = 0; i < 14; i++) {
-            index = rawText.indexOf(" ", index + 1);
-            if (index == -1) break;
+        // document headers '\n \n' replacement1 '\n \n' replacement2 ...
+        ArrayList<String> temp = new ArrayList<>(Arrays.asList(rawText.split("\n \n")));
+        temp.remove(0); // remove first element containing unnecessary info
+
+        for(String replacement : temp) {
+            String[] lines = replacement.split("\n");
+
+            lines[1] = ""; // remove table headers
+
+            String newReplacement = String.join("<br>", lines); // add <br>s
+            newReplacement = newReplacement.replaceAll(" {2,}", " "); // replace all consecutive spaces into one space
+
+            replacements.add(newReplacement);
         }
-
-        // +3 to skip first number, so theres no empty element at first index
-        rawText = rawText.substring(index + 3);
-
-        // "FirstName SecondName extraInfo 0 FirstName ... " => [FirstName SecondName extraInfo, FirstName ...]
-        String[] replacementsArray = rawText.split(" \\d ");
-        replacements = Arrays.asList(replacementsArray);
     }
 
 }

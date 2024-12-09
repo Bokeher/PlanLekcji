@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ReplacementDataProcessor {
     private final String rawReplacements;
-    private List<String> replacements = new ArrayList<>();
+    private final List<String> replacements = new ArrayList<>();
 
     public List<String> getReplacements() {
         return replacements;

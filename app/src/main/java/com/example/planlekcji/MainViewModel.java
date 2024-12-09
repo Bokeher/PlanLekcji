@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.planlekcji.ckziu_elektryk.client.CKZiUElektrykClient;
 import com.example.planlekcji.listener.DownloadCompleteListener;
+import com.example.planlekcji.listener.DownloadCompleteListenerString;
 import com.example.planlekcji.replacements.ReplacementDataProcessor;
 import com.example.planlekcji.replacements.ReplacementDataDownloader;
 import com.example.planlekcji.utils.RetryHandler;
@@ -47,9 +48,9 @@ public class MainViewModel extends ViewModel {
     }
 
     private void startReplacementDownload() {
-        ReplacementDataDownloader downloader = new ReplacementDataDownloader(client, new DownloadCompleteListener() {
+        ReplacementDataDownloader downloader = new ReplacementDataDownloader(client, new DownloadCompleteListenerString() {
             @Override
-            public void onDownloadComplete(Document document) {
+            public void onDownloadComplete(String document) {
                 // Process replacement data
                 ReplacementDataProcessor replacementDataProcessor = new ReplacementDataProcessor(document);
                 replacementDataProcessor.process();

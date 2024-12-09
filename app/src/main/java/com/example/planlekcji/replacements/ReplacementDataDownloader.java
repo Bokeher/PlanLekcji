@@ -3,18 +3,15 @@ package com.example.planlekcji.replacements;
 import com.example.planlekcji.ckziu_elektryk.client.CKZiUElektrykClient;
 import com.example.planlekcji.ckziu_elektryk.client.replacments.Replacement;
 import com.example.planlekcji.ckziu_elektryk.client.replacments.ReplacementService;
-import com.example.planlekcji.listener.DownloadCompleteListener;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import com.example.planlekcji.listener.DownloadCompleteListenerString;
 
 import java.util.Optional;
 
 public class ReplacementDataDownloader implements Runnable {
-    private final DownloadCompleteListener listener;
+    private final DownloadCompleteListenerString listener;
     private final CKZiUElektrykClient client;
 
-    public ReplacementDataDownloader(CKZiUElektrykClient client, DownloadCompleteListener listener) {
+    public ReplacementDataDownloader(CKZiUElektrykClient client, DownloadCompleteListenerString listener) {
         this.listener = listener;
         this.client = client;
     }
@@ -29,8 +26,6 @@ public class ReplacementDataDownloader implements Runnable {
 
         Replacement replacement = replacementOptional.get();
 
-        Document doc = Jsoup.parse(replacement.content());
-
-        listener.onDownloadComplete(doc);
+        listener.onDownloadComplete(replacement.content());
     }
 }

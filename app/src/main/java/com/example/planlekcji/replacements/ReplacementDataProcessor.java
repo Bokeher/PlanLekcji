@@ -1,25 +1,23 @@
 package com.example.planlekcji.replacements;
 
-import org.jsoup.nodes.Document;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ReplacementDataProcessor {
-    private final Document document;
+    private final String document;
     private List<String> replacements = new ArrayList<>();
 
     public List<String> getReplacements() {
         return replacements;
     }
 
-    public ReplacementDataProcessor(Document document) {
+    public ReplacementDataProcessor(String document) {
         this.document = document;
     }
 
     public void process() {
-        String rawText = document.text();
+        String rawText = document;
 
         // Find index of first word after skipped 14 words
         // These 14 words are unnecessary for this processing

@@ -50,9 +50,9 @@ public class MainViewModel extends ViewModel {
     private void startReplacementDownload() {
         ReplacementDataDownloader downloader = new ReplacementDataDownloader(client, new DownloadCompleteListenerString() {
             @Override
-            public void onDownloadComplete(String document) {
+            public void onDownloadComplete(String rawReplacements) {
                 // Process replacement data
-                ReplacementDataProcessor replacementDataProcessor = new ReplacementDataProcessor(document);
+                ReplacementDataProcessor replacementDataProcessor = new ReplacementDataProcessor(rawReplacements);
                 replacementDataProcessor.process();
 
                 // Update LiveData

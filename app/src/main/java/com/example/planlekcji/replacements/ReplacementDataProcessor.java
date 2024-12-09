@@ -5,22 +5,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ReplacementDataProcessor {
-    private final String document;
+    private final String rawReplacements;
     private List<String> replacements = new ArrayList<>();
 
     public List<String> getReplacements() {
         return replacements;
     }
 
-    public ReplacementDataProcessor(String document) {
-        this.document = document;
+    public ReplacementDataProcessor(String rawReplacements) {
+        this.rawReplacements = rawReplacements;
     }
 
     public void process() {
-        String rawText = document;
-
         // document headers '\n \n' replacement1 '\n \n' replacement2 ...
-        ArrayList<String> temp = new ArrayList<>(Arrays.asList(rawText.split("\n \n")));
+        ArrayList<String> temp = new ArrayList<>(Arrays.asList(rawReplacements.split("\n \n")));
         temp.remove(0); // remove first element containing unnecessary info
 
         for(String replacement : temp) {

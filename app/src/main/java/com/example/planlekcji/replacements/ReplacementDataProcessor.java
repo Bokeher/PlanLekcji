@@ -24,7 +24,13 @@ public class ReplacementDataProcessor {
         for(String replacement : temp) {
             String[] lines = replacement.split("\n");
 
-            lines[1] = ""; // remove table headers
+            // remove table headers
+            for(int i = 0; i < lines.length; i++) {
+                if (lines[i].contains("LP. ")) {
+                    lines[i] = "";
+                    break;
+                }
+            }
 
             String newReplacement = String.join("<br>", lines); // add <br>s
             newReplacement = newReplacement.replaceAll(" {2,}", " "); // replace all consecutive spaces into one space

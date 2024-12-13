@@ -38,6 +38,10 @@ public class ReplacementDataProcessor {
                     String swapTemp = words[2];
                     words[2] = words[1];
                     words[1] = swapTemp;
+
+                    // highlight first and second name
+                    words[1] = "<b><font color=\"#d4b085\">" + words[1];
+                    words[2] = words[2]+"</font></b>";
                 }
 
                 lines[i] = String.join(" ", words);

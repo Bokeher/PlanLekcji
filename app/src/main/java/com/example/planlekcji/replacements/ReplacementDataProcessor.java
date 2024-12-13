@@ -36,7 +36,7 @@ public class ReplacementDataProcessor {
                 if (words.length > 3) {
                     // swap first and second name
                     String swapTemp = words[2];
-                    words[2] = words[1];
+                    words[2] = getInitial(words[1]); // also change second name to initial
                     words[1] = swapTemp;
 
                     // highlight first and second name
@@ -57,4 +57,27 @@ public class ReplacementDataProcessor {
         }
     }
 
+    private String getInitial(String str) {
+        if (str == null || str.length() < 2) {
+            throw new IllegalArgumentException("Input string must have at least two character");
+        }
+
+        str = str.toLowerCase();
+        char firstChar = str.charAt(0);
+        char secondChar = str.charAt(1);
+
+        final String[] polishDigraphs = {"sz", "cz", "dż", "dź", "rz", "ch", "dz"};
+
+        for (String digraph : polishDigraphs) {
+            if (digraph.charAt(0) == firstChar) {
+                if (digraph.charAt(1) == secondChar) {
+                    String ch1 = digraph.substring(0, 1).toUpperCase();
+                    String ch2 = digraph.substring(1, 2);
+                    return ch1.concat(ch2);
+                }
+            }
+        }
+
+        return String.valueOf(firstChar).toUpperCase();
+    }
 }

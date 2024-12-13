@@ -29,6 +29,8 @@ public class ReplacementDataProcessor {
                     .filter(line -> !(line.contains("LP. ") || line.length() < 8))
                     .toArray(String[]::new);
 
+            // bold the date of replacement
+            lines[0] = "<b>"+lines[0]+"</b>";
 
             String newReplacement = String.join("<br>", lines); // add <br>s
             newReplacement = newReplacement.replaceAll(" {2,}", " "); // replace all consecutive spaces into one space

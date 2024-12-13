@@ -24,12 +24,11 @@ public class ReplacementDataProcessor {
         for(String replacement : temp) {
             String[] lines = replacement.split("\n");
 
-            // remove table headers
-            for(int i = 0; i < lines.length; i++) {
-                if (lines[i].contains("LP. ") || lines[i].length() < 8) {
-                    lines[i] = "";
-                }
-            }
+            // remove empty lines and table headers
+            lines = Arrays.stream(lines)
+                    .filter(line -> !(line.contains("LP. ") || line.length() < 8))
+                    .toArray(String[]::new);
+
 
             String newReplacement = String.join("<br>", lines); // add <br>s
             newReplacement = newReplacement.replaceAll(" {2,}", " "); // replace all consecutive spaces into one space

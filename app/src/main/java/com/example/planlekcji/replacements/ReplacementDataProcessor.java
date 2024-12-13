@@ -29,6 +29,20 @@ public class ReplacementDataProcessor {
                     .filter(line -> !(line.contains("LP. ") || line.length() < 8))
                     .toArray(String[]::new);
 
+            for (int i = 0; i < lines.length; i++) {
+                String line = lines[i];
+                String[] words = line.split(" ");
+
+                if (words.length > 3) {
+                    // swap first and second name
+                    String swapTemp = words[2];
+                    words[2] = words[1];
+                    words[1] = swapTemp;
+                }
+
+                lines[i] = String.join(" ", words);
+            }
+
             // bold the date of replacement
             lines[0] = "<b>"+lines[0]+"</b>";
 

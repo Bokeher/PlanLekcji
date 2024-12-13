@@ -26,9 +26,8 @@ public class ReplacementDataProcessor {
 
             // remove table headers
             for(int i = 0; i < lines.length; i++) {
-                if (lines[i].contains("LP. ")) {
+                if (lines[i].contains("LP. ") || lines[i].length() < 8) {
                     lines[i] = "";
-                    break;
                 }
             }
 

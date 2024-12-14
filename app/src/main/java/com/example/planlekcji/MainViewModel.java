@@ -68,7 +68,7 @@ public class MainViewModel extends ViewModel {
     }
 
     private void startTimetableDownload() {
-        TimetableDataDownloader downloader = new TimetableDataDownloader(new DownloadCompleteListener() {
+        TimetableDataDownloader downloader = new TimetableDataDownloader(client, new DownloadCompleteListener() {
             @Override
             public void onDownloadComplete(Document document) {
                 // Process timetable data

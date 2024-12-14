@@ -4,9 +4,11 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.planlekcji.MainActivity;
 import com.example.planlekcji.ckziu_elektryk.client.Config;
 import com.example.planlekcji.ckziu_elektryk.client.response.ErrorResponse;
 import com.example.planlekcji.ckziu_elektryk.client.response.SuccessResponse;
+import com.example.planlekcji.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -61,7 +63,7 @@ public abstract class ClientService {
 
             apiResponseCall.setSuccessResponse(new SuccessResponse(response.code(), jsonElement));
         } catch (IOException exception) {
-            throw new IllegalStateException(exception);
+            ToastUtils.showToast(MainActivity.getContext(), "Nie udało się nawiązać połączenia z serwerem.", true);
         }
 
         return apiResponseCall;

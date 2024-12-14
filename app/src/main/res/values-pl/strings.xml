@@ -26,4 +26,7 @@
     <string name="replacementsOnTimetable_description">Widoczne są tylko zastępstwa dedykowane twojej klasie. Zastępstwa lekcji łączonych z innymi klasami nie są pokazywane.</string>
     <string name="settings_extraInfo">Aplikacja została stworzona przez absolwenta szkoły CKZiU Elektryk</string>
     <string name="no_replacements">Brak zastępstw</string>
+    <string name="toastErrorMessage_failedApiConnection">Nie udało się nawiązać połączenia z serwerem.</string>
+    <string name="toastErrorMessage_noInternetConnection">Wymagane połączenie z internetem.</string>
+    <string name="toastErrorMessage_noInternetConnectionRetry">Brak połączenia z internetem. Ponawianie połączenia.</string>
 </resources>

@@ -25,12 +25,15 @@ import com.example.planlekcji.MainActivity;
 import com.example.planlekcji.R;
 import com.example.planlekcji.timetable.model.DayOfWeek;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class LessonFragment extends Fragment {
+    List<String> lessonHours = new ArrayList<>();
 
     public static final String TITLE = "title";
     private Map<DayOfWeek, List<String>> timetableMap;
@@ -53,6 +56,8 @@ public class LessonFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Context context = MainActivity.getContext();
 
+        addLessonHours();
+
         assert getArguments() != null;
         String argument = getArguments().getString(TITLE);
         assert argument != null;
@@ -69,7 +74,7 @@ public class LessonFragment extends Fragment {
         int dayNumbers = Objects.requireNonNull(timetableMap.get(DayOfWeek.MONDAY)).size();
         for (int i = 0; i < dayNumbers; i++) {
             String number = (i + 1) + "";
-            String hour = "00:00";
+            String hour = lessonHours.get(i);
 
             String html = Objects.requireNonNull(timetableMap.get(dayNumber)).get(i);
 
@@ -154,6 +159,17 @@ public class LessonFragment extends Fragment {
             cardView.setLayoutParams(layoutParams);
             linearLayout.addView(cardView);
         }
+    }
+
+    private void addLessonHours() {
+        String[] hours = {
+                "08:00 - 08:45", "08:50 - 09:35", "09:45 - 10:30", "10:50 - 11:35", "11:45 - 12:30",
+                "12:40 - 13:25", "13:35 - 14:20", "14:25 - 15:10", "15:15 - 16:00", "16:05 - 16:50",
+                "16:55 - 17:40", "17:45 - 18:30", "18:35 - 19:20", "19:25 - 20:10", "20:15 - 21:00",
+                "21:05 - 21:50", "21:55 - 22:40", "22:45 - 23:30", "23:35 - 00:20"
+        };
+
+        Collections.addAll(lessonHours, hours);
     }
 
     /**

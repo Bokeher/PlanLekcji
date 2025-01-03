@@ -23,10 +23,6 @@ public enum Endpoint {
     }
 
     public Endpoint withPlaceholders(@NotNull Map<String, String> placeholders) {
-        if (!this.name.contains("{") && !this.name.contains("}")) {
-            throw new IllegalStateException("This endpoint hasn't placeholders");
-        }
-
         for (Map.Entry<String, String> keyValueEntry : placeholders.entrySet()) {
             this.name = this.name.replace(keyValueEntry.getKey(), keyValueEntry.getValue());
         }

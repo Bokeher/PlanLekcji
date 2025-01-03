@@ -22,7 +22,10 @@ public class ReplacementDataDownloader implements Runnable {
 
         Optional<Replacement> replacementOptional = replacementService.getLatestReplacement();
 
-        if (!replacementOptional.isPresent()) return;
+        if (!replacementOptional.isPresent()) {
+            listener.onDownloadComplete("");
+            return;
+        }
 
         Replacement replacement = replacementOptional.get();
 

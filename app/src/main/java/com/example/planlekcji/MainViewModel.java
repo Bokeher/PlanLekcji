@@ -51,6 +51,10 @@ public class MainViewModel extends ViewModel {
         ReplacementDataDownloader downloader = new ReplacementDataDownloader(client, new DownloadCompleteListenerString() {
             @Override
             public void onDownloadComplete(String rawReplacements) {
+                if(rawReplacements.isEmpty()) {
+                    replacements.postValue(null);
+                }
+
                 // Process replacement data
                 ReplacementDataProcessor replacementDataProcessor = new ReplacementDataProcessor(rawReplacements);
                 replacementDataProcessor.process();

@@ -2,21 +2,16 @@ package com.example.planlekcji.timetable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.example.planlekcji.MainActivity;
+import com.example.planlekcji.R;
 import com.example.planlekcji.ckziu_elektryk.client.CKZiUElektrykClient;
-import com.example.planlekcji.ckziu_elektryk.client.timetable.SchoolEntry;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.SchoolEntryType;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.TimetableService;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.info.TimetableInfo;
 import com.example.planlekcji.listener.DownloadCompleteListener;
 import com.example.planlekcji.timetable.model.DayOfWeek;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,28 +31,14 @@ public class TimetableDataDownloader implements Runnable {
 
         if (!timetableInfoOptional.isPresent()) return;
 
-        TimetableInfo timetableInfo = timetableInfoOptional.get();
+        SchoolEntryType schoolEntryType = getTimetableType();
+        String token = getToken(schoolEntryType).replaceAll(" ", "");
 
-//        SchoolEntryType schoolEntryType = getTimetableType();
-        SchoolEntryType schoolEntryType = SchoolEntryType.CLASSES;
-
-        Log.e("asd", schoolEntryType+"");
         TimetableService timetableService = client.getTimetableService(schoolEntryType);
-        List<SchoolEntry> schoolEntries = timetableService.getList();
 
-        Map<DayOfWeek, List<String>> map = timetableService.getTimetable("{AW}");
+        Map<DayOfWeek, List<String>> map = timetableService.getTimetable(token);
 
-        // this crashes, because map is null
-//        Log.e("adsad", map.toString());
-//        Log.e("adsad", map.get(DayOfWeek.MONDAY)+"");
-
-        try {
-            Document doc = Jsoup.connect(getTimetableUrl()).get();
-            listener.onDownloadComplete(doc);
-        } catch (IOException e) {
-            e.printStackTrace();
-            listener.onDownloadFailed();
-        }
+        listener.onDownloadComplete(map);
     }
 
     private String getTimetableUrl() {
@@ -91,5 +72,21 @@ public class TimetableDataDownloader implements Runnable {
         };
 
         return timetableTypes[typeOfTimetable];
+    }
+
+    private String getToken(SchoolEntryType timetableType) {
+        Context context = MainActivity.getContext();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("sharedPrefs", 0);
+
+        String tokenType;
+        if (timetableType == SchoolEntryType.CLASSES) {
+            tokenType = context.getString(R.string.classTokenKey);
+        } else if(timetableType == SchoolEntryType.TEACHERS) {
+            tokenType = context.getString(R.string.teacherTokenKey);
+        } else {
+            tokenType = context.getString(R.string.classroomTokenKey);
+        }
+
+        return sharedPreferences.getString(tokenType, "");
     }
 }

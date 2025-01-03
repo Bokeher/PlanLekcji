@@ -9,21 +9,19 @@ import com.example.planlekcji.listener.DownloadCompleteListener;
 import com.example.planlekcji.listener.DownloadCompleteListenerString;
 import com.example.planlekcji.replacements.ReplacementDataProcessor;
 import com.example.planlekcji.replacements.ReplacementDataDownloader;
+import com.example.planlekcji.timetable.model.DayOfWeek;
 import com.example.planlekcji.utils.RetryHandler;
-import com.example.planlekcji.timetable.model.LessonRow;
-import com.example.planlekcji.timetable.TimetableDataProcessor;
 import com.example.planlekcji.timetable.TimetableDataDownloader;
 
-import org.jsoup.nodes.Document;
-
 import java.util.List;
+import java.util.Map;
 
 public class MainViewModel extends ViewModel {
     private final CKZiUElektrykClient client;
 
     // downloaded data
     private final MutableLiveData<List<String>> replacements = new MutableLiveData<>();
-    private final MutableLiveData<List<LessonRow>> lessonRows = new MutableLiveData<>();
+    private final MutableLiveData<Map<DayOfWeek, List<String>>> timetableMap = new MutableLiveData<>();
 
     // retry handlers
     private final RetryHandler replaceRetryHandler = new RetryHandler(this::startReplacementDownload);
@@ -74,13 +72,9 @@ public class MainViewModel extends ViewModel {
     private void startTimetableDownload() {
         TimetableDataDownloader downloader = new TimetableDataDownloader(client, new DownloadCompleteListener() {
             @Override
-            public void onDownloadComplete(Document document) {
-                // Process timetable data
-                TimetableDataProcessor processTimetableData = new TimetableDataProcessor(document);
-                List<LessonRow> lessonRows = processTimetableData.getLessonRows();
-
+            public void onDownloadComplete(Map<DayOfWeek, List<String>> timetableMap) {
                 // Update LiveData
-                MainViewModel.this.lessonRows.postValue(lessonRows);
+                MainViewModel.this.timetableMap.postValue(timetableMap);
             }
 
             @Override
@@ -91,8 +85,8 @@ public class MainViewModel extends ViewModel {
         new Thread(downloader).start();
     }
 
-    public LiveData<List<LessonRow>> getTimetableLiveData() {
-        return lessonRows;
+    public LiveData<Map<DayOfWeek, List<String>>> getTimetableLiveData() {
+        return timetableMap;
     }
 
     public LiveData<List<String>> getReplacementsLiveData() {

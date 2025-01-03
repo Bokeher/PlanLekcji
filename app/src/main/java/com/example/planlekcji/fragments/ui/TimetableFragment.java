@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.planlekcji.MainViewModel;
 import com.example.planlekcji.R;
-import com.example.planlekcji.timetable.model.LessonRow;
+import com.example.planlekcji.timetable.model.DayOfWeek;
 import com.example.planlekcji.timetable.ui.Adapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -20,12 +20,13 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 
 public class TimetableFragment extends Fragment {
     private ViewPager2 viewPager_timetable;
     private MainViewModel mainViewModel;
 
-    private List<LessonRow> lessonRows;
+    private Map<DayOfWeek, List<String>> timetableMap;
     private View view;
 
     @Override
@@ -47,13 +48,13 @@ public class TimetableFragment extends Fragment {
     }
 
     private void setAdapterToViewPager() {
-        Adapter adapter = new Adapter(getChildFragmentManager(), getLifecycle(), lessonRows, null);
+        Adapter adapter = new Adapter(getChildFragmentManager(), getLifecycle(), timetableMap, null);
         viewPager_timetable.setAdapter(adapter);
     }
 
     private void observeAndHandleTimetableLiveData() {
-        mainViewModel.getTimetableLiveData().observe(getViewLifecycleOwner(), newLessonRows -> {
-            lessonRows = newLessonRows;
+        mainViewModel.getTimetableLiveData().observe(getViewLifecycleOwner(), newTimetableMap -> {
+            timetableMap = newTimetableMap;
 
             setAdapterToViewPager();
 

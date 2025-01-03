@@ -27,25 +27,22 @@ import com.example.planlekcji.MainActivity;
 import com.example.planlekcji.replacements.model.ReplacementToTimetable;
 import com.example.planlekcji.R;
 import com.example.planlekcji.timetable.model.DayOfWeek;
-import com.example.planlekcji.timetable.model.LessonRow;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class LessonFragment extends Fragment {
 
     public static final String TITLE = "title";
     private SharedPreferences sharedPreferences;
-    private List<LessonRow> lessonRows;
+    private Map<DayOfWeek, List<String>> timetableMap;
 
     public LessonFragment() {
     }
 
-    public LessonFragment(List<LessonRow> lessonRows, List<ReplacementToTimetable> replacementsForTimetable) {
-        this.lessonRows = lessonRows;
+    public LessonFragment(Map<DayOfWeek, List<String>> timetableMap, List<ReplacementToTimetable> replacementsForTimetable) {
+        this.timetableMap = timetableMap;
     }
 
     @Override
@@ -64,34 +61,34 @@ public class LessonFragment extends Fragment {
         sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs", 0);
         int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
 
-        int dayNumber = DayOfWeek.getDayOfWeek(tabNumber).getDayOfWeekAsNumber();
+        DayOfWeek dayNumber = DayOfWeek.getDayOfWeek(tabNumber);
 
         int currentLesson = getCurrentLessonIndex(tabNumber);
 
-        if (lessonRows != null) {
-            for (int i = 0; i < lessonRows.size(); i++) {
+        if (timetableMap != null) {
+            for (int i = 0; i < timetableMap.get(DayOfWeek.MONDAY).size(); i++) {
                 // get number of lesson and hour
-                String number = lessonRows.get(i).getLessonNumbers();
-                String hour = lessonRows.get(i).getLessonHours();
+                String number = (i + 1) + "";
+                String hour = "00:00";
 
                 // get html to change <br> tag into \n
-                String html = lessonRows.get(i).getDayData().get(dayNumber);
+                String html = timetableMap.get(dayNumber).get(i);
+//
+//                // for some reason when timetable is for classrooms or teachers there is br at the end of cell
+//                // this is to prevent that from making new lines
+//                if (timetableType != 0) {
+//                    html = html.replace("<br>", "");
+//                }
+//                // create pointer for line breaks (\n cant be used here)
+//                html = html.replace("<br>", "|nLine|");
+//
+//                // create html document to remove unnecessary html tags
+//                Document doc = Jsoup.parse(html);
+//
+//                // replace pointer for \n
+//                String data = doc.text().replace("|nLine|", "\n");
 
-                // for some reason when timetable is for classrooms or teachers there is br at the end of cell
-                // this is to prevent that from making new lines
-                if (timetableType != 0) {
-                    html = html.replace("<br>", "");
-                }
-                // create pointer for line breaks (\n cant be used here)
-                html = html.replace("<br>", "|nLine|");
-
-                // create html document to remove unnecessary html tags
-                Document doc = Jsoup.parse(html);
-
-                // replace pointer for \n
-                String data = doc.text().replace("|nLine|", "\n");
-
-                SpannableStringBuilder str = new SpannableStringBuilder(data);
+                SpannableStringBuilder str = new SpannableStringBuilder(html);
 //
 //                if (shouldShowReplacementsOnTimetable()) {
 //                    for (ReplacementToTimetable replacement : replacementsForTimetable) {

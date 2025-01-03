@@ -5,8 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.StrikethroughSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -184,42 +182,6 @@ public class LessonFragment extends Fragment {
                 linearLayout.addView(cardView);
             }
         }
-    }
-
-    private boolean shouldShowReplacementsOnTimetable() {
-        boolean visibility = sharedPreferences.getBoolean(getString(R.string.replacementVisibilityOnTimetable), false);
-        int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
-        return visibility && timetableType == 0;
-    }
-
-    private boolean isLessonWithReplacement(ReplacementToTimetable replacement, int tabNumber, int i) {
-        return replacement.getDayNumber() == tabNumber && replacement.getLessonNumber() == i + 1;
-    }
-
-    private void applyStrikethroughToCorrectPartsOfSpan(SpannableStringBuilder str, ReplacementToTimetable replacement) {
-        int beginIndex = 0;
-        int foundIndex = 0;
-
-        for (int k = 0; foundIndex != -1 && beginIndex < str.length(); k++) {
-            foundIndex = str.toString().indexOf("\n", beginIndex);
-
-            if (foundIndex == -1) {
-                foundIndex = str.length();
-            }
-
-            if (k == replacement.getGroupNumber() - 1) {
-                str.setSpan(new StrikethroughSpan(), beginIndex, foundIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                appendExtraInfoIfNeeded(str, replacement.getExtraInfo());
-            }
-
-            beginIndex = foundIndex + 1;
-        }
-    }
-
-    private void appendExtraInfoIfNeeded(SpannableStringBuilder str, String extraInfo) {
-        if (extraInfo.isEmpty()) return;
-
-        str.append("\n").append(extraInfo);
     }
 
     /**

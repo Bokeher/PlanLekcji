@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.planlekcji.MainActivity;
-import com.example.planlekcji.replacements.model.ReplacementToTimetable;
 import com.example.planlekcji.R;
 import com.example.planlekcji.timetable.model.DayOfWeek;
 
@@ -39,7 +38,7 @@ public class LessonFragment extends Fragment {
     public LessonFragment() {
     }
 
-    public LessonFragment(Map<DayOfWeek, List<String>> timetableMap, List<ReplacementToTimetable> replacementsForTimetable) {
+    public LessonFragment(Map<DayOfWeek, List<String>> timetableMap) {
         this.timetableMap = timetableMap;
     }
 
@@ -87,20 +86,6 @@ public class LessonFragment extends Fragment {
 //                String data = doc.text().replace("|nLine|", "\n");
 
                 SpannableStringBuilder str = new SpannableStringBuilder(html);
-//
-//                if (shouldShowReplacementsOnTimetable()) {
-//                    for (ReplacementToTimetable replacement : replacementsForTimetable) {
-//                        if (isLessonWithReplacement(replacement, tabNumber, i)) {
-//                            // 0 means there is no group division
-//                            if (replacement.getGroupNumber() == 0) {
-//                                str.setSpan(new StrikethroughSpan(), 0, str.length(), 0); // apply strikethrough to entire lesson
-//                                appendExtraInfoIfNeeded(str, replacement.getExtraInfo());
-//                            } else {
-//                                applyStrikethroughToCorrectPartsOfSpan(str, replacement);
-//                            }
-//                        }
-//                    }
-//                }
 
                 LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCards);
 

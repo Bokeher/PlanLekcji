@@ -48,7 +48,7 @@ public class TimetableFragment extends Fragment {
     }
 
     private void setAdapterToViewPager() {
-        Adapter adapter = new Adapter(getChildFragmentManager(), getLifecycle(), timetableMap, null);
+        Adapter adapter = new Adapter(getChildFragmentManager(), getLifecycle(), timetableMap);
         viewPager_timetable.setAdapter(adapter);
     }
 

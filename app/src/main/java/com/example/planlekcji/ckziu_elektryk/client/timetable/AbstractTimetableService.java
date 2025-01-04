@@ -1,7 +1,5 @@
 package com.example.planlekcji.ckziu_elektryk.client.timetable;
 
-import android.util.Log;
-
 import com.example.planlekcji.ckziu_elektryk.client.Config;
 import com.example.planlekcji.ckziu_elektryk.client.common.APIResponseCall;
 import com.example.planlekcji.ckziu_elektryk.client.common.ClientService;
@@ -47,7 +45,6 @@ public abstract class AbstractTimetableService extends ClientService implements 
                     for (JsonElement element : jsonArray) {
                         JsonObject jsonObject = element.getAsJsonObject();
 
-                        Log.e("JSON Response1", jsonObject.toString());
                         schoolEntries.add(new SchoolEntry(
                                 jsonObject.get("shortcut").getAsString(),
                                 jsonObject.get("url").getAsString()
@@ -72,7 +69,6 @@ public abstract class AbstractTimetableService extends ClientService implements 
                     Map<DayOfWeek, List<String>> timetable = new HashMap<>();
 
                     JsonObject jsonObject = successResponse.getJsonElement().getAsJsonObject();
-                    Log.e("JSON Response2", jsonObject.toString());
 
                     String[] daysOfWeekShortcuts = {"PON", "WTO", "ŚRO", "CZW", "PTK"};
 

@@ -92,4 +92,8 @@ public class MainViewModel extends ViewModel {
     public LiveData<List<String>> getReplacementsLiveData() {
         return replacements;
     }
+
+    public CKZiUElektrykClient getClient() {
+        return client;
+    }
 }

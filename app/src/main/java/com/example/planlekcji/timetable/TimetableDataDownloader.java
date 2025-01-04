@@ -9,7 +9,7 @@ import com.example.planlekcji.ckziu_elektryk.client.CKZiUElektrykClient;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.SchoolEntryType;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.TimetableService;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.info.TimetableInfo;
-import com.example.planlekcji.listener.DownloadCompleteListener;
+import com.example.planlekcji.listener.TimetableDownloadCompleteListener;
 import com.example.planlekcji.timetable.model.DayOfWeek;
 
 import java.util.List;
@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public class TimetableDataDownloader implements Runnable {
-    private final DownloadCompleteListener listener;
+    private final TimetableDownloadCompleteListener listener;
     private final CKZiUElektrykClient client;
 
-    public TimetableDataDownloader(CKZiUElektrykClient client, DownloadCompleteListener listener) {
+    public TimetableDataDownloader(CKZiUElektrykClient client, TimetableDownloadCompleteListener listener) {
         this.listener = listener;
         this.client = client;
     }

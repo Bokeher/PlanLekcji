@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.planlekcji.ckziu_elektryk.client.CKZiUElektrykClient;
-import com.example.planlekcji.listener.DownloadCompleteListener;
-import com.example.planlekcji.listener.DownloadCompleteListenerString;
+import com.example.planlekcji.listener.TimetableDownloadCompleteListener;
+import com.example.planlekcji.listener.ReplacementsDownloadCompleteListener;
 import com.example.planlekcji.replacements.ReplacementDataProcessor;
 import com.example.planlekcji.replacements.ReplacementDataDownloader;
 import com.example.planlekcji.timetable.model.DayOfWeek;
@@ -46,7 +46,7 @@ public class MainViewModel extends ViewModel {
     }
 
     private void startReplacementDownload() {
-        ReplacementDataDownloader downloader = new ReplacementDataDownloader(client, new DownloadCompleteListenerString() {
+        ReplacementDataDownloader downloader = new ReplacementDataDownloader(client, new ReplacementsDownloadCompleteListener() {
             @Override
             public void onDownloadComplete(String rawReplacements) {
                 if(rawReplacements.isEmpty()) {
@@ -70,7 +70,7 @@ public class MainViewModel extends ViewModel {
     }
 
     private void startTimetableDownload() {
-        TimetableDataDownloader downloader = new TimetableDataDownloader(client, new DownloadCompleteListener() {
+        TimetableDataDownloader downloader = new TimetableDataDownloader(client, new TimetableDownloadCompleteListener() {
             @Override
             public void onDownloadComplete(Map<DayOfWeek, List<String>> timetableMap) {
                 // Update LiveData

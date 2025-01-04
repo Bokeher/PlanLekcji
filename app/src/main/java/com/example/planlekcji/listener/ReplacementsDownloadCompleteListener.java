@@ -1,6 +1,6 @@
 package com.example.planlekcji.listener;
 
-public interface DownloadCompleteListenerString {
+public interface ReplacementsDownloadCompleteListener {
 
     void onDownloadComplete(String rawReplacements);
 

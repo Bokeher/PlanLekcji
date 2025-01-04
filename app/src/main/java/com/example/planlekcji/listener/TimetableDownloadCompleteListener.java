@@ -5,7 +5,7 @@ import com.example.planlekcji.timetable.model.DayOfWeek;
 import java.util.List;
 import java.util.Map;
 
-public interface DownloadCompleteListener {
+public interface TimetableDownloadCompleteListener {
 
     void onDownloadComplete(Map<DayOfWeek, List<String>> timetableMap);
 

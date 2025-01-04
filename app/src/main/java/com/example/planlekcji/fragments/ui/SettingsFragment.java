@@ -53,14 +53,14 @@ public class SettingsFragment extends Fragment {
         Spinner spinnerTeacherTokens = view.findViewById(R.id.spinnerTeacherTokens);
         Spinner spinnerClassroomTokens = view.findViewById(R.id.spinnerClassroomTokens);
 
-        setSpinner(spinnerClassTokens, classesSchoolEntries, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey));
-        setSpinner(spinnerTeacherTokens, teachersSchoolEntries, getString(R.string.teacherTokenKey), getString(R.string.teacherTimetableUrlKey));
-        setSpinner(spinnerClassroomTokens, classroomsSchoolEntries, getString(R.string.classroomTokenKey), getString(R.string.classroomTimetableUrlKey));
+        setSpinner(spinnerClassTokens, classesSchoolEntries, getString(R.string.classTokenKey));
+        setSpinner(spinnerTeacherTokens, teachersSchoolEntries, getString(R.string.teacherTokenKey));
+        setSpinner(spinnerClassroomTokens, classroomsSchoolEntries, getString(R.string.classroomTokenKey));
 
         setTypeOfTimetableSpinner();
     }
 
-    private void setSpinner(Spinner spinner, List<SchoolEntry> schoolEntries, String sharedPreferencesToken, String sharedPreferencesUrl) {
+    private void setSpinner(Spinner spinner, List<SchoolEntry> schoolEntries, String sharedPreferencesToken) {
         List<String> tokenList = new ArrayList<>();
         for (SchoolEntry schoolEntry : schoolEntries) {
             tokenList.add(schoolEntry.shortcut());

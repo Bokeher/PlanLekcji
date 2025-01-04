@@ -17,13 +17,10 @@
     <string name="selectClass">Wybierz klasę</string>
     <string name="selectTeacher">Wybierz nauczyciela</string>
     <string name="selectClassroom">Wybierz salę</string>
-    <string name="showReplacements">Pokaż zastępstwa na planie</string>
     <string name="classes">Klasy</string>
     <string name="teachers">Nauczyciele</string>
     <string name="classrooms">Sale</string>
     <string name="goBackButton_description">Powrót</string>
-    <string name="replacementsOnTimetable_title">Zastępstwa na planie</string>
-    <string name="replacementsOnTimetable_description">Widoczne są tylko zastępstwa dedykowane twojej klasie. Zastępstwa lekcji łączonych z innymi klasami nie są pokazywane.</string>
     <string name="settings_extraInfo">Aplikacja została stworzona przez absolwenta szkoły CKZiU Elektryk</string>
     <string name="no_replacements">Brak zastępstw</string>
     <string name="toastErrorMessage_failedApiConnection">Nie udało się nawiązać połączenia z serwerem.</string>

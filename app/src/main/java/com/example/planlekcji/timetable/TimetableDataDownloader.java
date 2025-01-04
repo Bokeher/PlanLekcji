@@ -2,6 +2,7 @@ package com.example.planlekcji.timetable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.planlekcji.MainActivity;
 import com.example.planlekcji.R;
@@ -34,9 +35,12 @@ public class TimetableDataDownloader implements Runnable {
         SchoolEntryType schoolEntryType = getTimetableType();
         String token = getToken(schoolEntryType).replaceAll(" ", "");
 
+        Log.d("token: ", token);
         TimetableService timetableService = client.getTimetableService(schoolEntryType);
 
         Map<DayOfWeek, List<String>> map = timetableService.getTimetable(token);
+
+        Log.d("map: ", map.toString());
 
         listener.onDownloadComplete(map);
     }

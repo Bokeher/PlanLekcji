@@ -18,6 +18,17 @@ public class EndpointTest {
         assertEquals("replacements/filename", endpoint.getName());
     }
 
+    @Test
+    public void shouldCreateEndpointWithPlaceholdersWithReplacingTwice() {
+        Endpoint.REPLACEMENTS_BY_FILE_NAME
+                .withPlaceholders(Map.of("{file_name}", "filename"));
+
+        Endpoint endpoint2 = Endpoint.REPLACEMENTS_BY_FILE_NAME
+                .withPlaceholders(Map.of("{file_name}", "filename2"));
+
+        assertEquals("replacements/filename2", endpoint2.getName());
+    }
+
     @Test(expected = IllegalStateException.class)
     public void shouldCreateEndpointWithoutPlaceholders() {
         Endpoint.LATEST_REPLACEMENTS

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +20,18 @@ import com.example.planlekcji.R;
 import com.example.planlekcji.utils.BoyerMooreSearch;
 import com.example.planlekcji.utils.DelayedSearchTextWatcher;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ReplacementsFragment extends Fragment {
     private View view;
     private List<String> replacements;
     private MainViewModel mainViewModel;
+
+    // used for searching
+    private List<String> replacementsWithoutHtml;
+    private HashSet<Integer> replacementIds;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,27 +50,23 @@ public class ReplacementsFragment extends Fragment {
         mainViewModel.getReplacementsLiveData().observe(getViewLifecycleOwner(), newReplacements -> {
             replacements = newReplacements;
 
+            // Prepare replacements without html for searching
+            replacementsWithoutHtml = replacements.stream()
+                    .map(s -> s.replaceAll("<[^>]*>", "").replaceAll("\\s+", " "))
+                    .collect(Collectors.toList());
+
             setReplacements();
         });
     }
 
     private void setEventListenerToSearchBar() {
         EditText searchBar = view.findViewById(R.id.editText_searchBar);
-        TextView textView_noResults = view.findViewById(R.id.textView_noResults);
+
 
         searchBar.addTextChangedListener(new DelayedSearchTextWatcher(query -> {
-            if(query.isEmpty()) {
-                setReplacements();
-            } else {
-                String foundData = searchReplacements(query);
-                if(foundData.isEmpty()) {
-                    textView_noResults.setVisibility(View.VISIBLE);
-                    setReplacements();
-                } else {
-                    textView_noResults.setVisibility(View.GONE);
-                    setReplacements(foundData);
-                }
-            }
+            replacementIds = searchReplacements(query.toLowerCase());
+
+            setReplacements();
         }));
     }
 
@@ -73,6 +74,7 @@ public class ReplacementsFragment extends Fragment {
         TextView textFieldReplacements = view.findViewById(R.id.textView_replacements);
         EditText searchBar = view.findViewById(R.id.editText_searchBar);
         View divider = view.findViewById(R.id.divider);
+        TextView textView_noResults = view.findViewById(R.id.textView_noResults);
 
         if(replacements == null || replacements.isEmpty()) {
             searchBar.setVisibility(View.GONE);
@@ -83,7 +85,19 @@ public class ReplacementsFragment extends Fragment {
             searchBar.setVisibility(View.VISIBLE);
             divider.setVisibility(View.VISIBLE);
 
-            textFieldReplacements.setText(Html.fromHtml(String.join("<br><br>", replacements), Html.FROM_HTML_MODE_LEGACY));
+            if (replacementIds == null || replacementIds.isEmpty()) {
+                textView_noResults.setVisibility(replacementIds == null ? View.GONE : View.VISIBLE);
+                textFieldReplacements.setText(Html.fromHtml(String.join("<br><br>", replacements), Html.FROM_HTML_MODE_LEGACY));
+                return;
+            }
+
+            List<String> filteredReplacements = replacements.stream()
+                    .filter(rep -> replacementIds.contains(replacements.indexOf(rep)))
+                    .collect(Collectors.toList());
+
+            textFieldReplacements.setText(Html.fromHtml(String.join("<br><br>", filteredReplacements), Html.FROM_HTML_MODE_LEGACY));
+            textView_noResults.setVisibility(View.GONE);
+
         }
     }
 
@@ -94,42 +108,24 @@ public class ReplacementsFragment extends Fragment {
         textFieldReplacements.setText(Html.fromHtml(data, Html.FROM_HTML_MODE_LEGACY));
     }
 
-    private String searchReplacements(String searchingKey) {
-        if(searchingKey.isEmpty()) return "";
-
-        // In case user types '4ptn' instead of '4 ptn'
-        searchingKey = handleOtherUserInput(searchingKey).toLowerCase();
+    private HashSet<Integer> searchReplacements(String searchingKey) {
+        if (searchingKey.isEmpty()) return null;
 
         BoyerMooreSearch boyerMooreSearch = new BoyerMooreSearch();
 
         // searching
-        StringBuilder foundResults = new StringBuilder();
-        for (int i = 1; i < replacements.size(); i++) {
-            String singleReplacement = replacements.get(i);
+        HashSet<Integer> replacementIds = new HashSet<>();
+        for (int i = 0; i < replacementsWithoutHtml.size(); i++) {
+            String replacement = replacementsWithoutHtml.get(i);
 
-            String text = singleReplacement.toLowerCase();
-
-            if(boyerMooreSearch.search(text, searchingKey)) {
-                if(foundResults.length() == 0) foundResults.append(singleReplacement);
-                else foundResults.append("<br><br>").append(singleReplacement);
+            if (boyerMooreSearch.search(replacement.toLowerCase(), searchingKey)) {
+                replacementIds.add(i);
             }
+
         }
 
-        return foundResults.toString();
+        return replacementIds;
     }
-
-    // In case user types '4ptn' instead of '4 ptn'
-    private String handleOtherUserInput(String searchingKey) {
-        Pattern pattern = Pattern.compile("\\d");
-        Matcher matcher = pattern.matcher(searchingKey.substring(0, 1));
-
-        if(!searchingKey.contains(" ") && searchingKey.length() > 1 && matcher.find()) {
-            searchingKey = searchingKey.charAt(0)+" "+searchingKey.substring(1);
-        }
-
-        return searchingKey;
-    }
-
 
     private String updateSearchBar() {
         SharedPreferences sharedPref = MainActivity.getContext().getSharedPreferences("sharedPrefs", 0);

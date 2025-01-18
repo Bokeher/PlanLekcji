@@ -8,29 +8,27 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.planlekcji.replacements.model.ReplacementToTimetable;
-import com.example.planlekcji.timetable.model.LessonRow;
+import com.example.planlekcji.timetable.model.DayOfWeek;
 
 import java.util.List;
+import java.util.Map;
 
 public class Adapter extends FragmentStateAdapter {
-    private final List<LessonRow> lessonRows;
-    private final List<ReplacementToTimetable> replacementsForTimetable;
+    private final Map<DayOfWeek, List<String>> timetableMap;
 
-    public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, List<LessonRow> lessonRows, List<ReplacementToTimetable> replacementsForTimetable) {
+    public Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, Map<DayOfWeek, List<String>> timetableMap) {
         super(fragmentManager, lifecycle);
-        this.lessonRows = lessonRows;
-        this.replacementsForTimetable = replacementsForTimetable;
+        this.timetableMap = timetableMap;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        if (lessonRows == null || lessonRows.get(0).getLessonNumbers() == null || lessonRows.get(0) == null) {
+        if (timetableMap == null || timetableMap.get(DayOfWeek.MONDAY) == null) {
             return new Fragment();
         }
 
-        Fragment fragment = new LessonFragment(lessonRows, replacementsForTimetable);
+        Fragment fragment = new LessonFragment(timetableMap);
         Bundle args = new Bundle();
         args.putString(LessonFragment.TITLE, "Tab" + (position + 1));
         fragment.setArguments(args);

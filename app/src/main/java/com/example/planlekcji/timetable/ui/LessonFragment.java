@@ -1,12 +1,10 @@
 package com.example.planlekcji.timetable.ui;
 
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.StrikethroughSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,28 +22,27 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.planlekcji.MainActivity;
-import com.example.planlekcji.replacements.model.ReplacementToTimetable;
 import com.example.planlekcji.R;
 import com.example.planlekcji.timetable.model.DayOfWeek;
-import com.example.planlekcji.timetable.model.LessonRow;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class LessonFragment extends Fragment {
+    private final List<String> lessonHours = new ArrayList<>();
 
     public static final String TITLE = "title";
-    private SharedPreferences sharedPreferences;
-    private List<LessonRow> lessonRows;
+    private Map<DayOfWeek, List<String>> timetableMap;
 
     public LessonFragment() {
     }
 
-    public LessonFragment(List<LessonRow> lessonRows, List<ReplacementToTimetable> replacementsForTimetable) {
-        this.lessonRows = lessonRows;
+    public LessonFragment(Map<DayOfWeek, List<String>> timetableMap) {
+        this.timetableMap = timetableMap;
     }
 
     @Override
@@ -57,172 +54,122 @@ public class LessonFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Context context = MainActivity.getContext();
 
+        addLessonHours();
+
+        assert getArguments() != null;
         String argument = getArguments().getString(TITLE);
+        assert argument != null;
         int tabNumber = Character.getNumericValue(argument.charAt(3));
 
-        sharedPreferences = MainActivity.getContext().getSharedPreferences("sharedPrefs", 0);
-        int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
-
-        int dayNumber = DayOfWeek.getDayOfWeek(tabNumber).getDayOfWeekAsNumber();
+        DayOfWeek dayNumber = DayOfWeek.getDayOfWeek(tabNumber);
 
         int currentLesson = getCurrentLessonIndex(tabNumber);
 
-        if (lessonRows != null) {
-            for (int i = 0; i < lessonRows.size(); i++) {
-                // get number of lesson and hour
-                String number = lessonRows.get(i).getLessonNumbers();
-                String hour = lessonRows.get(i).getLessonHours();
+        if (timetableMap == null || timetableMap.get(DayOfWeek.MONDAY) == null) {
+            return;
+        }
 
-                // get html to change <br> tag into \n
-                String html = lessonRows.get(i).getDayData().get(dayNumber);
+        int dayNumbers = Objects.requireNonNull(timetableMap.get(DayOfWeek.MONDAY)).size();
+        for (int i = 0; i < dayNumbers; i++) {
+            String number = (i + 1) + "";
+            String hour = lessonHours.get(i);
 
-                // for some reason when timetable is for classrooms or teachers there is br at the end of cell
-                // this is to prevent that from making new lines
-                if (timetableType != 0) {
-                    html = html.replace("<br>", "");
-                }
-                // create pointer for line breaks (\n cant be used here)
-                html = html.replace("<br>", "|nLine|");
+            String html = Objects.requireNonNull(timetableMap.get(dayNumber)).get(i);
 
-                // create html document to remove unnecessary html tags
-                Document doc = Jsoup.parse(html);
+            SpannableStringBuilder str = new SpannableStringBuilder(html);
 
-                // replace pointer for \n
-                String data = doc.text().replace("|nLine|", "\n");
+            LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCards);
 
-                SpannableStringBuilder str = new SpannableStringBuilder(data);
-//
-//                if (shouldShowReplacementsOnTimetable()) {
-//                    for (ReplacementToTimetable replacement : replacementsForTimetable) {
-//                        if (isLessonWithReplacement(replacement, tabNumber, i)) {
-//                            // 0 means there is no group division
-//                            if (replacement.getGroupNumber() == 0) {
-//                                str.setSpan(new StrikethroughSpan(), 0, str.length(), 0); // apply strikethrough to entire lesson
-//                                appendExtraInfoIfNeeded(str, replacement.getExtraInfo());
-//                            } else {
-//                                applyStrikethroughToCorrectPartsOfSpan(str, replacement);
-//                            }
-//                        }
-//                    }
-//                }
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT
+            );
+            layoutParams.setMargins(0, 0, 0, 10);
 
-                LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCards);
+            int color = ContextCompat.getColor(context, R.color.lessonBackgroundColor);
 
-                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT
-                );
-                layoutParams.setMargins(0, 0, 0, 10);
+            CardView cardView = new CardView(context);
+            cardView.setRadius(30);
+            cardView.setCardBackgroundColor(color);
 
-                int color = ContextCompat.getColor(getActivity(), R.color.lessonBackgroundColor);
+            ConstraintLayout.LayoutParams layoutParams_matchParent2 = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
+            ConstraintLayout.LayoutParams layoutParams_matchParent3 = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
 
-                CardView cardView = new CardView(getActivity());
-                cardView.setRadius(30);
-                cardView.setCardBackgroundColor(color);
+            TextView lessonNumber = new TextView(getActivity());
+            lessonNumber.setId(R.id.textViewLessonNumber);
+            lessonNumber.setText(number);
+            lessonNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 36f);
+            lessonNumber.setGravity(Gravity.CENTER);
+            lessonNumber.setPadding(dpToPx(10), 0, 0, 0);
 
-                ConstraintLayout.LayoutParams layoutParams_matchParent2 = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
-                ConstraintLayout.LayoutParams layoutParams_matchParent3 = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
+            TextView lessonHours = new TextView(getActivity());
+            lessonHours.setId(R.id.textViewLessonHours);
+            lessonHours.setText(hour);
+            lessonHours.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            lessonHours.setLayoutParams(layoutParams_matchParent2);
 
-                TextView lessonNumber = new TextView(getActivity());
-                lessonNumber.setId(R.id.textViewLessonNumber);
-                lessonNumber.setText(number);
-                lessonNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 36f);
-                lessonNumber.setGravity(Gravity.CENTER);
-                lessonNumber.setPadding(dpToPx(10), 0, 0, 0);
-
-                TextView lessonHours = new TextView(getActivity());
-                lessonHours.setId(R.id.textViewLessonHours);
-                lessonHours.setText(hour);
-                lessonHours.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                lessonHours.setLayoutParams(layoutParams_matchParent2);
-
-                TextView lessonData = new TextView(getActivity());
-                lessonData.setId(R.id.textViewLessonData);
-                lessonData.setText(str);
-                lessonData.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
-                lessonData.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                lessonData.setLayoutParams(layoutParams_matchParent3);
+            TextView lessonData = new TextView(getActivity());
+            lessonData.setId(R.id.textViewLessonData);
+            lessonData.setText(str);
+            lessonData.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
+            lessonData.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            lessonData.setLayoutParams(layoutParams_matchParent3);
 
 
-                lessonData.setPadding(0, 0, 0, dpToPx(16));
+            lessonData.setPadding(0, 0, 0, dpToPx(16));
 
-                if (i == currentLesson - 1) {
-                    int bgColor = ContextCompat.getColor(getActivity(), R.color.primaryDark);
-                    int textColor = ContextCompat.getColor(getActivity(), R.color.black);
+            if (i == currentLesson - 1) {
+                int bgColor = ContextCompat.getColor(context, R.color.primaryDark);
+                int textColor = ContextCompat.getColor(context, R.color.black);
 
-                    cardView.setCardBackgroundColor(bgColor);
-                    lessonNumber.setTextColor(textColor);
-                    lessonHours.setTextColor(textColor);
-                    lessonData.setTextColor(textColor);
-                    lessonNumber.setTypeface(null, Typeface.BOLD);
-                    lessonHours.setTypeface(null, Typeface.BOLD);
-                    lessonData.setTypeface(null, Typeface.BOLD);
-                }
-
-                ConstraintLayout constraintLayout = new ConstraintLayout(getActivity());
-                constraintLayout.setId(R.id.constraintLayout);
-
-                constraintLayout.addView(lessonNumber);
-                constraintLayout.addView(lessonHours);
-                constraintLayout.addView(lessonData);
-
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(constraintLayout);
-                constraintSet.connect(R.id.textViewLessonHours, ConstraintSet.TOP, R.id.constraintLayout, ConstraintSet.TOP, dpToPx(8));
-                constraintSet.connect(R.id.textViewLessonHours, ConstraintSet.LEFT, R.id.textViewLessonNumber, ConstraintSet.RIGHT, dpToPx(40));
-                constraintSet.connect(R.id.textViewLessonHours, ConstraintSet.RIGHT, R.id.constraintLayout, ConstraintSet.RIGHT, dpToPx(16));
-
-                constraintSet.connect(R.id.textViewLessonData, ConstraintSet.TOP, R.id.textViewLessonHours, ConstraintSet.BOTTOM, dpToPx(2));
-                constraintSet.connect(R.id.textViewLessonData, ConstraintSet.BOTTOM, R.id.constraintLayout, ConstraintSet.BOTTOM, dpToPx(2));
-                constraintSet.connect(R.id.textViewLessonData, ConstraintSet.RIGHT, R.id.constraintLayout, ConstraintSet.RIGHT, dpToPx(16));
-                constraintSet.connect(R.id.textViewLessonData, ConstraintSet.LEFT, R.id.textViewLessonNumber, ConstraintSet.LEFT, dpToPx(40));
-
-                constraintSet.connect(R.id.textViewLessonNumber, ConstraintSet.TOP, R.id.constraintLayout, ConstraintSet.TOP, 0);
-                constraintSet.connect(R.id.textViewLessonNumber, ConstraintSet.BOTTOM, R.id.constraintLayout, ConstraintSet.BOTTOM, 0);
-                constraintSet.applyTo(constraintLayout);
-
-                cardView.addView(constraintLayout);
-                cardView.setLayoutParams(layoutParams);
-                linearLayout.addView(cardView);
+                cardView.setCardBackgroundColor(bgColor);
+                lessonNumber.setTextColor(textColor);
+                lessonHours.setTextColor(textColor);
+                lessonData.setTextColor(textColor);
+                lessonNumber.setTypeface(null, Typeface.BOLD);
+                lessonHours.setTypeface(null, Typeface.BOLD);
+                lessonData.setTypeface(null, Typeface.BOLD);
             }
+
+            ConstraintLayout constraintLayout = new ConstraintLayout(context);
+            constraintLayout.setId(R.id.constraintLayout);
+
+            constraintLayout.addView(lessonNumber);
+            constraintLayout.addView(lessonHours);
+            constraintLayout.addView(lessonData);
+
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.connect(R.id.textViewLessonHours, ConstraintSet.TOP, R.id.constraintLayout, ConstraintSet.TOP, dpToPx(8));
+            constraintSet.connect(R.id.textViewLessonHours, ConstraintSet.LEFT, R.id.textViewLessonNumber, ConstraintSet.RIGHT, dpToPx(40));
+            constraintSet.connect(R.id.textViewLessonHours, ConstraintSet.RIGHT, R.id.constraintLayout, ConstraintSet.RIGHT, dpToPx(16));
+
+            constraintSet.connect(R.id.textViewLessonData, ConstraintSet.TOP, R.id.textViewLessonHours, ConstraintSet.BOTTOM, dpToPx(2));
+            constraintSet.connect(R.id.textViewLessonData, ConstraintSet.BOTTOM, R.id.constraintLayout, ConstraintSet.BOTTOM, dpToPx(2));
+            constraintSet.connect(R.id.textViewLessonData, ConstraintSet.RIGHT, R.id.constraintLayout, ConstraintSet.RIGHT, dpToPx(16));
+            constraintSet.connect(R.id.textViewLessonData, ConstraintSet.LEFT, R.id.textViewLessonNumber, ConstraintSet.LEFT, dpToPx(40));
+
+            constraintSet.connect(R.id.textViewLessonNumber, ConstraintSet.TOP, R.id.constraintLayout, ConstraintSet.TOP, 0);
+            constraintSet.connect(R.id.textViewLessonNumber, ConstraintSet.BOTTOM, R.id.constraintLayout, ConstraintSet.BOTTOM, 0);
+            constraintSet.applyTo(constraintLayout);
+
+            cardView.addView(constraintLayout);
+            cardView.setLayoutParams(layoutParams);
+            linearLayout.addView(cardView);
         }
     }
 
-    private boolean shouldShowReplacementsOnTimetable() {
-        boolean visibility = sharedPreferences.getBoolean(getString(R.string.replacementVisibilityOnTimetable), false);
-        int timetableType = sharedPreferences.getInt("selectedTypeOfTimetable", 0);
-        return visibility && timetableType == 0;
-    }
+    private void addLessonHours() {
+        String[] hours = {
+                "08:00 - 08:45", "08:50 - 09:35", "09:45 - 10:30", "10:50 - 11:35", "11:45 - 12:30",
+                "12:40 - 13:25", "13:35 - 14:20", "14:25 - 15:10", "15:15 - 16:00", "16:05 - 16:50",
+                "16:55 - 17:40", "17:45 - 18:30", "18:35 - 19:20", "19:25 - 20:10", "20:15 - 21:00",
+                "21:05 - 21:50", "21:55 - 22:40", "22:45 - 23:30", "23:35 - 00:20"
+        };
 
-    private boolean isLessonWithReplacement(ReplacementToTimetable replacement, int tabNumber, int i) {
-        return replacement.getDayNumber() == tabNumber && replacement.getLessonNumber() == i + 1;
-    }
-
-    private void applyStrikethroughToCorrectPartsOfSpan(SpannableStringBuilder str, ReplacementToTimetable replacement) {
-        int beginIndex = 0;
-        int foundIndex = 0;
-
-        for (int k = 0; foundIndex != -1 && beginIndex < str.length(); k++) {
-            foundIndex = str.toString().indexOf("\n", beginIndex);
-
-            if (foundIndex == -1) {
-                foundIndex = str.length();
-            }
-
-            if (k == replacement.getGroupNumber() - 1) {
-                str.setSpan(new StrikethroughSpan(), beginIndex, foundIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                appendExtraInfoIfNeeded(str, replacement.getExtraInfo());
-            }
-
-            beginIndex = foundIndex + 1;
-        }
-    }
-
-    private void appendExtraInfoIfNeeded(SpannableStringBuilder str, String extraInfo) {
-        if (extraInfo.isEmpty()) return;
-
-        str.append("\n").append(extraInfo);
+        Collections.addAll(lessonHours, hours);
     }
 
     /**

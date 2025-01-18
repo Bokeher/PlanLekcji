@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,23 +14,27 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.planlekcji.MainActivity;
+import com.example.planlekcji.MainViewModel;
 import com.example.planlekcji.R;
+import com.example.planlekcji.ckziu_elektryk.client.timetable.SchoolEntry;
 import com.example.planlekcji.settings.SchoolEntriesDownloader;
-import com.example.planlekcji.settings.model.TimetableInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsFragment extends Fragment {
     private SharedPreferences sharedPref;
-    private List<TimetableInfo> classInfoList = new ArrayList<>();
-    private List<TimetableInfo> teachersInfoList = new ArrayList<>();
-    private List<TimetableInfo> classroomsInfoList = new ArrayList<>();
+    private List<SchoolEntry> classesSchoolEntries = new ArrayList<>();
+    private List<SchoolEntry> teachersSchoolEntries = new ArrayList<>();
+    private List<SchoolEntry> classroomsSchoolEntries = new ArrayList<>();
     private View view;
+    private MainViewModel mainViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         // Initialize SharedPreferences for storing application settings.
         sharedPref = MainActivity.getContext().getSharedPreferences("sharedPrefs", 0);
@@ -48,17 +53,17 @@ public class SettingsFragment extends Fragment {
         Spinner spinnerTeacherTokens = view.findViewById(R.id.spinnerTeacherTokens);
         Spinner spinnerClassroomTokens = view.findViewById(R.id.spinnerClassroomTokens);
 
-        setSpinner(spinnerClassTokens, classInfoList, getString(R.string.classTokenKey), getString(R.string.classTimetableUrlKey));
-        setSpinner(spinnerTeacherTokens, teachersInfoList, getString(R.string.teacherTokenKey), getString(R.string.teacherTimetableUrlKey));
-        setSpinner(spinnerClassroomTokens, classroomsInfoList, getString(R.string.classroomTokenKey), getString(R.string.classroomTimetableUrlKey));
+        setSpinner(spinnerClassTokens, classesSchoolEntries, getString(R.string.classTokenKey));
+        setSpinner(spinnerTeacherTokens, teachersSchoolEntries, getString(R.string.teacherTokenKey));
+        setSpinner(spinnerClassroomTokens, classroomsSchoolEntries, getString(R.string.classroomTokenKey));
 
         setTypeOfTimetableSpinner();
     }
 
-    private void setSpinner(Spinner spinner, List<TimetableInfo> timetableInfoList, String sharedPreferencesToken, String sharedPreferencesUrl) {
+    private void setSpinner(Spinner spinner, List<SchoolEntry> schoolEntries, String sharedPreferencesToken) {
         List<String> tokenList = new ArrayList<>();
-        for (TimetableInfo timetableInfo : timetableInfoList) {
-            tokenList.add(timetableInfo.getToken());
+        for (SchoolEntry schoolEntry : schoolEntries) {
+            tokenList.add(schoolEntry.shortcut());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.getContext(), android.R.layout.simple_list_item_1, tokenList);
@@ -71,11 +76,10 @@ public class SettingsFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                TimetableInfo timetableInfo = timetableInfoList.get(i);
+                SchoolEntry schoolEntry = schoolEntries.get(i);
 
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(sharedPreferencesToken, timetableInfo.getToken());
-                editor.putString(sharedPreferencesUrl, timetableInfo.getUrl());
+                editor.putString(sharedPreferencesToken, schoolEntry.shortcut());
                 editor.apply();
             }
 
@@ -129,7 +133,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void getData() {
-        SchoolEntriesDownloader spinnersDataDownloader = new SchoolEntriesDownloader();
+        SchoolEntriesDownloader spinnersDataDownloader = new SchoolEntriesDownloader(mainViewModel.getClient());
         Thread thread = new Thread(spinnersDataDownloader);
         thread.start();
 
@@ -139,8 +143,8 @@ public class SettingsFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
-        classInfoList = spinnersDataDownloader.getClassInfoList();
-        teachersInfoList = spinnersDataDownloader.getTeachersInfoList();
-        classroomsInfoList = spinnersDataDownloader.getClassroomsInfoList();
+        classesSchoolEntries = spinnersDataDownloader.getClassesSchoolEntries();
+        teachersSchoolEntries = spinnersDataDownloader.getTeachersSchoolEntries();
+        classroomsSchoolEntries = spinnersDataDownloader.getClassroomsSchoolEntries();
     }
 }

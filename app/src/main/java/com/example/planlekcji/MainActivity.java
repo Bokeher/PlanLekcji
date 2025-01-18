@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Check for internet connection; exit the app if not connected.
         if (!isOnline()) {
-            ToastUtils.showToast(this, "Wymagane połączenie z internetem.", true);
+            String errorMessage = getString(R.string.toastErrorMessage_noInternetConnection);
+            ToastUtils.showToast(this, errorMessage, true);
         }
 
         // Lock the orientation of the screen to portrait mode.

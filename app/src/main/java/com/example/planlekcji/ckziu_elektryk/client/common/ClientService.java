@@ -1,12 +1,16 @@
 package com.example.planlekcji.ckziu_elektryk.client.common;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.planlekcji.MainActivity;
+import com.example.planlekcji.R;
 import com.example.planlekcji.ckziu_elektryk.client.Config;
 import com.example.planlekcji.ckziu_elektryk.client.response.ErrorResponse;
 import com.example.planlekcji.ckziu_elektryk.client.response.SuccessResponse;
+import com.example.planlekcji.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -61,7 +65,10 @@ public abstract class ClientService {
 
             apiResponseCall.setSuccessResponse(new SuccessResponse(response.code(), jsonElement));
         } catch (IOException exception) {
-            throw new IllegalStateException(exception);
+            Context context = MainActivity.getContext();
+            String errorMessage = context.getString(R.string.toastErrorMessage_failedApiConnection);
+
+            ToastUtils.showToast(context, errorMessage, true);
         }
 
         return apiResponseCall;

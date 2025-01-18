@@ -4,12 +4,7 @@
     <string name="teacherTokenKey" translatable="false">teacherToken</string>
     <string name="classroomTokenKey" translatable="false">classroomToken</string>
 
-    <string name="classTimetableUrlKey" translatable="false">classTimetableUrl</string>
-    <string name="teacherTimetableUrlKey" translatable="false">teacherTimetableUrl</string>
-    <string name="classroomTimetableUrlKey" translatable="false">classroomTimetableUrl</string>
-
     <string name="selectedTypeOfTimetableKey" translatable="false">selectedTypeOfTimetable</string>
-    <string name="replacementVisibilityOnTimetable" translatable="false">replacementVisibilityOnTimetable</string>
     <string name="searchKey" translatable="false">searchingKey</string>
     <string name="navigate_timetable">Timetable</string>
     <string name="navigate_replacements">Replacements</string>
@@ -27,13 +22,13 @@
     <string name="selectClass">Select class</string>
     <string name="selectTeacher">Select teacher</string>
     <string name="selectClassroom">Select classroom</string>
-    <string name="showReplacements">Show replacements on timetable</string>
     <string name="classes">Classes</string>
     <string name="teachers">Teachers</string>
     <string name="classrooms">Classrooms</string>
     <string name="goBackButton_description">Go back</string>
-    <string name="replacementsOnTimetable_title">Replacements on timetable</string>
-    <string name="replacementsOnTimetable_description">Only replacements dedicated to your class are visible. Replacements for combined lessons with other classes are not displayed.</string>
     <string name="settings_extraInfo">This application was created by a graduate of the CKZiU Elektryk school</string>
     <string name="no_replacements">No replacements</string>
+    <string name="toastErrorMessage_failedApiConnection">Unable to connect to the server.</string>
+    <string name="toastErrorMessage_noInternetConnection">Internet connection is required.</string>
+    <string name="toastErrorMessage_noInternetConnectionRetry">No internet connection. Trying to reconnect…</string>
 </resources>

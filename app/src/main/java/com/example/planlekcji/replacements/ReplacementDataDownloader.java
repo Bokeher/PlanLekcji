@@ -1,27 +1,34 @@
 package com.example.planlekcji.replacements;
 
-import com.example.planlekcji.listener.DownloadCompleteListener;
+import com.example.planlekcji.ckziu_elektryk.client.CKZiUElektrykClient;
+import com.example.planlekcji.ckziu_elektryk.client.replacments.Replacement;
+import com.example.planlekcji.ckziu_elektryk.client.replacments.ReplacementService;
+import com.example.planlekcji.listener.ReplacementsDownloadCompleteListener;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.IOException;
+import java.util.Optional;
 
 public class ReplacementDataDownloader implements Runnable {
-    private final DownloadCompleteListener listener;
+    private final ReplacementsDownloadCompleteListener listener;
+    private final CKZiUElektrykClient client;
 
-    public ReplacementDataDownloader(DownloadCompleteListener listener) {
+    public ReplacementDataDownloader(CKZiUElektrykClient client, ReplacementsDownloadCompleteListener listener) {
         this.listener = listener;
+        this.client = client;
     }
 
     @Override
     public void run() {
-        try {
-            Document doc = Jsoup.connect("http://zastepstwa.ckziu-elektryk.pl/").get();
-            listener.onDownloadComplete(doc);
-        } catch (IOException e) {
-            e.printStackTrace();
-            listener.onDownloadFailed();
+        ReplacementService replacementService = client.getReplacementService();
+
+        Optional<Replacement> replacementOptional = replacementService.getLatestReplacement();
+
+        if (!replacementOptional.isPresent()) {
+            listener.onDownloadComplete("");
+            return;
         }
+
+        Replacement replacement = replacementOptional.get();
+
+        listener.onDownloadComplete(replacement.content());
     }
 }

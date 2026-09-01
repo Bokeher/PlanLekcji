@@ -3,7 +3,7 @@ package com.example.planlekcji.settings;
 import android.content.SharedPreferences;
 
 import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.LessonDetails;
-import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.utils.DayOfWeek;
 
 /**
  * Utility for managing group-related user preferences in SharedPreferences.

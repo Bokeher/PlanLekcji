@@ -3,7 +3,7 @@ package com.example.planlekcji;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.utils.DayOfWeek;
 
 import org.junit.Test;
 

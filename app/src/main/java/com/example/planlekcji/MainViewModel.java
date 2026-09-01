@@ -1,6 +1,7 @@
 package com.example.planlekcji;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -19,7 +20,7 @@ import com.example.planlekcji.listener.ReplacementsDownloadCompleteListener;
 import com.example.planlekcji.listener.TimetableDownloadCompleteListener;
 import com.example.planlekcji.replacements.ReplacementDataDownloader;
 import com.example.planlekcji.timetable.TimetableDataDownloader;
-import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.utils.DayOfWeek;
 import com.example.planlekcji.utils.RefreshCooldownManager;
 import com.example.planlekcji.utils.RefreshDataType;
 
@@ -56,21 +57,12 @@ public class MainViewModel extends ViewModel {
 
     public MainViewModel() {
         client = CKZiUElektrykClient.getInstance();
-        client.setFailedApiConnectionCallback(e -> {
-            toastErrorMessage.postValue(R.string.toastErrorMessage_failedApiConnection);
-        });
+        client.setFailedApiConnectionCallback(e -> toastErrorMessage.postValue(R.string.toastErrorMessage_failedApiConnection));
 
         client.setFailedRouteRespondCallback(errorResponse -> {
-            System.err.println("Error occurred: " + errorResponse.getMessage());
+            Log.e("FAILED_ROUTE_RESPOND_CALLBACK", errorResponse.getMessage());
             toastErrorMessage.postValue(R.string.toast_errorMessage);
         });
-    }
-
-    public void fetchData() {
-        startReplacementDownload();
-        startTimetableDownload();
-        startArticlesDownload();
-        startCalendarDownload();
     }
 
     public void fetchReplacements() {
@@ -320,12 +312,5 @@ public class MainViewModel extends ViewModel {
 
     public void setCalendarNeedsRefresh(boolean calendarNeedsRefresh) {
         this.calendarNeedsRefresh = calendarNeedsRefresh;
-    }
-
-    public void markAllAsNeedsRefresh() {
-        timetableNeedsRefresh = true;
-        replacementsNeedsRefresh = true;
-        articlesNeedsRefresh = true;
-        calendarNeedsRefresh = true;
     }
 }

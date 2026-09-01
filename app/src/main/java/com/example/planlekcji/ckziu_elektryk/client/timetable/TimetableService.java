@@ -1,7 +1,7 @@
 package com.example.planlekcji.ckziu_elektryk.client.timetable;
 
 import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.Lesson;
-import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.utils.DayOfWeek;
 import com.google.gson.JsonObject;
 
 import java.util.List;

@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.Lesson;
-import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.utils.DayOfWeek;
 
 import java.util.List;
 import java.util.Map;

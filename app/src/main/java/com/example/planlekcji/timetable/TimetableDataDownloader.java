@@ -13,7 +13,7 @@ import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.Lesson;
 import com.example.planlekcji.database.DatabaseCacheManager;
 import com.example.planlekcji.listener.TimetableDownloadCompleteListener;
 import com.example.planlekcji.preview.PreviewDataStore;
-import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.utils.DayOfWeek;
 import com.example.planlekcji.utils.RefreshCooldownManager;
 import com.example.planlekcji.utils.RefreshDataType;
 import com.google.gson.JsonObject;

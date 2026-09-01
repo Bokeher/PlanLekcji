@@ -14,7 +14,7 @@ import com.example.planlekcji.R;
 import com.example.planlekcji.utils.EmptyStateHelper;
 import com.example.planlekcji.utils.EmptyStateType;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.Lesson;
-import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.utils.DayOfWeek;
 import com.example.planlekcji.timetable.ui.Adapter;
 import android.widget.LinearLayout;
 import com.google.android.material.tabs.TabLayout;

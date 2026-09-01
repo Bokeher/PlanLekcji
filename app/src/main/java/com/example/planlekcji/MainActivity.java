@@ -22,7 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.planlekcji.ckziu_elektryk.client.timetable.SchoolEntryType;
-import com.example.planlekcji.fragments.model.ViewPagerAdapter;
+import com.example.planlekcji.fragments.ViewPagerAdapter;
 import com.example.planlekcji.utils.NetworkMonitor;
 import com.example.planlekcji.utils.RefreshCooldownManager;
 import com.example.planlekcji.utils.RefreshDataType;

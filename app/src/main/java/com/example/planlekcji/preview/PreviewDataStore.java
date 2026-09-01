@@ -11,7 +11,7 @@ import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.SchoolClass
 import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.SingleLesson;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.Subject;
 import com.example.planlekcji.ckziu_elektryk.client.utils.Time;
-import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.utils.DayOfWeek;
 
 import java.util.ArrayList;
 import java.util.EnumMap;

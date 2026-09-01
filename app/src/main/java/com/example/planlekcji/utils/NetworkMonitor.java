@@ -7,10 +7,13 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import java.util.Objects;
 
 public class NetworkMonitor {
     private final ConnectivityManager connectivityManager;
@@ -50,7 +53,7 @@ public class NetworkMonitor {
             @Override
             public void onAvailable(@NonNull Network network) {
                 mainHandler.post(() -> {
-                    if (!Boolean.TRUE.equals(isOnlineLiveData.getValue())) {
+                    if (!Objects.equals(isOnlineLiveData.getValue(), true)) {
                         isOnlineLiveData.setValue(true);
                     }
                 });
@@ -59,7 +62,7 @@ public class NetworkMonitor {
             @Override
             public void onLost(@NonNull Network network) {
                 mainHandler.post(() -> {
-                    if (!Boolean.FALSE.equals(isOnlineLiveData.getValue())) {
+                    if (!Objects.equals(isOnlineLiveData.getValue(), false)) {
                         isOnlineLiveData.setValue(false);
                     }
                 });
@@ -69,7 +72,7 @@ public class NetworkMonitor {
         try {
             connectivityManager.registerNetworkCallback(request, networkCallback);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("REGISTER_NETWORK_CALLBACK_ERROR", e.getMessage(), e);
         }
     }
 
@@ -77,7 +80,8 @@ public class NetworkMonitor {
         if (connectivityManager != null && networkCallback != null) {
             try {
                 connectivityManager.unregisterNetworkCallback(networkCallback);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
     }
 }

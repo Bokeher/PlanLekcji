@@ -38,7 +38,6 @@ public class ArticleServiceTest {
         assertNotNull(page);
         assertNotNull(page.data());
         assertNotNull(page.links());
-        assertNotNull(page.links());
         assertNotNull(page.meta());
         assertEquals(1, page.meta().currentPage());
         assertEquals(5, page.meta().perPage());
@@ -48,11 +47,8 @@ public class ArticleServiceTest {
     public void shouldRespondArticlesWithPaginationWithPageTwo() {
         Page<Article> page = articleService.getArticles(2);
 
-        System.out.println(page.meta());
-
         assertNotNull(page);
         assertNotNull(page.data());
-        assertNotNull(page.links());
         assertNotNull(page.links());
         assertNotNull(page.meta());
         assertEquals(2, page.meta().currentPage());
@@ -60,18 +56,18 @@ public class ArticleServiceTest {
     }
 
     @Test
-    public void shouldGetArticleById() {
+    public void shouldGetArticleById() throws MalformedURLException {
         Optional<Article> articleOptional = articleService.getArticle(5);
 
         if (articleOptional.isPresent()) {
             Article article = articleOptional.get();
 
-            assertNotNull(article.getCreationDate());
-            assertNotNull(article.getContent());
-            assertTrue(article.getId() >= 1);
-            assertNotNull(article.getPhotosURLs());
-            assertNotNull(article.getTitle());
-            assertNotNull(article.getHeaderImageUrl());
+            assertNotNull(article.creationDate());
+            assertNotNull(article.content());
+            assertTrue(article.id() >= 1);
+            assertNotNull(article.photosURLs());
+            assertNotNull(article.title());
+            assertNotNull(article.getHeaderImageUrl(PhotoSize.SIZE_FULL));
         }
     }
 

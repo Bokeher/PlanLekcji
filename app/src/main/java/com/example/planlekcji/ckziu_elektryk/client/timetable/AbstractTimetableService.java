@@ -7,7 +7,7 @@ import com.example.planlekcji.ckziu_elektryk.client.common.Endpoint;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.Lesson;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.LessonFactory;
 import com.example.planlekcji.ckziu_elektryk.client.utils.ParamValidator;
-import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.utils.DayOfWeek;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

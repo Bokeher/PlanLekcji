@@ -30,7 +30,7 @@ import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.LessonDurat
 import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.SchoolClass;
 import com.example.planlekcji.ckziu_elektryk.client.timetable.lesson.SingleLesson;
 import com.example.planlekcji.settings.GroupPreferenceManager;
-import com.example.planlekcji.timetable.model.DayOfWeek;
+import com.example.planlekcji.utils.DayOfWeek;
 import com.example.planlekcji.utils.EmptyStateHelper;
 import com.example.planlekcji.utils.EmptyStateType;
 import com.google.android.material.card.MaterialCardView;

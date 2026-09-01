@@ -1,4 +1,4 @@
-package com.example.planlekcji.timetable.model;
+package com.example.planlekcji.utils;
 
 import java.util.Arrays;
 

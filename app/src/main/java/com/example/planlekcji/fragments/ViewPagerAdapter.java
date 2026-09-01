@@ -1,4 +1,4 @@
-package com.example.planlekcji.fragments.model;
+package com.example.planlekcji.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

@@ -1,6 +1,5 @@
 package com.example.planlekcji.ckziu_elektryk.client;
 
-
 import static org.junit.Assert.assertNotNull;
 
 import com.example.planlekcji.ckziu_elektryk.client.replacements.Replacement;
@@ -14,7 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class ReplacementServiceTest {
 
@@ -44,6 +45,16 @@ public class ReplacementServiceTest {
     @Test
     public void shouldGetLatestReplacementWithModeClassesAndDate() {
         List<Replacement> replacements = replacementService.getReplacements(ReplacementType.CLASSES, DateUtil.parseDate(ReplacementRequest.REPLACEMENT_DATE_PATTERN, "2025-09-09"));
+
+        assertNotNull(replacements);
+    }
+
+    @Test
+    public void shouldGetReplacementsByPeriod() {
+        Date startDate = DateUtil.parseDate(ReplacementRequest.REPLACEMENT_DATE_PATTERN, "2026-09-07");
+        Date endDate = DateUtil.parseDate(ReplacementRequest.REPLACEMENT_DATE_PATTERN, "2026-09-11");
+
+        Map<Date, List<Replacement>> replacements = replacementService.getReplacements(ReplacementType.TEACHERS, startDate, endDate);
 
         assertNotNull(replacements);
     }
